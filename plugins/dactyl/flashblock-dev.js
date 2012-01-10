@@ -237,6 +237,9 @@ var data = {
                         this.setAttribute("flashblock", true);
                     if (this.placeholder || parent.placeholder)
                         return;
+                    var objectHeight = this.getAttribute("height");
+                    if ((!objectHeight || objectHeight <= 20) && !this.style.height)
+                        return;
                     this.placeholder = new Placeholder(self);
 
                     function checkReplace(e) {

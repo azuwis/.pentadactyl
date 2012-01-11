@@ -1,0 +1,265 @@
+"" {{{ Mapping
+"" scroll more
+nnoremap j 10j
+nnoremap k 10k
+
+"" swap d/D
+nnoremap d D
+nnoremap D d
+"nnoremap d :js config.removeTab(tabs.getTab())<CR>
+
+"" swap y/Y
+"nnoremap y Y
+"nnoremap Y y
+
+"" swap p/P
+nnoremap p P
+nnoremap P p
+
+"" J/K move left/right
+"nnoremap J h
+"nnoremap K l
+
+"" h/l switch tabs
+nnoremap h <C-p>
+nnoremap l <C-n>
+
+"" prev selected tab
+nnoremap e <C-^>
+
+"" <M-i> focus on input
+"nnoremap <M-i> gi
+
+"" U list closed tabs
+nnoremap U :undo<Space>
+
+"" toggle menubar
+nnoremap gm :set guioptions!=m<CR>
+
+"" viewsource in new tab
+nnoremap gf :tab viewsource<CR>
+
+"" open addons manager
+nnoremap <Leader>a :dialog addons<CR>
+
+"" rehash
+nnoremap <Leader>R :rehash<CR>
+
+"" private mode
+nnoremap <Leader>p :set private!<CR>
+
+"" display download
+nnoremap <Leader>d :downloads<CR>
+
+"" about:config
+nnoremap <Leader>c :tabopen about:config<CR>
+
+"" auto add -tags option when adding bookmark
+nnoremap a a<Space>-tags<Space>
+
+"" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
+"map -modes hints j     -ex normal! 10j
+"map -modes hints k     -ex normal! 10k
+map -modes hints <C-f> -ex normal! <C-f>
+map -modes hints <C-b> -ex normal! <C-b>
+"map -modes hints gg    -ex normal! gg
+"map -modes hints G     -ex normal! G
+"" }}}
+
+"" {{{ Searching
+"" from http://www.slimeden.com/2011/03/firefox/pentadactyl
+":map t -js content.getSelection().toString()!=""?dactyl.execute(":tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
+":map o -js content.getSelection().toString()!=""?dactyl.execute(":open "+ content.getSelection()):CommandExMode().open("open ")
+command! -nargs=* -complete=search search exe 't <args> ' + content.getSelection().toString()
+map s :search<Space>
+command! -nargs=? -complete=search switchSearch exe 'o <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
+map S gi<ESC> :switchSearch<Space>
+command! -nargs=* siteSearch exe "t http://www.google.com/search?q=" + encodeURIComponent("<args>") + "&sitesearch=" + window.content.location.hostname
+
+"" search engines
+"" hide all browser search engines except google(for suggestion)
+js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google") e.hidden = true})
+silent bmark -tags searchengine -title='Google SSL Search' https://encrypted.google.com/search?q=%s -keyword g
+silent bmark -tags searchengine -title='Google Code Search' http://google.com/codesearch?q=%s -keyword gc
+silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
+silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t
+silent bmark -tags searchengine -title='Debian Package Search' http://packages.debian.org/search?keywords=%s -keyword d
+silent bmark -tags searchengine -title='Debian File Search' http://packages.debian.org/search?searchon=contents&mode=filename&keywords=%s -keyword df
+silent bmark -tags searchengine -title='Mtime Movie Search' http://search.mtime.com/search/?%s -keyword m
+silent bmark -tags searchengine -title='Douban Movie Search' http://movie.douban.com/subject_search?search_text=%s&cat=1002 -keyword dm
+silent bmark -tags searchengine -title='Shooter Subtitle Search' http://shooter.cn/search/%s -keyword s
+silent bmark -tags searchengine -title='Baidu Search' -charset=GB2312 http://www.baidu.com/s?wd=%s&rsv_bp=0&rsv_spt=3 -keyword b
+silent bmark -tags searchengine -title='KTXP Torrent Search' http://bt.ktxp.com/search.php?keyword=%s -keyword k
+silent bmark -tags searchengine -title='CHDBits Search' http://chdbits.org/torrents.php?incldead=1&spstate=0&inclbookmarked=0&search=%s&search_area=0&search_mode=0 -keyword c
+silent bmark -tags searchengine -title='Baidu MP3 Search' -charset=GB2312 http://mp3.baidu.com/m?f=ms&rf=idx&tn=baidump3&ct=134217728&lf=&rn=&word=%s&lm=-1 -keyword bm
+set defsearch=g
+"" }}}
+
+"" {{{ Option
+"" ]]/[[ turn next/previous page
+set nextpattern&
+set nextpattern^='[下后]一?[页张个篇章]','\bolder\s*posts\b'
+set previouspattern&
+set previouspattern^='[上前]一?[页张个篇章]','\bnewer\s*posts\b'
+
+"" do not display right scrollbar and commandline
+"set guioptions+=n
+set guioptions=sbn
+
+"" open things at new tab
+set newtab=all
+
+"" only show the tab bar when there are multiple tabs
+set showtabline=multitab
+
+"" highlight search
+set hlfind
+
+"" complete search engine suguest
+set complete=location,suggestion
+
+"" pressing `,' is easier
+set mapleader=,
+
+"" allow popups popup
+set popups=tab,resized
+
+"" home row as hintkeys
+"set hintkeys=asdfg;lkjh
+set hintkeys="4;/.123"
+
+"" only follow hints when press enter
+set followhints=1
+
+"" show link when hover links
+"set showstatuslinks=command
+"" }}}
+
+"" {{{ Command
+"" flush browser dns
+command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
+
+"" open current tab in google chrome
+command! gchrome -js <<EOF
+var url=window.content.location.href;
+if (url.indexOf("http://v.youku.com/v_show/") == 0) {
+    url = url.replace(/v_show/i, "v_showMini");
+}
+if (config.OS.isMacOSX) {
+    io.system("open -a 'Google Chrome' " + url);
+}
+EOF
+nnoremap gc :gchrome<CR>
+
+"" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
+"" Open current location via Coral CDN
+"" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830
+command! coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
+nnoremap gp :coralcdn<CR>
+
+command! gohttps -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
+nnoremap gs :gohttps<CR>
+
+"" display calendar
+command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
+
+"" workaround for tabgroups manager causing P misbehave
+"nnoremap p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
+
+"" use https for some sites
+"autocmd! PageLoad '^http://((reader|groups|docs|spreadsheets)\.google\.com|www\.google\.com/(search|reader))' -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
+
+"" set title to url
+"autocmd! LocationChange .* :set titlestring=<url>
+
+"" find duplicated tab
+group deduplicateTab
+autocmd! -javascript -group deduplicateTab PageLoad .* <<EOF
+var dtabs = [];
+tabs.allTabs.forEach(function (t, i) {
+    if (t.linkedBrowser.lastURI && doc.location == t.linkedBrowser.lastURI.spec && tab != i + 1) {
+        dtabs.push(i + 1);
+        config.removeTab(tabs.getTab(i));
+    }
+});
+if (dtabs.length > 0) {
+    dactyl.echo("Tab " + dtabs.join(",") + " duplicated");
+    dactyl.beep();
+}
+EOF
+"" }}}
+
+"" {{{ Style
+colorscheme mybeta1
+"highlight WarningMsg display:none;
+"" }}}
+
+"" {{{ Bookmarklet
+nnoremap <Leader>b :bml-
+nnoremap <Leader>r :bml-readability<CR>
+nnoremap <Leader>s :bml-subscribe<CR>
+command! bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
+command! bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
+command! bml-share -description "Bookmarklet: Google reader official bookmarklet" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');void(b.appendChild(z));}else{}
+command! bml-subscribe -description "Bookmarklet: Subscribe using Google reader" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/subscribe-bookmarklet.js');void(b.appendChild(z));}else{location='http://www.google.com/reader/view/feed/'+encodeURIComponent(location.href)}
+command! bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());
+command! bml-readability -description "Bookmarklet: Make webpage readable using readability" open javascript:(%28function%28%29%7Bwindow.baseUrl%3D%27http%3A//www.readability.com%27%3Bwindow.readabilityToken%3D%27%27%3Bvar%20s%3Ddocument.createElement%28%27script%27%29%3Bs.setAttribute%28%27type%27%2C%27text/javascript%27%29%3Bs.setAttribute%28%27charset%27%2C%27UTF-8%27%29%3Bs.setAttribute%28%27src%27%2CbaseUrl%2B%27/bookmarklet/read.js%27%29%3Bdocument.documentElement.appendChild%28s%29%3B%7D%29%28%29)
+"" }}}
+
+"" {{{ Misc
+"" ~ as pwd
+silent cd ~
+
+"" plugins
+set loadplugins='\.(css|js|penta)$'
+"" }}}
+
+"" {{{ Firefox Setting
+set! ui.caretWidth=5
+set! ui.caretBlinkTime=0
+"" disable web page accesskey, this leads to key conflict
+set! ui.key.generalAccessKey=0
+set! browser.tabs.closeWindowWithLastTab=false
+set! browser.tabs.insertRelatedAfterCurrent=true
+set! network.dns.disableIPv6=true
+set! browser.startup.homepage="about:blank"
+set! browser.download.useDownloadDir=false
+set! browser.download.manager.showWhenStarting=false
+set! general.warnOnAboutConfig=false
+set! intl.accept_languages="en-us,en,zh-cn,zh"
+set! view_source.wrap_long_lines=true
+"" do not reload tabs when restarting firefox, see http://blog.zpao.com/post/1140456188/cascaded-session-restore-a-hidden-bonus
+set! browser.sessionstore.restore_on_demand=true
+"" save session every 5min, see http://lifehacker.com/5342636/
+set! browser.sessionstore.interval=300000
+"" http://www.stayupdate.com/firefox/increase-firefox-speed-and-decrease-firefox-memory-usage-20-tips/567
+set! nglayout.initialpaint.delay=0
+set! content.notify.interval=500000
+set! content.notify.ontimer=true
+set! content.switch.threshold=250000
+set! content.interrupt.parsing=false
+"" disable addons compatibility check
+set! extensions.checkCompatibility.5.0=false
+set! extensions.checkCompatibility.6.0=false
+set! extensions.checkCompatibility.7.0=false
+set! extensions.checkCompatibility.8.0=false
+set! extensions.checkCompatibility.9.0=false
+set! extensions.checkCompatibility.10.0=false
+"" disable the install-dialog delay
+set! security.dialog_enable_delay=0
+set! extensions.adblockplus.frameobjects=false
+set! extensions.adblockplus.showinstatusbar=true
+set! extensions.adblockplus.showintoolbar=false
+set! extensions.httpfox.AlwaysOpenDetached=true
+set! extensions.verticaltabs.width=260
+set! extensions.flashresizer.color="#999999"
+set! extensions.flashresizer.width=1
+set! extensions.tabgroupsmanager.groupBarPosition=2
+set! extensions.tabgroupsmanager.dispGroupTabCount=false
+set! extensions.tabgroupsmanager.dispGroupTabIconReading=false
+if config.OS.isMacOSX
+set! font.name.monospace.x-western="Menlo"
+end
+"" }}}
+
+" vim: set ft=pentadactyl fdm=marker:

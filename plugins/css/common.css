@@ -1,0 +1,18 @@
+@namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
+/* tabbar no new tab button */
+.tabs-newtab-button {display:none !important;}
+#new-tab-button {display:none !important;}
+
+/* tabbar no all tab button */
+#alltabs-button {display:none !important;}
+
+/* statusbar no dropmarker */
+.toolbarbutton-menubutton-dropmarker {display:none !important;}
+.toolbarbutton-menu-dropmarker {display:none !important;}
+
+/* no tab close button */
+.tab-close-button {display:none !important;}
+
+/* make ime inactive on commandline and statubline */
+#dactyl-commandline-command input {ime-mode: inactive;}
+#dactyl-statusline-field-commandline-command input {ime-mode: inactive;}

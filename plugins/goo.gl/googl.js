@@ -37,7 +37,7 @@ var INFO =
  *
 */
 
-commands.addUserCommand(["googl", "gg"], "Goo.gl an url and copy it to clipboard", function (args) {
+group.commands.add(["googl", "gg"], "Goo.gl an url and copy it to clipboard", function (args) {
 
     var url, post_data, req_url, json_resp, httpPost;
 

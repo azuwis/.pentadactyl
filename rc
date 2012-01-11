@@ -74,7 +74,7 @@ command! -nargs=* -complete=search search exe 't <args> ' + content.getSelection
 map s :search<Space>
 command! -nargs=? -complete=search switchSearch exe 'o <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
 map S gi<ESC> :switchSearch<Space>
-command! -nargs=* siteSearch exe "t https://www.google.com/search?q=" + encodeURIComponent("<args>") + "&sitesearch=" + window.content.location.hostname
+command! -nargs=* siteSearch exe "t <args> site:" + window.content.location.hostname
 
 "" search engines
 "" hide all browser search engines except google(for suggestion)

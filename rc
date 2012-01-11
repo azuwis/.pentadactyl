@@ -70,11 +70,11 @@ map -modes hints <C-b> -ex normal! <C-b>
 "" from http://www.slimeden.com/2011/03/firefox/pentadactyl
 ":map t -js content.getSelection().toString()!=""?dactyl.execute(":tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
 ":map o -js content.getSelection().toString()!=""?dactyl.execute(":open "+ content.getSelection()):CommandExMode().open("open ")
-command! -nargs=* -complete=search search exe 't <args> ' + content.getSelection().toString()
+command! -nargs=* -complete=search search execute 'tabopen <args> ' + content.getSelection().toString()
 map s :search<Space>
-command! -nargs=? -complete=search switchSearch exe 'o <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
+command! -nargs=? -complete=search switchSearch execute 'open <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
 map S gi<ESC> :switchSearch<Space>
-command! -nargs=* siteSearch exe "t <args> site:" + window.content.location.hostname
+command! -nargs=* siteSearch execute "tabopen <args> site:" + window.content.location.hostname
 
 "" search engines
 "" hide all browser search engines except google(for suggestion)

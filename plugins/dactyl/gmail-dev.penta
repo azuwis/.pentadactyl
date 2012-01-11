@@ -1,0 +1,20 @@
+js <<EOF
+XML.ignoreWhitespace = XML.prettyPrinting = false;
+var INFO =
+<plugin name="gmail" version="0.1"
+        href="http://dactyl.sf.net/pentadactyl/plugins#gmail-plugin"
+        summary="Gmail integration"
+        xmlns={NS}>
+    <author email="maglione.k@gmail.com">Kris Maglione</author>
+    <license>Public Domain</license>
+    <project name="Pentadactyl" min-version="1.0"/>
+    <p>
+	Adds key passthrough mappings for Gmail.
+    </p>
+</plugin>;
+EOF
+
+group default -locations mail.google.com
+
+set passkeys+=mail.google.com:'!#*+-./<C-Down><C-s><Enter>?INU[]acefjk lmnopqrsuvxyz',*a,*n,*r,*s,*t,*u,ga,gc,gd,gi,gl,gs,gt,yo
+

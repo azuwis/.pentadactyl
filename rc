@@ -74,12 +74,12 @@ command! -nargs=* -complete=search search exe 't <args> ' + content.getSelection
 map s :search<Space>
 command! -nargs=? -complete=search switchSearch exe 'o <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
 map S gi<ESC> :switchSearch<Space>
-command! -nargs=* siteSearch exe "t http://www.google.com/search?q=" + encodeURIComponent("<args>") + "&sitesearch=" + window.content.location.hostname
+command! -nargs=* siteSearch exe "t https://www.google.com/search?q=" + encodeURIComponent("<args>") + "&sitesearch=" + window.content.location.hostname
 
 "" search engines
 "" hide all browser search engines except google(for suggestion)
 js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google") e.hidden = true})
-silent bmark -tags searchengine -title='Google SSL Search' https://encrypted.google.com/search?q=%s -keyword g
+silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s -keyword g
 silent bmark -tags searchengine -title='Google Code Search' http://google.com/codesearch?q=%s -keyword gc
 silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
 silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t

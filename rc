@@ -136,6 +136,16 @@ set followhints=1
 "" }}}
 
 "" {{{ Command
+"" smart reload
+command! smartReload -js <<EOF
+if (buffer.URL.indexOf('#') >=0) {
+    dactyl.execute("reload")
+} else {
+    dactyl.open(buffer.URL.spec)
+}
+EOF
+nnoremap r :smartReload<CR>
+
 "" flush browser dns
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 

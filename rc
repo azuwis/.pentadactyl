@@ -39,6 +39,18 @@ nnoremap gm :set guioptions!=m<CR>
 "" viewsource in new tab
 nnoremap gf :tab viewsource<CR>
 
+"" swap full zoom and text zoom mapping
+nnoremap zi ZI
+nnoremap zm ZM
+nnoremap zo ZO
+nnoremap zr ZR
+nnoremap zz zZ
+nnoremap ZI zi
+nnoremap ZM zm
+nnoremap ZO zo
+nnoremap ZR zr
+nnoremap zZ zz
+
 "" open addons manager
 nnoremap <Leader>a :dialog addons<CR>
 

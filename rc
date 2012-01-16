@@ -145,6 +145,9 @@ set followhints=1
 
 "" show link when hover links
 "set showstatuslinks=command
+
+"" disable annoying auto focus
+set strictfocus^=tao123.com:despotic
 "" }}}
 
 "" {{{ Command

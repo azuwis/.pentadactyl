@@ -238,7 +238,8 @@ var data = {
                     if (this.placeholder || parent.placeholder)
                         return;
                     var objectHeight = this.getAttribute("height");
-                    if ((!objectHeight || objectHeight <= 20) && !this.style.height)
+                    var styleHeight = this.style.height;
+                    if ((!objectHeight || objectHeight <= 20) && (!styleHeight || parseInt(styleHeight) <= 20))
                         return;
                     this.placeholder = new Placeholder(self);
 

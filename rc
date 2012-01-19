@@ -264,10 +264,6 @@ set! content.notify.ontimer=true
 set! content.switch.threshold=250000
 set! content.interrupt.parsing=false
 "" disable addons compatibility check
-set! extensions.checkCompatibility.5.0=false
-set! extensions.checkCompatibility.6.0=false
-set! extensions.checkCompatibility.7.0=false
-set! extensions.checkCompatibility.8.0=false
 set! extensions.checkCompatibility.9.0=false
 set! extensions.checkCompatibility.10.0=false
 "" disable the install-dialog delay
@@ -275,10 +271,7 @@ set! security.dialog_enable_delay=0
 set! extensions.adblockplus.frameobjects=false
 set! extensions.adblockplus.showinstatusbar=true
 set! extensions.adblockplus.showintoolbar=false
-set! extensions.httpfox.AlwaysOpenDetached=true
 set! extensions.verticaltabs.width=260
-set! extensions.flashresizer.color="#999999"
-set! extensions.flashresizer.width=1
 set! extensions.tabgroupsmanager.groupBarPosition=2
 set! extensions.tabgroupsmanager.dispGroupTabCount=false
 set! extensions.tabgroupsmanager.dispGroupTabIconReading=false

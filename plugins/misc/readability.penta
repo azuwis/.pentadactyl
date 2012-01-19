@@ -1,0 +1,2 @@
+set readability-local
+nnoremap <Leader>r :readability<CR>

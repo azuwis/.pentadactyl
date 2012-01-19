@@ -165,16 +165,16 @@ nnoremap r :smartReload<CR>
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
 "" open current tab in google chrome
-command! gchrome -js <<EOF
+command! gextern -js <<EOF
 var url=window.content.location.href;
 if (url.indexOf("http://v.youku.com/v_show/") == 0) {
     url = url.replace(/v_show/i, "v_showMini");
 }
 if (config.OS.isMacOSX) {
-    io.system("open -a 'Google Chrome' " + url);
+    io.system("open -a 'Safari' " + url);
 }
 EOF
-nnoremap gc :gchrome<CR>
+nnoremap ge :gextern<CR>
 
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN

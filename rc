@@ -279,4 +279,12 @@ set! font.name.monospace.x-western="Menlo"
 end
 "" }}}
 
+"" {{{ Extension
+"" reader
+set! extensions.firefoxreader.currentbackgroundcolor="#E5DED6"
+set! extensions.firefoxreader.currentfontsize="22"
+set! extensions.firefoxreader.customfirefoxreaderkeyboardshortcut="z"
+nnoremap <Leader>r <M-A-z>
+"" }}}
+
 " vim: set ft=pentadactyl fdm=marker:

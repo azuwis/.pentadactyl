@@ -7,7 +7,7 @@
 hi Bell                 border: 0 none; background-color: black;
 hi Boolean              color: #CC9393;
 hi CmdLine              background: white; color: black; -moz-transition: all 0.25s;
-hi CmdLine>*            font-family: monospace;
+hi CmdLine>*            font-family: monaco,consolas,monospace; font-weight: normal;
 hi CmdOutput            white-space: pre;
 hi CompDesc             color: gray; width: 50%;font-size: 9pt;
 hi CompGroup:not(:first-of-type)    margin-top: 1ex;
@@ -34,8 +34,8 @@ hi Function             color: navy;
 hi Gradient             height: 1px; margin-bottom: -1px; margin-top: -1px;
 hi GradientLeft         background-color: #87af87;
 hi GradientRight        background-color: #242421;
-"hi Hint                 font-family: monospace; font-size: 12px; font-weight: bold; color: #385F38; background-color: #F8F893; border-color: ButtonShadow; border-width: 1px; border-style: solid; padding 0px 1px 0px 1px;
-"hi Hint                 border-radius: 1px; background: #ffec8b; border: 1px solid orange; font-family: monospace; font-size: 11px;
+"hi Hint                 font-family: monaco,consolas,monospace; font-size: 12px; font-weight: bold; color: #385F38; background-color: #F8F893; border-color: ButtonShadow; border-width: 1px; border-style: solid; padding 0px 1px 0px 1px;
+"hi Hint                 border-radius: 1px; background: #ffec8b; border: 1px solid orange; font-family: monaco,consolas,monospace; font-size: 11px;
 "hi Hint::after          content: attr(number);
 "hi HintActive           background: 666666; color: black;
 "hi HintElem             background-color: transparent;
@@ -50,12 +50,12 @@ hi NonText              color: #94BFF3; min-height: 16px; padding-left: 2px;
 hi Normal               color: black; background: white; font-weight: normal; 
 hi Null                 color: #94BFF3;
 hi Number               color: #94BFF3;
-hi Normal               color: black !important; background: white !important; font-weight: normal !important;font-family: monospace !important;
+hi Normal               color: black !important; background: white !important; font-weight: normal !important;font-family: monaco,consolas,monospace !important;
 hi Object               color: maroon;
 hi Preview              color: #4B9CEB;
 hi Question             color: #9ECE9E; background: #242421; font-weight: bold;
 hi Search               font-size: inherit; padding: 0; color: #385F38; background-color: #F8F893; padding: 0;
-hi StatusLine           background: #f0f0f0 !important; font-size: 9pt; font-family: monospace; font-weight: 600; padding: 0px 3px;
+hi StatusLine           background: #f0f0f0 !important; font-size: 9pt; font-family: monaco,consolas,monospace; font-weight: 600; padding: 0px 3px;
 hi StatusInfoMsg        background: #f0f0f0 !important; font-size: 9pt;       
 hi StatusLineNormal     color: black !important; background: #f0f0f0 !important; font-size: 9pt;
 hi StatusLineBroken     background: #f0f0f0 !important; font-size: 9pt;
@@ -71,7 +71,7 @@ hi URL:hover            text-decoration: underline; cursor: pointer;
 hi WarningMsg           color: #CC9393; background: #242421;
 
 "===修正DACTYL的标签编号显示不正确问题(DACTYL已修正，但这条CSS可以以VIMPREATOR 3PRE的风格显示)===
-"style! -name tabnum chrome://* #TabsToolbar { counter-reset:tabn; } #TabsToolbar tab::after { counter-increment:tabn; content:counter(tabn); font:bold 0.84em monospace; } #TabsToolbar tab:not([pinned])::after { display:block; padding-bottom:0.4em; }
+"style! -name tabnum chrome://* #TabsToolbar { counter-reset:tabn; } #TabsToolbar tab::after { counter-increment:tabn; content:counter(tabn); font:bold 0.84em monaco,consolas,monospace; } #TabsToolbar tab:not([pinned])::after { display:block; padding-bottom:0.4em; }
 "====命令栏输入法自动默认为INACTIVE===
 "style! -name commandline-ime chrome://* #dactyl-commandline-command input {ime-mode: inactive;}
 

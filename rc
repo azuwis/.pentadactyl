@@ -161,6 +161,17 @@ if (buffer.URL.spec.indexOf('#') >= 0) {
 EOF
 nnoremap r :smartReload<CR>
 
+command! smartReader -js <<EOF
+if (typeof FirefoxReader === "object") {
+    dactyl.execute("feedkeys <M-A-z>");
+} else if (typeof commands.get("readability") === "object") {
+    dactyl.execute("readability");
+} else {
+    dactyl.execute("bml-readability");
+}
+EOF
+nnoremap <Leader>r :smartReader<CR>
+
 "" flush browser dns
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
@@ -277,7 +288,6 @@ end
 set! extensions.firefoxreader.currentbackgroundcolor="#E5DED6"
 set! extensions.firefoxreader.currentfontsize="22"
 set! extensions.firefoxreader.customfirefoxreaderkeyboardshortcut="z"
-nnoremap <Leader>r <M-A-z>
 
 "" adblock plus
 set! extensions.adblockplus.frameobjects=false

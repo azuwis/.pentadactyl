@@ -209,8 +209,7 @@ command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 "autocmd! LocationChange .* :set titlestring=<url>
 
 "" find duplicated tab
-group deduplicateTab
-autocmd! -javascript -group deduplicateTab PageLoad .* <<EOF
+autocmd! -javascript PageLoad .* <<EOF
 var dtabs = [];
 tabs.allTabs.forEach(function (t, i) {
     if (t.linkedBrowser.lastURI && doc.location == t.linkedBrowser.lastURI.spec && tab != i + 1) {

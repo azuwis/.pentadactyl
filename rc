@@ -153,7 +153,7 @@ set strictfocus^=tao123.com:despotic
 "" {{{ Command
 "" smart reload
 command! smartReload -js <<EOF
-if (buffer.URL.spec.indexOf('#') >=0) {
+if (buffer.URL.spec.indexOf('#') >= 0) {
     dactyl.execute("reload");
 } else {
     dactyl.open(buffer.URL.spec);
@@ -166,8 +166,8 @@ command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpir
 
 "" open current tab in google chrome
 command! gextern -js <<EOF
-var url=window.content.location.href;
-if (url.indexOf("http://v.youku.com/v_show/") == 0) {
+var url = window.content.location.href;
+if (url.indexOf("http://v.youku.com/v_show/") === 0) {
     url = url.replace(/v_show/i, "v_showMini");
 }
 if (config.OS.isMacOSX) {

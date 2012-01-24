@@ -21,11 +21,11 @@ nnoremap P p
 "nnoremap K l
 
 "" h/l switch tabs
-nnoremap h <C-p>
-nnoremap l <C-n>
+nnoremap w <C-p>
+nnoremap e <C-n>
 
 "" prev selected tab
-nnoremap e <C-^>
+nnoremap x <C-^>
 
 "" <M-i> focus on input
 "nnoremap <M-i> gi

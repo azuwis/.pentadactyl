@@ -183,6 +183,8 @@ if (url.indexOf("http://v.youku.com/v_show/") === 0) {
 }
 if (config.OS.isMacOSX) {
     io.system("open -a 'Safari' " + url);
+} else {
+    dactyl.execute("tabopen " + url);
 }
 EOF
 nnoremap ge :gextern<CR>

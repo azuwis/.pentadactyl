@@ -280,6 +280,11 @@ set! security.dialog_enable_delay=0
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end
+if config.OS.isWindows
+set! font.name.monospace.zh-CN="Consolas"
+set! font.name.sans-serif.zh-CN="微软雅黑"
+set! font.name.serif.zh-CN="微软雅黑"
+end
 "" }}}
 
 "" {{{ Extension

@@ -20,7 +20,7 @@ nnoremap P p
 "nnoremap J h
 "nnoremap K l
 
-"" h/l switch tabs
+"" w/e switch tabs
 nnoremap w <C-p>
 nnoremap e <C-n>
 

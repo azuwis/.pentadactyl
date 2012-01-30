@@ -24,6 +24,10 @@ nnoremap P p
 nnoremap w <C-p>
 nnoremap e <C-n>
 
+"" back/forward
+nnoremap h <C-o>
+nnoremap l <C-i>
+
 "" prev selected tab
 nnoremap x <C-^>
 

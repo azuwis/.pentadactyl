@@ -266,6 +266,7 @@ set! network.dns.disableIPv6=true
 set! browser.startup.homepage="about:blank"
 set! browser.download.useDownloadDir=false
 set! browser.download.manager.showWhenStarting=false
+set! browser.download.manager.showAlertOnComplete=true
 set! general.warnOnAboutConfig=false
 set! intl.accept_languages="en-us,en,zh-cn,zh"
 set! view_source.wrap_long_lines=true

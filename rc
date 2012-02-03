@@ -226,6 +226,14 @@ if (dtabs.length > 0) {
     dactyl.beep();
 }
 EOF
+
+"" use google to get lwn subscription link
+autocmd! -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
+if (doc.title.match(/subscription/i)) {
+    var title = doc.getElementsByClassName("ArticleText")[0].getElementsByTagName("a")[0].innerHTML;
+    dactyl.open("g site:lwn.net/SubscriberLink " + title);
+}
+EOF
 "" }}}
 
 "" {{{ Style

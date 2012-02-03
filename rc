@@ -135,9 +135,6 @@ set hlfind
 "" complete search engine suguest
 set complete=location,suggestion
 
-"" pressing `,' is easier
-set mapleader=,
-
 "" allow popups popup
 set popups=tab,resized
 

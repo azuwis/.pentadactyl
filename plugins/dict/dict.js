@@ -2680,13 +2680,13 @@ group.commands.add(["spe[ak]"],
 );
 
 group.mappings.add(
-	[modes.MAIN, modes.VISUAL],
+	[modes.NORMAL, modes.VISUAL],
 	['<A-d>'],
 	T(32),
 	dict.init
 );
 group.mappings.add(
-	[modes.MAIN, modes.VISUAL],
+	[modes.NORMAL, modes.VISUAL],
 	['<A-S-d>'],
 	T(33),
 	function () dict.init({bang:true})
@@ -3095,3 +3095,4 @@ var INFO =
 //  http://translate.google.com/translate_tts\?ie\=UTF-8\&q\=你好\&tl\=zh-CN\&prev\=input -- 支持非英文的页面发音
 //  http://translate.google.com/translate_a/t?client=t&text=%E4%BD%A0%E5%A5%BD&hl=en&sl=auto&tl=en&multires=1&prev=conf&psl=az&ptl=en&otf=1&it=sel.5284%2Csrcd_gms.2521&ssel=4&tsel=6&uptl=en&alttl=zh-CN&sc=1 -- 自动检测语言
 //  如果是查询选区或者是光标下的词，可以根据当前页面的编码来猜测语言
+// try fanyi.youdao.com

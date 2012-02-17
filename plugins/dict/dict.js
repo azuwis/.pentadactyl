@@ -2,317 +2,6 @@
 XML.ignoreWhitespace = false;
 XML.prettyPrinting = false;
 
-/*
- * HTML Parser By John Resig (ejohn.org)
- * Original code by Erik Arvidsson, Mozilla Public License
- * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
- *
- * // Use like so:
- * HTMLParser(htmlString, {
- *     start: function(tag, attrs, unary) {},
- *     end: function(tag) {},
- *     chars: function(text) {},
- *     comment: function(text) {}
- * });
- *
- * // or to get an XML string:
- * HTMLtoXML(htmlString);
- *
- * // or to get an XML DOM Document
- * HTMLtoDOM(htmlString);
- *
- * // or to inject into an existing document/DOM node
- * HTMLtoDOM(htmlString, document);
- * HTMLtoDOM(htmlString, document.body);
- *
- */
-
-function PARSER(){
-
-	// Regular Expressions for parsing tags and attributes
-	var startTag = /^<(\w+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
-		endTag = /^<\/(\w+)[^>]*>/,
-		attr = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
-		
-	// Empty Elements - HTML 4.01
-	var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");
-
-	// Block Elements - HTML 4.01
-	var block = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");
-
-	// Inline Elements - HTML 4.01
-	var inline = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var");
-
-	// Elements that you can, intentionally, leave open
-	// (and which close themselves)
-	var closeSelf = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
-
-	// Attributes that have their values filled in disabled="disabled"
-	var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
-
-	// Special Elements (can contain anything)
-	var special = makeMap("script,style");
-
-	var HTMLParser = PARSER.HTMLParser = function( html, handler ) {
-		var index, chars, match, stack = [], last = html;
-		stack.last = function(){
-			return PARSER[ PARSER.length - 1 ];
-		};
-
-		while ( html ) {
-			chars = true;
-
-			// Make sure we're not in a script or style element
-			if ( !stack.last() || !special[ stack.last() ] ) {
-
-				// Comment
-				if ( html.indexOf("<!--") == 0 ) {
-					index = html.indexOf("-->");
-	
-					if ( index >= 0 ) {
-						if ( handler.comment )
-							handler.comment( html.substring( 4, index ) );
-						html = html.substring( index + 3 );
-						chars = false;
-					}
-	
-				// end tag
-				} else if ( html.indexOf("</") == 0 ) {
-					match = html.match( endTag );
-	
-					if ( match ) {
-						html = html.substring( match[0].length );
-						match[0].replace( endTag, parseEndTag );
-						chars = false;
-					}
-	
-				// start tag
-				} else if ( html.indexOf("<") == 0 ) {
-					match = html.match( startTag );
-	
-					if ( match ) {
-						html = html.substring( match[0].length );
-						match[0].replace( startTag, parseStartTag );
-						chars = false;
-					}
-				}
-
-				if ( chars ) {
-					index = html.indexOf("<");
-					
-					var text = index < 0 ? html : html.substring( 0, index );
-					html = index < 0 ? "" : html.substring( index );
-					
-					if ( handler.chars )
-						handler.chars( text );
-				}
-
-			} else {
-				html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>"), function(all, text){
-					text = text.replace(/<!--(.*?)-->/g, "$1")
-						.replace(/<!\[CDATA\[(.*?)]]>/g, "$1");
-
-					if ( handler.chars )
-						handler.chars( text );
-
-					return "";
-				});
-
-				parseEndTag( "", stack.last() );
-			}
-
-			if ( html == last )
-				throw "Parse Error: " + html;
-			last = html;
-		}
-		
-		// Clean up any remaining tags
-		parseEndTag();
-
-		function parseStartTag( tag, tagName, rest, unary ) {
-			if ( block[ tagName ] ) {
-				while ( stack.last() && inline[ stack.last() ] ) {
-					parseEndTag( "", stack.last() );
-				}
-			}
-
-			if ( closeSelf[ tagName ] && stack.last() == tagName ) {
-				parseEndTag( "", tagName );
-			}
-
-			unary = empty[ tagName ] || !!unary;
-
-			if ( !unary )
-				stack.push( tagName );
-			
-			if ( handler.start ) {
-				var attrs = [];
-	
-				rest.replace(attr, function(match, name) {
-					var value = arguments[2] ? arguments[2] :
-						arguments[3] ? arguments[3] :
-						arguments[4] ? arguments[4] :
-						fillAttrs[name] ? name : "";
-					
-					attrs.push({
-						name: name,
-						value: value,
-						escaped: value.replace(/(^|[^\\])"/g, '$1\\\"') //"
-					});
-				});
-	
-				if ( handler.start )
-					handler.start( tagName, attrs, unary );
-			}
-		}
-
-		function parseEndTag( tag, tagName ) {
-			// If no tag name is provided, clean shop
-			if ( !tagName )
-				var pos = 0;
-				
-			// Find the closest opened tag of the same type
-			else
-				for ( var pos = stack.length - 1; pos >= 0; pos-- )
-					if ( stack[ pos ] == tagName )
-						break;
-			
-			if ( pos >= 0 ) {
-				// Close all the open elements, up the stack
-				for ( var i = stack.length - 1; i >= pos; i-- )
-					if ( handler.end )
-						handler.end( stack[ i ] );
-				
-				// Remove the open elements from the stack
-				stack.length = pos;
-			}
-		}
-	};
-	
-	PARSER.HTMLtoXML = function( html ) {
-		var results = "";
-		
-		HTMLParser(html, {
-			start: function( tag, attrs, unary ) {
-				results += "<" + tag;
-		
-				for ( var i = 0; i < attrs.length; i++ )
-					results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
-		
-				results += (unary ? "/" : "") + ">";
-			},
-			end: function( tag ) {
-				results += "</" + tag + ">";
-			},
-			chars: function( text ) {
-				results += text;
-			},
-			comment: function( text ) {
-				results += "<!--" + text + "-->";
-			}
-		});
-		
-		return results;
-	};
-	
-	PARSER.HTMLtoDOM = function( html, doc ) {
-		// There can be only one of these elements
-		var one = makeMap("html,head,body,title");
-		
-		// Enforce a structure for the document
-		var structure = {
-			link: "head",
-			base: "head"
-		};
-	
-		if ( !doc ) {
-			if ( typeof DOMDocument != "undefined" )
-				doc = new DOMDocument();
-			else if ( typeof document != "undefined" && document.implementation && document.implementation.createDocument )
-				doc = document.implementation.createDocument("", "", null);
-			else if ( typeof ActiveX != "undefined" )
-				doc = new ActiveXObject("Msxml.DOMDocument");
-			
-		} else
-			doc = doc.ownerDocument ||
-				doc.getOwnerDocument && doc.getOwnerDocument() ||
-				doc;
-		
-		var elems = [],
-			documentElement = doc.documentElement ||
-				doc.getDocumentElement && doc.getDocumentElement();
-				
-		// If we're dealing with an empty document then we
-		// need to pre-populate it with the HTML document structure
-		if ( !documentElement && doc.createElement ) (function(){
-			var html = doc.createElement("html");
-			var head = doc.createElement("head");
-			head.appendChild( doc.createElement("title") );
-			html.appendChild( head );
-			html.appendChild( doc.createElement("body") );
-			doc.appendChild( html );
-		})();
-		
-		// Find all the unique elements
-		if ( doc.getElementsByTagName )
-			for ( var i in one )
-				one[ i ] = doc.getElementsByTagName( i )[0];
-		
-		// If we're working with a document, inject contents into
-		// the body element
-		var curParentNode = one.body;
-		
-		HTMLParser( html, {
-			start: function( tagName, attrs, unary ) {
-				// If it's a pre-built element, then we can ignore
-				// its construction
-				if ( one[ tagName ] ) {
-					curParentNode = one[ tagName ];
-					return;
-				}
-			
-				var elem = doc.createElement( tagName );
-				
-				for ( var attr in attrs )
-					elem.setAttribute( attrs[ attr ].name, attrs[ attr ].value );
-				
-				if ( structure[ tagName ] && typeof one[ structure[ tagName ] ] != "boolean" )
-					one[ structure[ tagName ] ].appendChild( elem );
-				
-				else if ( curParentNode && curParentNode.appendChild )
-					curParentNode.appendChild( elem );
-					
-				if ( !unary ) {
-					elems.push( elem );
-					curParentNode = elem;
-				}
-			},
-			end: function( tag ) {
-				elems.length -= 1;
-				
-				// Init the new parentNode
-				curParentNode = elems[ elems.length - 1 ];
-			},
-			chars: function( text ) {
-				curParentNode.appendChild( doc.createTextNode( text ) );
-			},
-			comment: function( text ) {
-				// create comment node
-			}
-		});
-		
-		return doc;
-	};
-
-	function makeMap(str){
-		var obj = {}, items = str.split(",");
-		for ( var i = 0; i < items.length; i++ )
-			obj[ items[i] ] = true;
-		return obj;
-	}
-}
-PARSER();
-
 var STYLE = <style type="text/css">
 <![CDATA[
 body { white-space:normal; }
@@ -431,7 +120,9 @@ var tr = {
 		39: "Chinese ↔ Japanese",
 		40: "Open result in current tab!",
 		41: "Han Dian",
-		42: "Wikipedia"
+		42: "Wikipedia",
+		43: "Net Sentences",
+		44: "Situational Dialogues"
 	},
 	"zh-CN": {
 		1:  "描述",
@@ -474,7 +165,9 @@ var tr = {
 		39: "汉日互译",
 		40: "在当前标签页中打开结果！",
 		41: "汉典",
-		42: "维基百科"
+		42: "维基百科",
+		43: "网络例句",
+		44: "情景对话"
 	}
 };
 
@@ -483,9 +176,6 @@ function T(i) {
 		return tr["zh-CN"][i];
 	return tr["en-US"][i];
 }
-
-if (document.getElementById("dict-frame")) // workaround for :rehash
-	document.getElementById('main-window').removeChild(document.getElementById('dict-frame'));
 
 let wikipedia = {
 	name: T(42),
@@ -502,7 +192,7 @@ let wikipedia = {
 				if (req.status == 200) {
 					wikipedia.process(req.responseText);
 				} else
-					dict.error(req.status);
+					dict.error(req.status); // @TODO:
 			}
 		}
 		req.send(null);
@@ -521,11 +211,13 @@ let wikipedia = {
 		let ret = {
 			notfound: false,
 			pron: false,
-			def: result.displaytitle,
-			simple: result.displaytitle,
-			full: result.text,
+			def: result.displaytitle || decodeURIComponent(dict.keyword),
+			simple: result.displaytitle || decodeURIComponent(dict.keyword),
+			full: result.text || "",
 			audio: false
 		};
+		if (options["dict-hasaudio"])
+			dactyl.execute("speak " + (result.displaytitle || decodeURIComponent(dict.keyword)).replace(" ", "\\ "));
 		let output = <div><style tyle="text/css">
 			<![CDATA[
 				#wikipedia-output {background-color:#FFF;color:#000;padding:1em 2em;white-space:normal;}
@@ -541,7 +233,7 @@ let wikipedia = {
 			</style>
 			<p class="title">
 				<a href={wikipedia.href({keyword: ret.def})} target="_blank" highlight="URL">{ret.def}</a></p></div>;
-		output += new XML("<div>"+ret.full['*']+"</div>");
+		output += new XML(dict.tidyStr(ret.full['*'], "article"));
 		dactyl.echo(<div id="wikipedia-output">{output}</div>);
 	},
 
@@ -573,7 +265,7 @@ let wikipedia = {
 
 		};
 		req.send(null);
-	}
+	},
 };
 
 let zdic = {
@@ -646,48 +338,44 @@ let zdic = {
 		};
 		
 		// 移除隐藏的网站宣传
-		let html = text;
 		let style_pattern = /<style type="text\/css">[\s\S]*(zdct[0-9]+)[\s\S]*<\/style>/i;
 		let classname = (style_pattern.test(text) && text.match(style_pattern)[1]) || false;
 		if (classname) {
 			let clearpattern = RegExp("<p class=\""+classname+"\">.*?<\\\/p>", "ig");
-			html = text.replace(clearpattern, "");
+			text = text.replace(clearpattern, "");
 		}
-		html = zdic._strip_html_tag(html);
 
-		let document = dict.htmlToDom(html);
-		let body = document.body;
-		dict.resolveRelative(body, "http://www.zdic.net/");
+		let doc = dict.htmlToDom(text, "http://www.zdic.net/", true);
 
 		// 移除添加到备忘录, 网友讨论
-		var rems = body.querySelectorAll(".badd,.bwladd,#wy,.secpan,.gdym,.annu_div,.ga,ga+div");
+		var rems = doc.querySelectorAll(".badd,.bwladd,#wy,.secpan,.gdym,.annu_div,.ga,ga+div");
 		if (rems) {
 			Array.forEach(rems, function (i) {
 				i.parentNode.removeChild(i);
 			});
 		}
 		// TODO: 移除 comments, stylesheets, objects, javascripts
-		var nodes = body.getElementsByTagName("*");
+		var nodes = doc.getElementsByTagName("*");
 		Array.forEach(nodes, function(node) {
 			if (node && node.nodeType == Node.COMMENT_NODE || node.nodeName == "SCRIPT" || node.nodeName == "STYLE" || node.nodeName == "LINK" || node.nodeName == "IFRAME") {
 				node.parentNode.removeChild(node);
 			}
 		});
 
-		var _ret = zdic._simple(body);
+		var _ret = zdic._simple(doc);
 		ret["audio"] = _ret["audio"] ? _ret["audio"] : ret["audio"];
 		ret["pron"] = _ret["pron"] ? _ret["pron"] : ret["pron"];
 		ret["def"] = _ret["def"] ? _ret["def"] : ret["def"];
 		ret["notfound"] = !ret["def"];
 		ret["simple"] = ret["def"].replace(/\n|\r/g, " ").replace(/\s\s+/g, " ").slice(0, 200);
-        ret["keyword"] = zdic.keyword;
-		ret["full"] = zdic._full(body);
+		ret["keyword"] = zdic.keyword;
+		ret["full"] = zdic._full(doc);
 		return ret;
 	},
 
-	_full: function(body) {
+	_full: function(doc) {
 		var full = {title: "", sub: {}};
-		var simp = zdic._simple(body);
+		var simp = zdic._simple(doc);
 		var keyword_url = zdic.href({keyword: simp["word"]});
 		if (simp["pron"]) {
 			full["title"] = <p class="title">
@@ -700,28 +388,20 @@ let zdic = {
 			</p>.toXMLString();
 		}
 
-		var explain = body.querySelectorAll("div#wrapper div#container div#content");
-		if (explain[0])
-			full["sub"][T(8)] = "<div xmlns=\""+XHTML+"\">"+PARSER.HTMLtoXML(zdic._htmlPre(explain[0].innerHTML))+"</div>";
+		var explain = doc.querySelector("div#wrapper div#container div#content");
+		if (explain)
+			full["sub"][T(8)] = dict.tidy(explain);
 		return full;
 	},
 
-	_simple: function(body) {
+	_simple: function(doc) {
 		var simp = {};
 		simp["word"] = decodeURIComponent(zdic.keyword);
 		simp["pron"] = false; // TODO
 		simp["audio"] = false; // TODO
-		var def = body.querySelectorAll("#content");
-		simp["def"] = def[0].textContent.trim();
+		var def = doc.querySelector("#content");
+		simp["def"] = def.textContent.trim() || "";
 		return simp;
-	},
-
-	_strip_html_tag: function(str) {
-		return youdao._strip_html_tag(str).replace("&eacute;", "&#233;"); // TODO
-	},
-
-	_htmlPre: function(str) {
-		return youdao._htmlPre(str);
 	},
 
 	generate: function(context, args) { // TODO 检查"日"字, <li><a href="/zd/zi3/ZdicF0ZdicA8Zdic96ZdicB9.htm" class="usual">　<img src="http://www.zdic.net/zd/3s/285B9.gif" width="20"  height="20"> <span class='ef'>rì</span></a></li>
@@ -756,7 +436,7 @@ let zdic = {
 		req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 				if (req.status == 200) {
-					var body = dict.htmlToDom("<head></head><body>"+req.responseText+"</body>").body;
+					var body = dict.htmlToDom(req.responseText);
 					var lis = body.querySelectorAll(".accy li");
 					if (lis) {
 						Array.forEach(lis, function (li) {
@@ -811,8 +491,7 @@ let youdao = {
 	},
 	html: "",
 	process: function(text) {
-		var html = youdao._strip_html_tag(text);
-		var ret = {
+		let ret = {
 			notfound: false,
 			pron: false,
 			def: false,
@@ -820,9 +499,8 @@ let youdao = {
 			full: false,
 			audio: false
 		};
-		var doc = dict.htmlToDom(html);
-		dict.resolveRelative(doc, "http://dict.youdao.com");
-		var _ret = youdao._simple(doc);
+		let doc = dict.htmlToDom(text, "http://dict.youdao.com", true);
+		let _ret = youdao._simple(doc);
 		ret["audio"] = _ret["audio"] ? _ret["audio"] : ret["audio"];
 		ret["pron"] = _ret["pron"] ? _ret["pron"] : ret["pron"];
 		ret["def"] = _ret["def"] ? _ret["def"] : ret["def"];
@@ -852,25 +530,24 @@ let youdao = {
 		}
 
 		var def = document.querySelectorAll("#etcTrans>ul, #cjTrans #basicToggle, #ckTrans #basicToggle, #cfTrans #basicToggle");
-		if (def[0])
-			full["sub"][T(8)] = "<ul>"+youdao._htmlPre(def[0].innerHTML)+"</ul>";
+		if (def)
+			full["sub"][T(8)] = dict.tidyNodes(def, "div");
 
-		var ph = document.querySelectorAll("#wordGroup");
-		if (ph[0])
-			full["sub"][T(9)] = "<div>"+youdao._htmlPre(ph[0].innerHTML)+"</div>";
+		var ph = document.querySelector("#wordGroup");
+		if (ph)
+			full["sub"][T(9)] = dict.tidy(ph);
 
-		var syn = document.querySelectorAll("#Synonyms");
-		if (syn[0])
-			full["sub"][T(10)] = "<div>"+youdao._htmlPre(syn[0].innerHTML)+"</div>";
+		var syn = document.querySelector("#Synonyms");
+		if (syn)
+			full["sub"][T(10)] = dict.tidy(syn);
 
-
-		var ex = document.querySelectorAll("#examples");
-		if (ex[0])
-			full["sub"][T(18)] = "<div>"+youdao._htmlPre(ex[0].innerHTML)+"</div>";
+		var ex = document.querySelector("#examples");
+		if (ex)
+			full["sub"][T(18)] = dict.tidy(ex);
 
 		var mor = document.querySelectorAll("#etcTrans p");
-		if (mor[0])
-			full["sub"][T(13)] = "<p>"+youdao._htmlPre(mor[0].innerHTML)+"</p>";
+		if (mor)
+			full["sub"][T(13)] = dict.tidyNodes(mor, "div");
 
 		return full;
 	},
@@ -889,19 +566,6 @@ let youdao = {
 		var def = document.querySelectorAll("#etcTrans>ul, #cjTrans #basicToggle, #ckTrans #basicToggle, #cfTrans #basicToggle")[0];
 		simp["def"] = def ? def.textContent.trim().replace(/\n\s+/g, " | ") : false;
 		return simp;
-	},
-
-	_strip_html_tag: function(str) {
-		var start = str.indexOf("<head");
-		if (start == -1)
-			start = str.indexOf("<HEAD");
-		var end = str.indexOf("</html>");
-		if (end == -1)
-			end = str.indexOf("</HTML>");
-		return str.slice(start, end);
-	},
-	_htmlPre: function (str) {
-		return str.replace(/&nbsp;/g, "&#160;").replace(/<\?(.*?)\?>/g,"").replace(/<br>/gi, "<br/>").replace(/<(img|input) +(.+?)>/gi, "<\$1 \$2/>").replace(/<a +(.+?)>/gi, "<a \$1 highlight=\"URL\">").replace(/,=""/g, "");
 	},
 
 	generate: function(context, args) {
@@ -1035,7 +699,30 @@ let qq = {
 					}
 				}
 			});
-			full["sub"][T(8)] = '<div class="basic">'+des+"</div>";
+			full["sub"][T(8)] = '<div class="basic">' + dict.tidyStr(des) + "</div>";
+		}
+
+		if (e.netsen) {
+			let o = "";
+			Array.forEach(e.netsen, function(s) {
+				o += "<dl><dt>" + s.cs + "</dt>" +
+				 "<dd><a href=\"" + s.url + "\" highlight=\"URL\">" + s.es + "</a></dd></dl>";
+			});
+			full["sub"][T(43)] = dict.tidyStr(o, "div");
+		}
+
+		if (e.dlg) {
+			let o = "";
+			e.dlg.forEach(function (play, idx) {
+				o += "<dl><b>" + (idx + 1) + "." + play.t + play.s + "</b><dt>";
+				o += "<dd style=\"padding-left:2em;\">";
+				play.c.forEach(function (sen) {
+					o += "<p>" + sen.n + ": " + sen.es + "</p>";
+					o += "<p>&nbsp;&nbsp;&nbsp;" + sen.cs + "</p>";
+				});
+				o += "</dd></dl>";
+			});
+			full["sub"][T(44)] = dict.tidyStr(o, "div");
 		}
 
 		if (t.ph) { // Related phrases
@@ -1043,9 +730,9 @@ let qq = {
 			t.ph.forEach(function(item) {
 				let href = qq.href({"keyword": item["phs"]});
 				let phs = item["phs"];
-				ph += "" + <li><a href={href} highlight="URL">{phs}</a> {item["phd"]}</li>.toXMLString();
+				ph += "<li><a href=\"" + href + "\" highlight=\"URL\">" + phs + "</a> " + item["phd"] + "</li>";
 			});
-			full["sub"][T(9)] = "<ol>"+ph+"</ol>";
+			full["sub"][T(9)] = dict.tidyStr(ph, "ol");
 		}
 
 		if (t.syn) { // Synonyms
@@ -1093,7 +780,7 @@ let qq = {
 		if (t.sd)
 			_ret["audio"] = qq._audioUri(t.sd);
 		if (t.pho)
-			_ret["pron"] = dict._html_entity_decode(t.pho.join(", "));
+			_ret["pron"] = dict.htmlToDom(t.pho.join(", ")).textContent.trim();
 		if (t.des) {
 			_ret["def"] = [];
 			t.des.forEach(function(item) {
@@ -1106,7 +793,7 @@ let qq = {
 						_ret["def"].push(item);
 					}
 			});
-			_ret["def"] = dict._html_entity_decode(_ret["def"].join(" | "));
+			_ret["def"] = dict.htmlToDom(_ret["def"].join(" | ")).textContent.trim();
 		}
 		return _ret;
 	},
@@ -1335,7 +1022,11 @@ let dict_cn = {
 			}
 
 			// def
-			ret["def"] = dict._html_entity_decode(def[0].textContent);
+			ret["def"] = [];
+			Array.forEach(def, function (node) {
+				ret["def"].push(node.textContent);
+			})
+			ret["def"] = ret["def"].join("\n");
 			let piece = <></>;
 			let ps = ret["def"].trim().split("\n");
 			for (let [i, v] in Iterator(ps))
@@ -1390,16 +1081,19 @@ let dict_cn = {
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
-		req.open("POST",
-			"http://dict.cn/ajax/suggestion.php"
+		req.open("GET",
+			"http://dict.cn/apis/suggestion.php?callback=hook&dict=dict&q=" + encodeURIComponent(args[0])
 		);
+		var hook = function() {
+			result_arr = arguments[0];
+		};
 		var suggestions = [];
 		req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 				if (req.status == 200) {
-					var result_arr = JSON.parse(req.responseText);
+					eval(req.responseText);
 					result_arr["s"].forEach(function (r) {
-							r["e"] = dict._html_entity_decode(r["e"].trim());
+							r["e"] = dict.htmlToDom(r["e"].trim()).textContent;
 							r["url"] = "http://dict.cn/" + encodeURIComponent(r["g"].trim());
 							r["g"] = r["g"].trim();
 							suggestions.push(r); // trim blank chars
@@ -1427,10 +1121,7 @@ let dict_cn = {
 				}
 			}
 		};
-		var formData = new FormData();
-		formData.append("q", args[0]);
-		formData.append("s", "d");
-		req.send(formData);
+		req.send(null);
 	},
 
 	_fix: function () {
@@ -1687,7 +1378,6 @@ let dict = {
 		keyword = keyword.trim();
 		if (keyword.length == 0)
 			keyword = dict._selection() || "";
-			// keyword = content.window.getSelection().toString() || "";
 		keyword = keyword.trim();
 		let engine = dict._route();
 		let lp = args["-l"] || options["dict-langpair"][engine] || options.get("dict-langpair").defaultValue[engine] || "";
@@ -2030,11 +1720,12 @@ let dict = {
 		let engine = dict.engines[dict._route(args)];
 
 		var url = function(item, text)
-		<a xmlns:dactyl={NS} identifier={item.id || ""} dactyl:command={item.command || ""}
+		<a xmlns:dactyl={NS} title={text||""} identifier={item.id || ""} dactyl:command={item.command || ""}
 		href={item.item.url} highlight="URL">{text || ""}</a>;
 
 		context.title = [T(14) + " - " + engine.name,T(15)];
 		context.keys = {"text":"g", "description":"e"};
+		context.compare = null;
 		context.filterFunc = null;
 		context.process[1] = url;
 		let dash_e = args["-e"] || options.get("dict-engine").value || options.get("dict-engine").defaultValue;
@@ -2245,6 +1936,7 @@ let dict = {
 		if (ret["pron"])
 			title += ": [" + ret["pron"] + "]";
 		let def = dict._pipelineToBr(ret["def"]);
+		// @FIXME: 当图标为远程资源时，不工作
 		notify.showAlertNotification(null, title, def, true, dict.engine.href({"keyword":ret["keyword"]}), listener, "dict-js-popup");
 	},
 
@@ -2268,16 +1960,6 @@ let dict = {
 		);
 		dactyl.execute('style chrome://* .popup-notification-icon[popupid="dict-popup"] { background:transparent url("'+dict.engine.logo+'") no-repeat left -8px;}');
 
-	},
-
-	// http://stackoverflow.com/questions/2808368/converting-html-entities-to-unicode-character-in-javascript
-	_html_entity_decode: function(str) {
-		var xml = new XML(dict._xmlPre(str));
-		return xml.toString();
-	},
-
-	_xmlPre: function(str) {
-		return str.replace(/&nbsp;/g, "&#160;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	},
 
 	_selection: function() {
@@ -2312,40 +1994,74 @@ let dict = {
 		return str.replace(/\n/g, "<br/>");
 	},
 
-	_tidy: function(node) { // remove comments, scripts, inline styles, stylesheets, unused properties
+	// @TODO: 给超链接加上 highlight 配色属性，值为 "URL"
+	// remove comments, scripts, inline styles, stylesheets, unused properties
+	tidy: function(node) {
+		return (new XMLSerializer).serializeToString(node);
 	},
 
-	htmlToDom: function(html) {
-		var frame = document.getElementById("dict-frame");
-		if (!frame) {
-			// create frame
-			frame = document.createElement("iframe"); // iframe ( or browser on older Firefox)
-			frame.setAttribute("id", "dict-frame");
-			frame.setAttribute("name", "dict-frame");
-			frame.setAttribute("collapsed", "true");
-			document.getElementById("main-window").appendChild(frame);
+	tidyStr: function(str/*, tagname*/) {
+		let body = dict.htmlToDom(str);
+		if (arguments[1])
+			return dict.tidyNodes(body.childNodes, arguments[1]);
+		return dict.tidyNodes(body.childNodes);
+	},
 
-			// set restrictions as needed
-			frame.webNavigation.allowAuth          = false;
-			frame.webNavigation.allowImages        = false;
-			frame.webNavigation.allowJavascript    = false;
-			frame.webNavigation.allowMetaRedirects = true;
-			frame.webNavigation.allowPlugins       = false;
-			frame.webNavigation.allowSubframes     = false;
+	tidyNodes: function (nodes/*, tagname*/) {
+		let tagname = arguments[1] || "";
+		let nodesPretty = "";
+		Array.forEach(nodes, function (node) {
+			nodesPretty += dict.tidy(node);
+		});
+		if (tagname) {
+			let parentNode = document.createElementNS(XHTML, tagname);
+			parentNode.innerHTML = nodesPretty;
+			return dict.tidy(parentNode);
 		}
-		frame.contentDocument.documentElement.innerHTML = html;
-		return frame.contentDocument;
+		return nodesPretty;
+
+	},
+
+	/*
+	 * @TODO: function document
+	 */
+	htmlToDom: function(str/*, prefix, isfull*/) {
+		let prefix = arguments[1] || false;
+		let isfull = arguments[2] || false;
+		let doc = document.implementation.createHTMLDocument("");
+		let ret = null;
+		if (isfull) {
+			ret = doc.documentElement;
+		} else {
+			ret = doc.body;
+		}
+		doc.documentElement.setAttribute("xmlns", doc.documentElement.namespaceURI);
+		ret.innerHTML = str;
+
+		if (prefix)
+			dict.resolveRelative(doc, prefix);
+
+		Array.forEach(doc.links, function (link) {
+			link.setAttribute("highlight", "URL");
+		});
+		return ret;
 	},
 
 	resolveRelative: function(node, prefix) {
-		var pattern = /^(https?|ftps?|file):\/\//;
+		// @TODO: #, name anchor
+		var protocol = prefix.split(":")[0] || "";
+		var pattern = /^((https?|ftps?|file|mailto|javascript):)?\/\//;
+		var anchor_pattern = /^#/;
 		var links = node.getElementsByTagName("a");
 		for (var i = links.length - 1; i >= 0; i--) {
 			var link = links[i];
 			var href = link.getAttribute("href");
-			if (!pattern.test(href))
+			if (!pattern.test(href) && !anchor_pattern.test(href))
 				link.setAttribute("href", prefix+href);
-			link.setAttribute("target", "_blank");
+			if (/^\/\//.test(href))
+				link.setAttribute("href", protocol + ":" + href);
+			// link.setAttribute("target", "_blank");
+			link.removeAttribute(","); // @HACK: hacks for youdao
 		}
 		var imgs = node.getElementsByTagName("img");
 		for (var i = imgs.length - 1; i >= 0; i--) {
@@ -2353,6 +2069,8 @@ let dict = {
 			var src = img.getAttribute("src");
 			if (!pattern.test(src))
 				img.setAttribute("src", prefix+src);
+			if (/^\/\//.test(src))
+				img.setAttribute("src", protocol + ":" + src);
 		}
 	},
 
@@ -3096,3 +2814,4 @@ var INFO =
 //  http://translate.google.com/translate_a/t?client=t&text=%E4%BD%A0%E5%A5%BD&hl=en&sl=auto&tl=en&multires=1&prev=conf&psl=az&ptl=en&otf=1&it=sel.5284%2Csrcd_gms.2521&ssel=4&tsel=6&uptl=en&alttl=zh-CN&sc=1 -- 自动检测语言
 //  如果是查询选区或者是光标下的词，可以根据当前页面的编码来猜测语言
 // try fanyi.youdao.com
+// dictw 无语音输出

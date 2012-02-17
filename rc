@@ -164,7 +164,9 @@ EOF
 nnoremap r :smartReload<CR>
 
 command! smartReader -js <<EOF
-if (typeof FirefoxReader === "object") {
+if (typeof __readable_by_evernote === "object") {
+    dactyl.execute("emenu Tools.Clearly");
+} else if (typeof FirefoxReader === "object") {
     dactyl.execute("feedkeys <M-A-z>");
 } else if (typeof commands.get("readability") === "object") {
     dactyl.execute("readability");

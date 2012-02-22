@@ -1077,32 +1077,34 @@ let dict_cn = {
 	},
 
 	generate: function(context, args) {
-		var req = new XMLHttpRequest();
+		let req = new XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
 		req.open("GET",
 			"http://dict.cn/apis/suggestion.php?callback=hook&dict=dict&q=" + encodeURIComponent(args[0])
 		);
-		var hook = function() {
-			result_arr = arguments[0];
-		};
-		var suggestions = [];
+		let suggestions = [];
 		req.onreadystatechange = function () {
 			if (req.readyState == 4) {
 				if (req.status == 200) {
-					eval(req.responseText);
-					result_arr["s"].forEach(function (r) {
+					try {
+						let sb = new Components.utils.Sandbox("http://www.example.com/");
+						sb.hook = function() arguments[0];
+						let result_arr = Components.utils.evalInSandbox(req.responseText, sb);
+						result_arr["s"].forEach(function (r) {
 							r["e"] = dict.htmlToDom(r["e"].trim()).textContent;
 							r["url"] = "http://dict.cn/" + encodeURIComponent(r["g"].trim());
 							r["g"] = r["g"].trim();
 							suggestions.push(r); // trim blank chars
-					});
-					context.incomplete = false;
-					if (suggestions.length == 0 && args[0].trim().length > 0) // TODO
-						context.completions = [{url:dict_cn.href({keyword:args[0]}), g:args[0], e:"自动补全查询结束, 无返回结果"}];
-					else
-						context.completions = suggestions;
+						});
+					} finally {
+						context.incomplete = false;
+						if (suggestions.length == 0 && args[0].trim().length > 0) // TODO
+							context.completions = [{url:dict_cn.href({keyword:args[0]}), g:args[0], e:"自动补全查询结束, 无返回结果"}];
+						else
+							context.completions = suggestions;
+					}
 				} else {
 					if (req.status == 404) {
 						// 辞海的自动补全需要 cookie
@@ -1579,7 +1581,8 @@ let dict = {
 				req.onreadystatechange = function (ev) {
 					if (req.readyState == 4) {
 						if (req.status == 200) {
-							eval("var g=" + req.responseText + ";");
+							let sb = new Components.utils.Sandbox("http://www.example.com/");
+							let g = Components.utils.evalInSandbox(req.responseText, sb);
 							let le = g[8][0][0];
 							dict.speak(dict.getSoundUriByLocaleKeyword(le, decodeURIComponent(dict.keyword)));
 						}
@@ -1647,7 +1650,8 @@ let dict = {
 	google: function(req) {
 		if (req.readyState == 4) {
 			if (req.status == 200) {
-				eval("var g=" + req.responseText + ";");
+				let sb = new Components.utils.Sandbox("http://www.example.com/");
+				let g = Components.utils.evalInSandbox(req.responseText, sb);
 				let show = options.get("dict-show").value || options.get("dict-show").defaultValue;
 				if (dict.args["-o"])
 					show = dict.args["-o"];
@@ -2364,7 +2368,8 @@ group.commands.add(["spe[ak]"],
 			req.onreadystatechange = function (ev) {
 				if (req.readyState == 4) {
 					if (req.status == 200) {
-						eval("var g=" + req.responseText + ";");
+						let sb = new Components.utils.Sandbox("http://www.example.com/");
+						let g = Components.utils.evalInSandbox(req.responseText, sb);
 						let le = g[8][0][0];
 						dict.speak(dict.getSoundUriByLocaleKeyword(le, words));
 					}

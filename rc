@@ -100,7 +100,7 @@ silent bmark -tags searchengine -title='Google Code Search' http://google.com/co
 silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
 silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t
 silent bmark -tags searchengine -title='Debian Package Search' http://packages.debian.org/search?keywords=%s -keyword d
-silent bmark -tags searchengine -title='Debian File Search' http://packages.debian.org/search?searchon=contents&mode=filename&keywords=%s -keyword df
+silent bmark -tags searchengine -title='Debian File Search' http://packages.debian.org/search?searchon=contents&mode=exactfilename&keywords=%s -keyword df
 silent bmark -tags searchengine -title='Mtime Movie Search' http://search.mtime.com/search/?%s -keyword m
 silent bmark -tags searchengine -title='Douban Movie Search' http://movie.douban.com/subject_search?search_text=%s&cat=1002 -keyword dm
 silent bmark -tags searchengine -title='Shooter Subtitle Search' http://shooter.cn/search/%s -keyword s

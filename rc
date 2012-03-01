@@ -55,6 +55,9 @@ nnoremap ZO zo
 nnoremap ZR zr
 nnoremap zZ zz
 
+"" set <Leader>
+map , <Leader>
+
 "" open addons manager
 nnoremap <Leader>a :dialog addons<CR>
 

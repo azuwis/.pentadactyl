@@ -303,11 +303,6 @@ end
 "" }}}
 
 "" {{{ Extension
-"" reader
-set! extensions.firefoxreader.currentbackgroundcolor="#E5DED6"
-set! extensions.firefoxreader.currentfontsize="22"
-set! extensions.firefoxreader.customfirefoxreaderkeyboardshortcut="z"
-
 "" adblock plus
 set! extensions.adblockplus.frameobjects=false
 set! extensions.adblockplus.showinstatusbar=true

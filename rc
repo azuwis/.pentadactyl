@@ -1,80 +1,80 @@
 "" {{{ Mapping
 "" scroll more
-nnoremap j 10j
-nnoremap k 10k
+nmap -builtin j 10j
+nmap -builtin k 10k
 
 "" swap d/D
-nnoremap d D
-nnoremap D d
-"nnoremap d :js config.removeTab(tabs.getTab())<CR>
+nmap -builtin d D
+nmap -builtin D d
+"nmap -builtin d :js config.removeTab(tabs.getTab())<CR>
 
 "" swap y/Y
-"nnoremap y Y
-"nnoremap Y y
+"nmap -builtin y Y
+"nmap -builtin Y y
 
 "" swap p/P
-nnoremap p P
-nnoremap P p
+nmap -builtin p P
+nmap -builtin P p
 
 "" J/K move left/right
-"nnoremap J h
-"nnoremap K l
+"nmap -builtin J h
+"nmap -builtin K l
 
 "" w/e switch tabs
-nnoremap w <C-p>
-nnoremap e <C-n>
+nmap -builtin w <C-p>
+nmap -builtin e <C-n>
 
 "" back/forward
-nnoremap h <C-o>
-nnoremap l <C-i>
+nmap -builtin h <C-o>
+nmap -builtin l <C-i>
 
 "" prev selected tab
-nnoremap x <C-^>
+nmap -builtin x <C-^>
 
 "" <M-i> focus on input
-"nnoremap <M-i> gi
+"nmap -builtin <M-i> gi
 
 "" U list closed tabs
-nnoremap U :undo<Space>
+nmap -builtin U :undo<Space>
 
 "" toggle menubar
-nnoremap gm :set guioptions!=m<CR>
+nmap -builtin gm :set guioptions!=m<CR>
 
 "" viewsource in new tab
-nnoremap gf :tab viewsource<CR>
+nmap -builtin gf :tab viewsource<CR>
 
 "" swap full zoom and text zoom mapping
-nnoremap zi ZI
-nnoremap zm ZM
-nnoremap zo ZO
-nnoremap zr ZR
-nnoremap zz zZ
-nnoremap ZI zi
-nnoremap ZM zm
-nnoremap ZO zo
-nnoremap ZR zr
-nnoremap zZ zz
+nmap -builtin zi ZI
+nmap -builtin zm ZM
+nmap -builtin zo ZO
+nmap -builtin zr ZR
+nmap -builtin zz zZ
+nmap -builtin ZI zi
+nmap -builtin ZM zm
+nmap -builtin ZO zo
+nmap -builtin ZR zr
+nmap -builtin zZ zz
 
 "" set <Leader>
 map , <Leader>
 
 "" open addons manager
-nnoremap <Leader>a :dialog addons<CR>
+nmap -builtin <Leader>a :dialog addons<CR>
 
 "" rehash
-nnoremap <Leader>R :rehash<CR>
+nmap -builtin <Leader>R :rehash<CR>
 
 "" private mode
-nnoremap <Leader>p :set private!<CR>
+nmap -builtin <Leader>p :set private!<CR>
 
 "" display download
-nnoremap <Leader>d :downloads<CR>
+nmap -builtin <Leader>d :downloads<CR>
 
 "" about:config
-nnoremap <Leader>c :tabopen about:config<CR>
+nmap -builtin <Leader>c :tabopen about:config<CR>
 
 "" auto add -tags option when adding bookmark
-nnoremap a a<Space>-tags<Space>
+nmap -builtin a a<Space>-tags<Space>
 
 "" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
 "map -modes hints j     -ex normal! 10j
@@ -164,7 +164,7 @@ if (buffer.URL.spec.indexOf('#') >= 0) {
     dactyl.open(buffer.URL.spec);
 }
 EOF
-nnoremap r :smartReload<CR>
+nmap -builtin r :smartReload<CR>
 
 command! smartReader -js <<EOF
 if (typeof __readable_by_evernote === "object") {
@@ -177,7 +177,7 @@ if (typeof __readable_by_evernote === "object") {
     dactyl.execute("bml-readability");
 }
 EOF
-nnoremap <Leader>r :smartReader<CR>
+nmap -builtin <Leader>r :smartReader<CR>
 
 "" flush browser dns
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
@@ -194,22 +194,22 @@ if (config.OS.isMacOSX) {
     dactyl.execute("tabopen " + url);
 }
 EOF
-nnoremap ge :smartOpen<CR>
+nmap -builtin ge :smartOpen<CR>
 
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN
 "" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830
 command! coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
-nnoremap gp :coralcdn<CR>
+nmap -builtin gp :coralcdn<CR>
 
 command! gohttps -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
-nnoremap gs :gohttps<CR>
+nmap -builtin gs :gohttps<CR>
 
 "" display calendar
 command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 "" workaround for tabgroups manager causing P misbehave
-"nnoremap p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
+"nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
 
 "" use https for some sites
 "autocmd! PageLoad '^http://((reader|groups|docs|spreadsheets)\.google\.com|www\.google\.com/(search|reader))' -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
@@ -247,8 +247,8 @@ colorscheme mybeta1
 "" }}}
 
 "" {{{ Bookmarklet
-nnoremap <Leader>b :bml-
-nnoremap <Leader>s :bml-subscribe<CR>
+nmap -builtin <Leader>b :bml-
+nmap -builtin <Leader>s :bml-subscribe<CR>
 command! bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
 command! bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
 command! bml-share -description "Bookmarklet: Google reader official bookmarklet" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');void(b.appendChild(z));}else{}

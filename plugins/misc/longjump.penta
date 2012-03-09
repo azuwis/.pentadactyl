@@ -1,1 +1,1 @@
-nnoremap J :long-jump-menu<Space>
+nmap -builtin J :long-jump-menu<Space>

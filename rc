@@ -239,6 +239,18 @@ if (doc.title.match(/subscription/i)) {
     dactyl.open("g site:lwn.net/SubscriberLink " + title);
 }
 EOF
+
+"" display tabgroup
+autocmd! -javascript LocationChange .* <<EOF
+    var groupname = "Pentadactyl";
+    var item = window.gBrowser.selectedTab._tabViewTabItem;
+    if(item) {
+        if(item.parent) {
+            groupname = item.parent.getTitle();
+        }
+    }
+    dactyl.execute("set titlestring=" + groupname);
+EOF
 "" }}}
 
 "" {{{ Style

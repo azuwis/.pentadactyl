@@ -274,7 +274,14 @@ command! bml-readability -description "Bookmarklet: Make webpage readable using 
 silent cd ~
 
 "" plugins
-set loadplugins='\.(css|js|penta)$'
+set loadplugins=!'TabGroupie','\.(css|js|penta)$'
+
+"" workaround for TabGroupie
+js <<EOF
+setTimeout(function(){
+    dactyl.execute("runtime plugins/tabgroupie/TabGroupie.js");
+}, 20000);
+EOF
 "" }}}
 
 "" {{{ Firefox Setting

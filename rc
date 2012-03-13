@@ -249,7 +249,7 @@ autocmd! -javascript LocationChange .* <<EOF
             groupname = item.parent.getTitle();
         }
     }
-    dactyl.execute("set titlestring=" + groupname);
+    dactyl.execute("set titlestring='" + groupname + "'");
 EOF
 "" }}}
 

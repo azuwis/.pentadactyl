@@ -205,7 +205,7 @@ var url = window.content.location.href;
 var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
 var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
 if (m3u) {
-    io.system('mplayer -fs -playlist -', m3u.val());
+    io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
 }
 EOF
 nmap -builtin gw :smartVideo<CR>

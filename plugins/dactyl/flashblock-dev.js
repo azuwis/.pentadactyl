@@ -239,7 +239,7 @@ var data = {
                         return;
                     var objectHeight = this.getAttribute("height");
                     var styleHeight = this.style.height;
-                    if ((!objectHeight || objectHeight <= 20) && (!styleHeight || parseInt(styleHeight) <= 20))
+                    if ((!objectHeight || objectHeight <= 30) && (!styleHeight || parseInt(styleHeight) <= 20))
                         return;
                     this.placeholder = new Placeholder(self);
 

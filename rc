@@ -196,6 +196,13 @@ if (url.indexOf("http://v.youku.com/v_") === 0) {
     }
     return;
 }
+if (url.indexOf("http://chdbits.org/details.php") === 0) {
+    var torrent = $('td.rowfollow:contains("http://chdbits.org/download.php?")').html();
+    if (config.OS.isMacOSX) {
+        io.system("open -a uTorrent '" + torrent + "'");
+    }
+    return;
+}
 if (config.OS.isMacOSX) {
     io.system("open -a Safari '" + url + "'");
 } else {

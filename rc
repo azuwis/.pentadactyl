@@ -199,6 +199,17 @@ if (config.OS.isMacOSX) {
 EOF
 nmap -builtin ge :smartOpen<CR>
 
+"" play video using mplayer
+command! smartVideo -js <<EOF
+var url = window.content.location.href;
+var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
+var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
+if (m3u) {
+    io.system('mplayer -fs -playlist -', m3u.val());
+}
+EOF
+nmap -builtin gw :smartVideo<CR>
+
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN
 "" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830

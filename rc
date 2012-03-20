@@ -188,27 +188,21 @@ command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpir
 "" open current tab conditionally
 command! smartOpen -js <<EOF
 var url = window.content.location.href;
-if (url.indexOf("http://v.youku.com/v_show/") === 0) {
-    url = url.replace(/v_show/i, "v_showMini");
+if (url.indexOf("http://v.youku.com/v_") === 0) {
+    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
+    var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
+    if (m3u) {
+        io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
+    }
+    return;
 }
 if (config.OS.isMacOSX) {
-    io.system("open -a 'Safari' '" + url + "'");
+    io.system("open -a Safari '" + url + "'");
 } else {
     dactyl.execute("tabopen " + url);
 }
 EOF
 nmap -builtin ge :smartOpen<CR>
-
-"" play video using mplayer
-command! smartVideo -js <<EOF
-var url = window.content.location.href;
-var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
-var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
-if (m3u) {
-    io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
-}
-EOF
-nmap -builtin gw :smartVideo<CR>
 
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN

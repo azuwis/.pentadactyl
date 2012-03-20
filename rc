@@ -76,6 +76,9 @@ nmap -builtin <Leader>c :tabopen about:config<CR>
 "" auto add -tags option when adding bookmark
 nmap -builtin a a<Space>-tags<Space>
 
+"" tabgroup
+nmap -builtin <Leader>e <S-M-e>
+
 "" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
 "map -modes hints j     -ex normal! 10j
 "map -modes hints k     -ex normal! 10k

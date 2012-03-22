@@ -156,6 +156,10 @@ set followhints=1
 
 "" disable annoying auto focus
 set strictfocus^=tao123.com:despotic
+
+"" disable smooth scroll
+set scrollsteps=1
+set scrolltime=0
 "" }}}
 
 "" {{{ Command

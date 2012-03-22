@@ -81,6 +81,7 @@ if config.OS.isMacOSX
 nmap -builtin <Leader>e <S-M-e>
 else
 nmap -builtin <Leader>e <S-C-e>
+end
 
 "" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
 "map -modes hints j     -ex normal! 10j

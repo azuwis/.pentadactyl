@@ -196,12 +196,16 @@ command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpir
 command! smartOpen -js <<EOF
 var url = window.content.location.href;
 if (url.indexOf("http://v.youku.com/v_") === 0) {
-    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
-    var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
-    if (m3u) {
-        io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
+    if (config.OS.isWindows) {
+        url = url.replace(/v_show/i, "v_showMini");
+    } else {
+        var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
+        var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
+        if (m3u) {
+            io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
+        }
+        return;
     }
-    return;
 }
 if (url.indexOf("http://chdbits.org/details.php") === 0) {
     var torrent = $('td.rowfollow:contains("http://chdbits.org/download.php?")').html();

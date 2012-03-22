@@ -243,7 +243,7 @@ command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 autocmd! -javascript PageLoad .* <<EOF
 var dtabs = [];
 tabs.allTabs.forEach(function (t, i) {
-    if (t.linkedBrowser.lastURI && doc.location == t.linkedBrowser.lastURI.spec && tab != i + 1) {
+    if (t.linkedBrowser.lastURI && doc.location == t.linkedBrowser.lastURI.spec && tab != i + 1 && t.linkedBrowser.lastURI.spec != "about:blank") {
         dtabs.push(i + 1);
         config.removeTab(tabs.getTab(i));
     }

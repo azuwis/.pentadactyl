@@ -199,7 +199,9 @@ var flvcd = function(url) {
     var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
     var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
     if (m3u) {
-        io.system('mplayer -really-quiet -fs -playlist - >&/dev/null &', m3u.val());
+        var tmpFile = io.createTempFile('m3u');
+        tmpFile.write(m3u.val());
+        io.system('mplayer -really-quiet -fs -playlist "' + tmpFile.path + '" >&/dev/null &');
     }
 }
 var url = window.content.location.href;

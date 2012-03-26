@@ -195,20 +195,28 @@ command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpir
 
 "" open current tab conditionally
 command! smartOpen -js <<EOF
+var flvcd = function(url) {
+    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
+    var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
+    if (m3u) {
+        io.system('mplayer -really-quiet -fs -playlist - >&/dev/null &', m3u.val());
+    }
+}
 var url = window.content.location.href;
-if (url.indexOf("http://v.youku.com/v_") === 0) {
+if (url.indexOf("http://u.youku.com/user_show/") === 0) {
+    var url = $('a#iLink.fBar').attr('href');
+    if (!config.OS.isWindows) {
+        flvcd(url);
+        return;
+    }
+} else if (url.indexOf("http://v.youku.com/v_") === 0) {
     if (config.OS.isWindows) {
         url = url.replace(/v_show/i, "v_showMini");
     } else {
-        var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
-        var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
-        if (m3u) {
-            io.system('mplayer -fs -playlist - >&/dev/null &', m3u.val());
-        }
+        flvcd(url);
         return;
     }
-}
-if (url.indexOf("http://chdbits.org/details.php") === 0) {
+} else if (url.indexOf("http://chdbits.org/details.php") === 0) {
     var torrent = $('td.rowfollow:contains("http://chdbits.org/download.php?")').html();
     if (config.OS.isMacOSX) {
         io.system("open -a uTorrent '" + torrent + "'");

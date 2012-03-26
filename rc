@@ -153,7 +153,7 @@ set popups=tab,resized
 set hintkeys="4;/.123"
 
 "" only follow hints when press enter
-set followhints=1
+"set followhints=1
 
 "" show link when hover links
 "set showstatuslinks=command

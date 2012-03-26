@@ -315,7 +315,7 @@ set loadplugins=!'TabGroupie','\.(css|js|penta)$'
 js <<EOF
 setTimeout(function(){
     dactyl.execute("runtime plugins/tabgroupie/TabGroupie.js");
-}, 20000);
+}, 90000);
 EOF
 "" }}}
 

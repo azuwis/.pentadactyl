@@ -216,11 +216,12 @@ if (url.indexOf("http://u.youku.com/user_show/") === 0) {
         flvcd(url);
         return;
     }
-} else if (url.indexOf("http://chdbits.org/details.php") === 0) {
-    var torrent = $('td.rowfollow:contains("http://chdbits.org/download.php?")').html();
-    if (config.OS.isMacOSX) {
-        io.system("open -a uTorrent '" + torrent + "'");
-    }
+} else if (url.indexOf("http://chdbits.org/details.php?id=") === 0) {
+    var torrent = 'http://chdbits.org/download.php?id=' + url.match(/\?id=([0-9]+)/)[1];
+    var tmpFile = io.createTempFile('torrent');
+    buffer.saveURI(util.newURI(torrent), tmpFile, function() {
+        tmpFile.launch();
+    });
     return;
 }
 if (config.OS.isMacOSX) {

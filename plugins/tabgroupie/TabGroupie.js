@@ -11,8 +11,7 @@ var INFO =
     <project name="Pentadactyl" min-version="1.0b7.2"/>
     <p>
         This plugin allows you to create tabgroups,
-        rename or delete them and move the currently use tab from group to group
-        with pentadactyl.
+        rename or delete them and move the currently use tab from group to group.
     </p>
     <item>
         <tags>:tgt :tgroup-title </tags>
@@ -39,16 +38,16 @@ var INFO =
             <p>
                 A groupname, that is not listed, will be handled as a new group
                 with a new name assumed you confirm the prompt.
-                [Y/n/b] is for yes(default), no and background.
+                [Y/n/b] for yes(default), no and background.
             </p>
-        </description>    
+        </description>
     </item>
     <item>
         <tags>:tgd :tgroup-delete</tags>
         <spec>:tgroup-delete <oa>GroupName</oa></spec>
         <description>
             This is deleting the given tabgroup incl. its items.
-        </description>    
+        </description>
     </item>
 </plugin>;
 
@@ -56,46 +55,43 @@ var INFO =
 
 let TabGroupie = {
     init: function init(){
-        try{
-            if (!("_groups" in tabs)){
-                if (window.TabView && TabView._initFrame)
-                    TabView._initFrame();
+        if (!("_groups" in tabs)){
+            if (window.TabView && TabView._initFrame)
+                TabView._initFrame();
 
-                let iframe = document.getElementById("tab-view");
-                tabs._groups = iframe ? iframe.contentWindow : null;
-                if (tabs._groups){
-                    util.waitFor(function () tabs._groups.TabItems, tabs);
-                }
-            }
-            
-            this.TabGroups = new Array();
-            for (let x in tabs._groups.GroupItems.groupItems){
-                if (tabs._groups.GroupItems.groupItems[x]._children.length === 0){
-                    tabs._groups.GroupItems.groupItems[x].close();
-                    continue;
-                }
-                let group = {"id":    tabs._groups.GroupItems.groupItems[x].id,
-                             "title": tabs._groups.GroupItems.groupItems[x].getTitle()
-                            };
-                this.TabGroups.push(group);
+            let iframe = document.getElementById("tab-view");
+            tabs._groups = iframe ? iframe.contentWindow : null;
+            if (tabs._groups){
+                util.waitFor(function () tabs._groups.TabItems, tabs);
             }
         }
-        catch(err){
-            dactyl.echoerr("FATAL - Init failed");
-        }    
+
+        this.TabGroups = new Array();
+        for (let x = 0; x < tabs._groups.GroupItems.groupItems.length; x+=1){
+            if (tabs._groups.GroupItems.groupItems[x]._children.length === 0){
+                tabs._groups.GroupItems.groupItems[x].close();
+                continue;
+            }
+            let id = tabs._groups.GroupItems.groupItems[x].id;
+            let title = tabs._groups.GroupItems.groupItems[x].getTitle();
+            let group = {"id":    id,
+                         "title": (title === "") ? "" + id : title,
+                        };
+            this.TabGroups.push(group);
+        }
     },
-    
-    
+
+
     getIdByTitle: function getIdByTitle(pattern){
         for (let i in this.TabGroups){
             if (this.TabGroups[i].title === pattern)
                 return this.TabGroups[i].id;
         }
-        
+
         commandline.input("Group does not exist. Create? [Y/n/b] ", check, {argCount: "1"});
 
         function check(args){
-            if (args.length === 0 
+            if ( args.length === 0
                 || "" + args[0] === "y"
                 || "" + args[0] === "Y"
                 || "" + args[0] === "b" ){
@@ -107,8 +103,8 @@ let TabGroupie = {
 
                 tabs.selectAlternateTab();
             }
-        }
         return null;
+        }
     },
 
 
@@ -155,8 +151,8 @@ let TabGroupie = {
         newGroup.setTitle(title);
         return newGroup.id;
     },
-    
-    
+
+
     deleter: function deleter(title){
         for (let i in tabs._groups.GroupItems.groupItems){
             if (tabs._groups.GroupItems.groupItems[i].id === this.getIdByTitle(title)){
@@ -167,14 +163,13 @@ let TabGroupie = {
             }
         }
     },
-    
 }
 
 try{
     TabGroupie.init();
 }
 catch (err){
-    dactyl.echoerr("FATAL - Init failed");
+    dactyl.echoerr("Tabgroupie.init() failed");
 }
 
 group.commands.add(["tgroup-c[hange]", "tgc"],
@@ -190,20 +185,15 @@ group.commands.add(["tgroup-c[hange]", "tgc"],
                             context.completions = TabGroupie.TabGroups;
                         }
                     });
-                    
+
 group.commands.add(["tgroup-t[itle]", "tgt"],
                     "Change the title of the current group",
                     function (args){
-						if (args.lenght===0){
-							alert("you're into it");
-							alert(window.gBrowser.selectedTab._tabViewTabItem.parent.getTitle());
-						}
-						alert(args);
                         TabGroupie.changeTitle("" + args[0]);
                         TabGroupie.init();
                     },
                     {
-                        argCount: "0",
+                        argCount: "1",
                     });
 
 group.commands.add(["tgroup-n[ew]", "tgn"],
@@ -217,7 +207,7 @@ group.commands.add(["tgroup-n[ew]", "tgn"],
                     {
                         argCount: "1",
                     });
-                    
+
 group.commands.add(["tgroup-d[elete]", "tgd"],
                     "delete a tabgroup incl. its items",
                     function (args) {

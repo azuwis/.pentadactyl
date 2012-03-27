@@ -2,6 +2,8 @@
 XML.ignoreWhitespace = false;
 XML.prettyPrinting = false;
 
+var SPACE = ' ';
+
 var STYLE = <style type="text/css">
 <![CDATA[
 body { white-space:normal; }
@@ -122,7 +124,8 @@ var tr = {
 		41: "Han Dian",
 		42: "Wikipedia",
 		43: "Net Sentences",
-		44: "Situational Dialogues"
+		44: "Situational Dialogues",
+		45: "The 21st Century Unabridged English-Chinese Dictionary"
 	},
 	"zh-CN": {
 		1:  "描述",
@@ -167,7 +170,8 @@ var tr = {
 		41: "汉典",
 		42: "维基百科",
 		43: "网络例句",
-		44: "情景对话"
+		44: "情景对话",
+		45: "21世纪大英汉词典"
 	}
 };
 
@@ -533,6 +537,10 @@ let youdao = {
 		if (def)
 			full["sub"][T(8)] = dict.tidyNodes(def, "div");
 
+		var twenty1st =  document.querySelector("#powerTrans");
+		if (twenty1st)
+			full["sub"][T(45)] = dict.tidy(twenty1st);
+
 		var ph = document.querySelector("#wordGroup");
 		if (ph)
 			full["sub"][T(9)] = dict.tidy(ph);
@@ -705,8 +713,8 @@ let qq = {
 		if (e.netsen) {
 			let o = "";
 			Array.forEach(e.netsen, function(s) {
-				o += "<dl><dt>" + s.cs + "</dt>" +
-				 "<dd><a href=\"" + s.url + "\" highlight=\"URL\">" + s.es + "</a></dd></dl>";
+				o += "<dl><dt>" + s.es + "</dt>" +
+				 "<dd><a href=\"" + s.url + "\" highlight=\"URL\">" + s.cs + "</a></dd></dl>";
 			});
 			full["sub"][T(43)] = dict.tidyStr(o, "div");
 		}
@@ -741,7 +749,7 @@ let qq = {
 				let syn_item = <></>;
 				item.c.forEach(function(single) {
 					let href = qq.href({"keyword": single});
-					syn_item += <><a href={href} highlight="URL">{single}</a> </>;
+					syn_item += <><a href={href} highlight="URL">{single}</a>{SPACE}</>;
 				});
 				syn += <>{syn_item}</>;
 			});
@@ -856,11 +864,20 @@ let google = {
 	logo: "http://www.gstatic.com/translate/intl/en/logo.png",
 	keyword: "",
 	langpairs: "",
+	_langpairs: function(langpair) {
+		let langpairs = langpair.split("|");
+		if (langpairs.length == 1) {
+			langpairs[1] = langpairs[0] || 'auto';
+			langpairs[0] = 'auto';
+		} else {
+			langpairs[0] = langpairs[0] || 'auto';
+			langpairs[1] = langpairs[1] || 'auto';
+		}
+		return langpairs;
+	},
 	init: function(keyword, args) {
 		let langpair = args["-l"] || options["dict-langpair"]["g"] || options.get("dict-langpair").defaultValue["g"];
-		let langpairs = langpair.split("|");
-		langpairs[0] = langpairs[0] || 'auto';
-		langpairs[1] = langpairs[1] || 'auto';
+		let langpairs = google._langpairs(langpair);
 		google.langpairs = langpairs;
 		var req = new XMLHttpRequest();
 		dict.req = req;
@@ -874,10 +891,9 @@ let google = {
 		return req;
 	},
 	href: function (params) {
-		let langpairs = (params["le"] || options["dict-langpair"]["g"] ||
-			options.get("dict-langpair").defaultValue["g"]).split("|");
-		langpairs[0] = langpairs[0] || "auto";
-		langpairs[1] = langpairs[1] || "auto";
+		let langpair = params["le"] || options["dict-langpair"]["g"] ||
+			options.get("dict-langpair").defaultValue["g"];
+		let langpairs = google._langpairs(langpair);
 		let pairs = langpairs.concat([encodeURIComponent(params['keyword'])]);
 		return "http://translate.google.cn/#" + pairs.join("|");
 	},
@@ -973,7 +989,7 @@ let dict_cn = {
 		var req = new XMLHttpRequest();
 		dict.req = req;
 		dict_cn.keyword = keyword;
-		dict_cn.url = "http://dict.cn/"+keyword;
+		dict_cn.url = dict_cn.href({keyword: decodeURIComponent(keyword)});
 		req.open("POST",
 			"http://dict.cn/ws.php?utf8=true&q="+keyword
 		);
@@ -986,7 +1002,7 @@ let dict_cn = {
 
 	href: function (params) {
 		const DICT_CN_PREFIX = "http://dict.cn/";
-		let keyword = encodeURIComponent(params["keyword"]);
+		let keyword = encodeURIComponent(params["keyword"].replace('.', '_2E'));
 		return DICT_CN_PREFIX + keyword;
 	},
 
@@ -1055,7 +1071,7 @@ let dict_cn = {
 			if (rels.length) {
 				let rs = <></>;
 				for (var i = 0; i < rels.length; i++) {
-					let url = "http://dict.cn/"+encodeURIComponent(rels[i].textContent);
+					let url = dict_cn.href({keyword: rels[i].textContent.trim()});
 					rs += <><span><a href={url} target="_blank" highlight="URL">{rels[i].textContent}</a></span></>;
 				}
 				ret["full"]["sub"][T(9)] = rs.toXMLString();
@@ -1094,9 +1110,9 @@ let dict_cn = {
 						let result_arr = Components.utils.evalInSandbox(req.responseText, sb);
 						result_arr["s"].forEach(function (r) {
 							r["e"] = dict.htmlToDom(r["e"].trim()).textContent;
-							r["url"] = "http://dict.cn/" + encodeURIComponent(r["g"].trim());
 							r["g"] = r["g"].trim();
-							suggestions.push(r); // trim blank chars
+							r["url"] = dict_cn.href({keyword: r["g"]});
+							suggestions.push(r);
 						});
 					} finally {
 						context.incomplete = false;
@@ -1184,7 +1200,150 @@ let dict = {
 		dict._DBConn = DBConn;
 		return dict._DBConn;
 	},
+	fl: [ // From:
+		["auto", "Auto Detect language"],
+		["en", "English"],
+		["zh", "Chinese"],
+		["zh-CN", "Chinese (Simplified)"],
+		["zh-TW", "Chinese (Traditional)"],
+		["ja", "Japanese"],
+		["ko", "Korean"],
+		["af", "Afrikaans"],
+		["sq", "Albanian"],
+		["ar", "Arabic"],
+		["hy", "Armenian"],
+		["az", "Azerbaijani"],
+		["eu", "Basque"],
+		["be", "Belarusian"],
+		["bn", "Bengali"],
+		["bg", "Bulgarian"],
+		["ca", "Catalan"],
+		["hr", "Croatian"],
+		["cs", "Czech"],
+		["da", "Danish"],
+		["nl", "Dutch"],
+		["eo", "Esperanto"],
+		["et", "Estonian"],
+		["tl", "Filipino"],
+		["fi", "Finnish"],
+		["fr", "French"],
+		["gl", "Galician"],
+		["ka", "Georgian"],
+		["de", "German"],
+		["el", "Greek"],
+		["gu", "Gujarati"],
+		["ht", "Haitian Creole"],
+		["iw", "Hebrew"],
+		["hi", "Hindi"],
+		["hu", "Hungarian"],
+		["is", "Icelandic"],
+		["id", "Indonesian"],
+		["ga", "Irish"],
+		["it", "Italian"],
+		["kn", "Kannada"],
+		["la", "Latin"],
+		["lv", "Latvian"],
+		["lt", "Lithuanian"],
+		["mk", "Macedonian"],
+		["ms", "Malay"],
+		["mt", "Maltese"],
+		["no", "Norwegian"],
+		["fa", "Persian"],
+		["pl", "Polish"],
+		["pt", "Portuguese"],
+		["ro", "Romanian"],
+		["ru", "Russian"],
+		["sr", "Serbian"],
+		["sk", "Slovak"],
+		["sl", "Slovenian"],
+		["es", "Spanish"],
+		["sw", "Swahili"],
+		["sv", "Swedish"],
+		["ta", "Tamil"],
+		["te", "Telugu"],
+		["th", "Thai"],
+		["tr", "Turkish"],
+		["uk", "Ukrainian"],
+		["ur", "Urdu"],
+		["vi", "Vietnamese"],
+		["cy", "Welsh"],
+		["yi", "Yiddish"]
+	],
+	tl: [ // To:
+		["en", "English"],
+		["zh", "Chinese"],
+		["zh-CN", "Chinese (Simplified)"],
+		["zh-TW", "Chinese (Traditional)"],
+		["ja", "Japanese"],
+		["ko", "Korean"],
+		["af", "Afrikaans"],
+		["sq", "Albanian"],
+		["ar", "Arabic"],
+		["hy", "Armenian"],
+		["az", "Azerbaijani"],
+		["eu", "Basque"],
+		["be", "Belarusian"],
+		["bn", "Bengali"],
+		["bg", "Bulgarian"],
+		["ca", "Catalan"],
+		["hr", "Croatian"],
+		["cs", "Czech"],
+		["da", "Danish"],
+		["nl", "Dutch"],
+		["eo", "Esperanto"],
+		["et", "Estonian"],
+		["tl", "Filipino"],
+		["fi", "Finnish"],
+		["fr", "French"],
+		["gl", "Galician"],
+		["ka", "Georgian"],
+		["de", "German"],
+		["el", "Greek"],
+		["gu", "Gujarati"],
+		["ht", "Haitian Creole"],
+		["iw", "Hebrew"],
+		["hi", "Hindi"],
+		["hu", "Hungarian"],
+		["is", "Icelandic"],
+		["id", "Indonesian"],
+		["ga", "Irish"],
+		["it", "Italian"],
+		["kn", "Kannada"],
+		["la", "Latin"],
+		["lv", "Latvian"],
+		["lt", "Lithuanian"],
+		["mk", "Macedonian"],
+		["ms", "Malay"],
+		["mt", "Maltese"],
+		["no", "Norwegian"],
+		["fa", "Persian"],
+		["pl", "Polish"],
+		["pt", "Portuguese"],
+		["ro", "Romanian"],
+		["ru", "Russian"],
+		["sr", "Serbian"],
+		["sk", "Slovak"],
+		["sl", "Slovenian"],
+		["es", "Spanish"],
+		["sw", "Swahili"],
+		["sv", "Swedish"],
+		["ta", "Tamil"],
+		["te", "Telugu"],
+		["th", "Thai"],
+		["tr", "Turkish"],
+		["uk", "Ukrainian"],
+		["ur", "Urdu"],
+		["vi", "Vietnamese"],
+		["cy", "Welsh"],
+		["yi", "Yiddish"]
+	],
 	languages: [
+		["zh", "Chinese"],
+		["zh-CN", "Chinese Simplified"],
+		["zh-TW", "Chinese Traditional"],
+		["ja", "Japanese"],
+		["ko", "Korean"],
+		["en", "English"],
 		["af", "Afrikaans"],
 		["sq", "Albanian"],
 		["am", "Amharic"],
@@ -1200,16 +1359,12 @@ let dict = {
 		["my", "Burmese"],
 		["ca", "Catalan"],
 		["chr", "Cherokee"],
-		["zh", "Chinese"],
-		["zh-CN", "Chinese Simplified"],
-		["zh-TW", "Chinese Traditional"],
 		["co", "Corsican"],
 		["hr", "Croatian"],
 		["cs", "Czech"],
 		["da", "Danish"],
 		["dv", "Dhivehi"],
 		["nl", "Dutch"],
-		["en", "English"],
 		["eo", "Esperanto"],
 		["et", "Estonian"],
 		["fo", "Faroese"],
@@ -1231,12 +1386,10 @@ let dict = {
 		["iu", "Inuktitut"],
 		["ga", "Irish"],
 		["it", "Italian"],
-		["ja", "Japanese"],
 		["jw", "Javanese"],
 		["kn", "Kannada"],
 		["kk", "Kazakh"],
 		["km", "Khmer"],
-		["ko", "Korean"],
 		["ku", "Kurdish"],
 		["ky", "Kyrgyz"],
 		["lo", "Lao"],
@@ -1333,15 +1486,17 @@ let dict = {
 	get langpairs()  {
 		if (!dict._langpairs) {
 			let cpt = [];
-			for (let [, [abbr, lang]] in Iterator(dict.languages)) {
-				for (let [, [inabbr, inlang]] in Iterator(dict.languages)) {
-					if (inabbr == "")
-						continue;
+			for (let [, [inabbr, inlang]] in Iterator(dict.tl))
+				cpt.push([inabbr, T(2) + dict.fl[0][1] + T(3) + inlang]);
+			for (let [, [abbr, lang]] in Iterator(dict.fl)) {
+				for (let [, [inabbr, inlang]] in Iterator(dict.tl)) {
 					if (abbr == inabbr)
 						continue;
 					cpt.push([abbr+"|"+inabbr, T(2) + lang + T(3) + inlang]);
 				}
 			}
+			for (let [, [inabbr, inlang]] in Iterator(dict.tl))
+				cpt.push(["|" + inabbr, T(2) + dict.fl[0][1] + T(3) + inlang]);
 			dict._langpairs = cpt;
 		}
 		return dict._langpairs;
@@ -1774,9 +1929,9 @@ let dict = {
 		context.compare = null;
 		let youdao_completions = [
 			['eng', T(36)],
-			['fr', T(37)],
+			['jap', T(39)],
 			['ko', T(38)],
-			['jap', T(39)]
+			['fr', T(37)]
 		];
 		let zdic_completions = [
 			["1hp", '条目 - 请直接输入汉字或词语进行查询，支持拼音查询，例：“han”;“han4”;“han yu”;“han4 yu3”'],
@@ -1998,6 +2153,48 @@ let dict = {
 		return str.replace(/\n/g, "<br/>");
 	},
 
+	_getFlSl: function() { // get google translate langpairs
+		let req = new XMLHttpRequest();
+		req.open('GET', 'http://translate.google.cn/?hl=en');
+
+		req.onreadystatechange = function(ev) {
+			if (req.readyState == 4) {
+				if (req.status == 200) {
+					let html = req.responseText;
+					let doc = document.implementation.createHTMLDocument('');
+					let ret = null;
+					ret = doc.documentElement;
+					doc.documentElement.setAttribute('xmlns',
+						doc.documentElement.namespaceURI);
+					ret.innerHTML = html;
+					// gt-sl
+					let gt_sl = doc.getElementById('gt-sl');
+					let options = gt_sl.getElementsByTagName('option');
+					let lang = '[';
+					Array.forEach(options, function(node, idx) {
+							if (idx == options.length - 1)
+								lang += '["' + node.value + '", "' + node.innerHTML + '"]]';
+							else
+								lang += '["' + node.value + '", "' + node.innerHTML + '"],';
+							lang += '\n';
+					});
+					let gt_tl = doc.getElementById('gt-tl');
+					options = gt_tl.getElementsByTagName('option');
+					lang += '\n[';
+					Array.forEach(options, function(node, idx) {
+							if (idx == options.length - 1)
+								lang += '["' + node.value + '", "' + node.innerHTML + '"]]';
+							else
+								lang += '["' + node.value + '", "' + node.innerHTML + '"],';
+							lang += '\n';
+					});
+					dactyl.clipboardWrite(lang);
+				}
+			}
+		};
+		req.send(null);
+	},
+
 	// @TODO: 给超链接加上 highlight 配色属性，值为 "URL"
 	// remove comments, scripts, inline styles, stylesheets, unused properties
 	tidy: function(node) {
@@ -2183,7 +2380,7 @@ group.options.add(["dict-dblclick", "dicd"],
 group.options.add(["dict-langpair", "dicl"], // stringmap google:en|zh-CN,youdao:jap
 	T(17),
 	"stringmap",
-	"g:|zh-CN,y:eng,z:1hp",
+	"g:zh-CN,y:eng,z:1hp",
 	{
 		completer: function(context, extra) {
 
@@ -2355,7 +2552,6 @@ group.commands.add(["spe[ak]"],
 				dactyl.echo("重新播放失败，无播放器或者播放链接为空！", commandline.FORCE_SINGLELINE);
 			return true;
 		}
-		// let le = args["-l"] || "en";
 		let le = args["-l"] || "";
 		if (le) {
 			dict.speak(dict.getSoundUriByLocaleKeyword(le, words));
@@ -2393,8 +2589,9 @@ group.commands.add(["spe[ak]"],
 						["yfr",  "Youdao - French"],
 						["yko",  "Youdao - Korean"],
 						["yjap", "Youdao - Japanese"],
-					].concat(dict.languages); // TODO
+					].concat(dict.languages);
 					context.filters = [CompletionContext.Filter.textDescription];
+					context.compare = null;
 				}
 			}
 		]
@@ -2561,14 +2758,12 @@ var INFO =
         <tags>'dicl' 'dict-langpair'</tags>
         <spec>'dict-langpair' 'dicl'</spec>
         <type>stringmap</type>
-        <default>g:|zh-CN,y:eng,z:1hp</default>
+        <default>g:zh-CN,y:eng,z:1hp</default>
         <description>
 			<p>This argument supplies the optional source language and required destination language. In order to translate from English to Spanish, specify a value of langpair=en|es.</p>
 
-			<p>To use the auto-detect source feature, leave off the source language and only specify the vertical bar followed by the destination langauge as in: langpair=|es.</p>
+			<p>To use the auto-detect source feature, leave off the source language and only specify the vertical bar followed by the destination langauge as in: langpair=|es. (vertical bar "|" is optional now.)</p>
 
-			<p><link topic="http://code.google.com/apis/language/translate/v1/getting_started.html#translatableLanguages">List of translatable languages</link></p>
-			<warning>The Google Translate API has been officially deprecated as of May 26, 2011. Due to the substantial economic burden caused by extensive abuse, the number of requests you may make per day will be limited and the API will be shut off completely on December 1, 2011.</warning>
 			<dl dt="width: 8em;">
 				<dt>jap</dt>      <dd>Chinese ↔ Japanese&#160;&#160;&#160;&#160;Youdao</dd>
 				<dt>eng</dt>      <dd>Chinese ↔ English&#160;&#160;&#160;&#160;&#160;&#160;&#160;Youdao</dd>
@@ -2583,10 +2778,10 @@ var INFO =
         <tags>'dicl' 'dict-langpair'</tags>
         <spec>'dict-langpair' 'dicl'</spec>
         <type>stringmap</type>
-        <default>g:|zh-CN,y:eng,z:1hp</default>
+        <default>g:zh-CN,y:eng,z:1hp</default>
         <description>
 			<p>使用谷歌翻译时，从哪种来源语言翻译到指定的目标语言。比如 <str>en|zh-CN</str>，表明从英文翻译到简体中文。</p>
-			<note>来源语言可以省略，例如当设置<o>dicl</o>为<str>|zh-CN</str>时，表明从任何语言翻译至简体中文。</note>
+			<note>来源语言可以省略，例如当设置<o>dicl</o>为<str>|zh-CN 或 zh-CN</str>时，表明从任何语言翻译至简体中文。</note>
 			<p><link topic="http://code.google.com/apis/language/translate/v1/getting_started.html#translatableLanguages">谷歌翻译所支持的语言及其对应的缩写。</link></p>
 			<dl dt="width: 8em;">
 				<dt>jap</dt>      <dd>汉日互译&#160;&#160;&#160;&#160;&#160;网易有道</dd>
@@ -2820,3 +3015,5 @@ var INFO =
 //  如果是查询选区或者是光标下的词，可以根据当前页面的编码来猜测语言
 // try fanyi.youdao.com
 // dictw 无语音输出
+// 添加 dictw/-h/:speak 的帮助文档
+// 支持命令行下的查词工具，sdcv

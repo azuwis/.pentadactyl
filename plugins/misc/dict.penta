@@ -1,3 +1,0 @@
-nnoremap gd :dict<CR>
-nnoremap gD :dict!<CR>
-nnoremap gl :dict! -e<Space>

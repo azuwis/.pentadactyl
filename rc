@@ -320,6 +320,31 @@ setTimeout(function(){
     dactyl.execute("runtime plugins/tabgroupie/TabGroupie.js");
 }, 90000);
 EOF
+
+"" when follow link, switch to buffer if found or open it
+:js <<EOF
+var switchOrOpen = function (url) {
+    var matches = array.nth(tabs.allTabs, function (t)(t.linkedBrowser.lastURI || {}).spec === url, 0);
+    if (matches) {
+        tabs.select(matches, false);
+        return true;
+    } else {
+        return false;
+    }
+};
+overlay.overlayObject(dactyl, {
+    open: function open(urls, params, force) {
+        if (!switchOrOpen(urls)) open.superapply(this, arguments);
+    }
+});
+document.addEventListener('click', function (event) {
+    let e = event.target;
+    if (e && event.which < 3 && e.tagName.match(/^a$/i) && e.href && switchOrOpen(e.href)) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}, true);
+EOF
 "" }}}
 
 "" {{{ Firefox Setting

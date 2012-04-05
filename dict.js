@@ -125,7 +125,8 @@ var tr = {
 		42: "Wikipedia",
 		43: "Net Sentences",
 		44: "Situational Dialogues",
-		45: "The 21st Century Unabridged English-Chinese Dictionary"
+		45: "The 21st Century Unabridged English-Chinese Dictionary",
+		46: "Collins"
 	},
 	"zh-CN": {
 		1:  "描述",
@@ -171,7 +172,8 @@ var tr = {
 		42: "维基百科",
 		43: "网络例句",
 		44: "情景对话",
-		45: "21世纪大英汉词典"
+		45: "21世纪大英汉词典",
+		46: "柯林斯高级英汉双解词典"
 	}
 };
 
@@ -353,7 +355,7 @@ let zdic = {
 
 		// 移除添加到备忘录, 网友讨论
 		var rems = doc.querySelectorAll(".badd,.bwladd,#wy,.secpan,.gdym,.annu_div,.ga,ga+div");
-		if (rems) {
+		if (rems.length) {
 			Array.forEach(rems, function (i) {
 				i.parentNode.removeChild(i);
 			});
@@ -404,7 +406,7 @@ let zdic = {
 		simp["pron"] = false; // TODO
 		simp["audio"] = false; // TODO
 		var def = doc.querySelector("#content");
-		simp["def"] = def.textContent.trim() || "";
+		simp["def"] = def ? def.textContent.trim() : "";
 		return simp;
 	},
 
@@ -442,7 +444,7 @@ let zdic = {
 				if (req.status == 200) {
 					var body = dict.htmlToDom(req.responseText);
 					var lis = body.querySelectorAll(".accy li");
-					if (lis) {
+					if (lis.length) {
 						Array.forEach(lis, function (li) {
 								var r = {};
 								var href = li.getElementsByTagName("a")[0];
@@ -533,11 +535,15 @@ let youdao = {
 			</p>;
 		}
 
-		var def = document.querySelectorAll("#etcTrans>ul, #cjTrans #basicToggle, #ckTrans #basicToggle, #cfTrans #basicToggle");
-		if (def)
+		var def = document.querySelectorAll("#phrsListTab .trans-container>ul, #results-contents #jcTrans+.trans-container, #results-contents #wordGroup>ul");
+		if (def.length)
 			full["sub"][T(8)] = dict.tidyNodes(def, "div");
 
-		var twenty1st =  document.querySelector("#powerTrans");
+		var collins = document.querySelector("#collins");
+		if (collins)
+			full["sub"][T(46)] = dict.tidy(collins);
+
+		var twenty1st = document.querySelector("#tfdict");
 		if (twenty1st)
 			full["sub"][T(45)] = dict.tidy(twenty1st);
 
@@ -553,26 +559,26 @@ let youdao = {
 		if (ex)
 			full["sub"][T(18)] = dict.tidy(ex);
 
-		var mor = document.querySelectorAll("#etcTrans p");
-		if (mor)
+		var mor = document.querySelectorAll("#phrsListTab p");
+		if (mor.length)
 			full["sub"][T(13)] = dict.tidyNodes(mor, "div");
 
 		return full;
 	},
 
 	_simple: function (document) {
-		var pron = document.querySelectorAll("#results .phonetic")[0];
+		var pron = document.querySelectorAll("#results .phonetic");
 		var simp = {};
 		simp["word"] = decodeURIComponent(youdao.keyword);
-		simp["pron"] = pron ? pron.textContent.trim().replace(/^\[,?|\]$/g, "").replace(/, ,/g, ", ") : false;
-		var audio = document.querySelectorAll("#results .phonetic+a")[0];
+		simp["pron"] = pron.length ? pron[0].textContent.trim().replace(/^\[,?|\]$/g, "").replace(/, ,/g, ", ") : false; // @TODO: pron[0]
+		var audio = document.querySelectorAll("#results .phonetic+a");
 		simp["audio"] = false;
-		if (audio) {
-			let datarel = audio.getAttribute("data-rel");
+		if (audio.length) {
+			let datarel = audio[0].getAttribute("data-rel"); // @TODO: audio[0]
 			simp["audio"] = "http://dict.youdao.com/dictvoice?audio=" + encodeURIComponent(datarel) + "&le=" + (dict.args["-l"] || options["dict-langpair"]["y"] || options.get("dict-langpair").defaultValue["y"]);
 		}
-		var def = document.querySelectorAll("#etcTrans>ul, #cjTrans #basicToggle, #ckTrans #basicToggle, #cfTrans #basicToggle")[0];
-		simp["def"] = def ? def.textContent.trim().replace(/\n\s+/g, " | ") : false;
+		var def = Array.map(Array.slice(document.querySelectorAll("#phrsListTab .trans-container>ul, #results-contents #jcTrans+.trans-container, #results-contents #wordGroup>ul")), function(node) node.textContent.trim().replace(/\s*\n+\s*/g, " ")).join(' | ');
+		simp["def"] = def.length ? def : false;
 		return simp;
 	},
 
@@ -1566,12 +1572,10 @@ let dict = {
 				}},
 				{
 					completer: function (context/*, args*/) { // todo
-						let _args = args;
-						_args[0] = commandline.command;
-						if (_args.length >= 1 && _args[0] !== "-" && _args[0].length > 0 && !_args["-h"])
-							dict.suggest(context, _args);
-
-						context.fork("words_history", 0, this, function (context) dict.cacheSuggest(context, _args));
+						args[0] = commandline.command;
+						if (args[0] && args[0] !== "-")
+							dict.suggest(context, args);
+						context.fork("words_history", 0, this, function (context) dict.cacheSuggest(context, args));
 					},
 					historyKey: 'dict.js'
 				}
@@ -2050,8 +2054,8 @@ let dict = {
 			}
 			
 		} else {
-			var value= "http://www.strangecube.com/audioplay/online/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=yes&sendstop=yes&repeat=1&buttondir=http://www.strangecube.com/audioplay/online/alpha_buttons/negative&bgcolor=0xffffff&mode=playstop";
-			// var value= "file:///home/eric/Downloads/audioplay/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=no&sendstop=yes&repeat=1&buttondir=file:///home/eric/Downloads/audioplay/buttons/negative&bgcolor=0xffffff&mode=playstop&einterface=yes";
+			// var value= "http://www.strangecube.com/audioplay/online/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=yes&sendstop=yes&repeat=1&buttondir=http://www.strangecube.com/audioplay/online/alpha_buttons/negative&bgcolor=0xffffff&mode=playstop";
+			var value= "file:///home/eric/Downloads/audioplay/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=no&sendstop=yes&repeat=1&buttondir=file:///home/eric/Downloads/audioplay/buttons/negative&bgcolor=0xffffff&mode=playstop&einterface=yes";
 
 			var dict_sound = document.getElementById("dict-sound");
 			if (!dict_sound) {
@@ -2244,6 +2248,9 @@ let dict = {
 
 		Array.forEach(doc.links, function (link) {
 			link.setAttribute("highlight", "URL");
+			// @HACK workaround for youdao
+			link.removeAttribute(',');
+			link.removeAttribute(')');
 		});
 		return ret;
 	},
@@ -2261,8 +2268,6 @@ let dict = {
 				link.setAttribute("href", prefix+href);
 			if (/^\/\//.test(href))
 				link.setAttribute("href", protocol + ":" + href);
-			// link.setAttribute("target", "_blank");
-			link.removeAttribute(","); // @HACK: hacks for youdao
 		}
 		var imgs = node.getElementsByTagName("img");
 		for (var i = imgs.length - 1; i >= 0; i--) {

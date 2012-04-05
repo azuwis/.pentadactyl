@@ -54,36 +54,24 @@ var INFO =
 
 
 let TabGroupie = {
-    init: function init(){
-        if (!("_groups" in tabs)){
-            if (window.TabView && TabView._initFrame)
-                TabView._initFrame();
-
-            let iframe = document.getElementById("tab-view");
-            tabs._groups = iframe ? iframe.contentWindow : null;
-            if (tabs._groups){
-                util.waitFor(function () tabs._groups.TabItems, tabs);
+    init: function init(){  // gets called to refresh the list too
+        let tabGroups = this.TabGroups = new Array();
+        tabs.getGroups( function ({ GroupItems }) {
+            let items = GroupItems.groupItems;
+            for(let x = 0; x < items.length; x+=1) {
+                let id = items[x].id;
+                let title = items[x].getTitle();
+                tabGroups.push({
+                    "id":    id,
+                    "title": (title === "") ? "" + id : title,
+                });
             }
-        }
-
-        this.TabGroups = new Array();
-        for (let x = 0; x < tabs._groups.GroupItems.groupItems.length; x+=1){
-            if (tabs._groups.GroupItems.groupItems[x]._children.length === 0){
-                tabs._groups.GroupItems.groupItems[x].close();
-                continue;
-            }
-            let id = tabs._groups.GroupItems.groupItems[x].id;
-            let title = tabs._groups.GroupItems.groupItems[x].getTitle();
-            let group = {"id":    id,
-                         "title": (title === "") ? "" + id : title,
-                        };
-            this.TabGroups.push(group);
-        }
+        });
     },
 
 
     getIdByTitle: function getIdByTitle(pattern){
-        for (let i in this.TabGroups){
+         for (let i = 0; i < this.TabGroups.length; i+=1){
             if (this.TabGroups[i].title === pattern)
                 return this.TabGroups[i].id;
         }
@@ -94,16 +82,13 @@ let TabGroupie = {
             if ( args.length === 0
                 || "" + args[0] === "y"
                 || "" + args[0] === "Y"
-                || "" + args[0] === "b" ){
-                TabView.moveTabTo(window.gBrowser.selectedTab
-                                 ,TabGroupie.createGroup(pattern));
-                TabView.hide();
-                if ("" + args[0] === "b")
-                    return null;
-
-                tabs.selectAlternateTab();
+                || "" + args[0] === "b" ) {
+                TabGroupie.newTabGroup(pattern, window.gBrowser.selectedTab, function () {
+                    if ("" + args[0] !== "b")
+                        tabs.selectAlternateTab();
+                });
             }
-        return null;
+            return null;
         }
     },
 
@@ -138,30 +123,37 @@ let TabGroupie = {
     },
 
 
-    newTabGroup: function newTabGroup(title){
-        let tab = window.gBrowser.addTab(prefs.get("browser.startup.homepage"));
-        TabView.moveTabTo(tab, this.createGroup(title));
-        TabView.hide();
+    newTabGroup: function newTabGroup(title, tab, callback){
+        this.createGroup(title, function ({ id }) {
+            tab = tab || window.gBrowser.addTab(prefs.get("browser.startup.homepage"));
+            TabView.moveTabTo(tab, id);
+            TabView.hide();
+            if (callback) callback(tab);
+        });
 
     },
 
 
-    createGroup: function createGroup(title){
-        let newGroup = tabs._groups.GroupItems.newGroup();
-        newGroup.setTitle(title);
-        return newGroup.id;
+    createGroup: function createGroup(title, callback){
+        tabs.getGroups( function ({ GroupItems }) {
+            let newGroup = GroupItems.newGroup();
+            newGroup.setTitle(title);
+            if (callback) callback(newGroup);
+        });
     },
 
 
     deleter: function deleter(title){
-        for (let i in tabs._groups.GroupItems.groupItems){
-            if (tabs._groups.GroupItems.groupItems[i].id === this.getIdByTitle(title)){
-                for (let x in tabs._groups.GroupItems.groupItems[i]._children){
-                    tabs._groups.GroupItems.groupItems[i]._children[x].close();
+        tabs.getGroups( function ({ GroupItems }) {
+            let items = GroupItems.groupItems;
+            for (let i = 0; i < items.length; i+=1) {
+                let item = items[i];
+                if (item.id === TabGroupie.getIdByTitle(title)){
+                    item.closeAll();
+                    break;
                 }
-            tabs._groups.GroupItems.groupItems[i].close();
             }
-        }
+        });
     },
 }
 
@@ -199,9 +191,9 @@ group.commands.add(["tgroup-t[itle]", "tgt"],
 group.commands.add(["tgroup-n[ew]", "tgn"],
                     "add a new tabgroup",
                     function (args){
-                        TabGroupie.newTabGroup( "" + args[0]);
-                        window.gBrowser.selectedTab = 
-                                    tabs.allTabs[tabs.allTabs.length - 1];
+                        TabGroupie.newTabGroup( "" + args[0], null, function (tab) {
+                            window.gBrowser.selectedTab = tab;
+                        });
                         TabGroupie.init();
                     },
                     {

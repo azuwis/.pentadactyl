@@ -223,7 +223,7 @@ let wikipedia = {
 			audio: false
 		};
 		if (options["dict-hasaudio"])
-			dactyl.execute("speak " + (result.displaytitle || decodeURIComponent(dict.keyword)).replace(" ", "\\ "));
+			ex.speak((result.displaytitle || decodeURIComponent(dict.keyword)).replace(" ", "\\ "));
 		let output = <div><style tyle="text/css">
 			<![CDATA[
 				#wikipedia-output {background-color:#FFF;color:#000;padding:1em 2em;white-space:normal;}
@@ -1753,7 +1753,7 @@ let dict = {
 
 		if (ret["notfound"]) {
 			dactyl.echo(T(19) + decodeURIComponent(dict.keyword), commandline.FORCE_SINGLELINE);
-			dict.timeout = dactyl.timeout(dict._clear, 3000);
+			dict.timeout = dactyl.timeout(ex.redraw, 3000);
 		} else {
 			var show = options.get("dict-show").value;
 			if (dict.args["-o"])
@@ -1765,7 +1765,7 @@ let dict = {
 					invert = !invert;
 				if (invert) {
 					dactyl.echomsg(ret["simple"], 0, commandline.FORCE_SINGLELINE);
-					dict.timeout = dactyl.timeout(dict._clear, 15000); // TODO: clickable, styling
+					dict.timeout = dactyl.timeout(ex.redraw, 15000); // TODO: clickable, styling
 				} else {
 					ret["full"]["title"] = new XML(ret["full"]["title"]);
 					for (var prop in ret["full"]["sub"]) {
@@ -1822,7 +1822,7 @@ let dict = {
 					case "s":
 					dactyl.echo(new XML(google.genOutput(g)));
 					if (!mow.visible)
-						dict.timeout = dactyl.timeout(dict._clear, 10000);
+						dict.timeout = dactyl.timeout(ex.redraw, 10000);
 					break;
 
 					case "a":
@@ -1841,7 +1841,7 @@ let dict = {
 							timeout: Date.now() + 15000
 						}
 					);
-					dactyl.execute('style chrome://* .popup-notification-icon[popupid="dict-popup"] { background:transparent url("'+dict.engine.logo+'") no-repeat left top;background-size:contain contain;}');
+					ex.style('chrome://* .popup-notification-icon[popupid="dict-popup"] { background:transparent url("'+dict.engine.logo+'") no-repeat left top;background-size:contain contain;}');
 					break;
 
 					case "n":
@@ -2041,7 +2041,7 @@ let dict = {
 			var dict_sound = document.getElementById("dict-sound");
 			if (!dict_sound) {
 				var dict_sound = util.xmlToDom(<embed id="dict-sound" src="" autostart="false" type="application/x-mplayer2" hidden="true" height="0" width="0" enablejavascript="true" xmlns={XHTML}/>, document);
-				var addonbar = document.getElementById("addon-bar"); // FIXME: firefox 3.6 support
+				var addonbar = document.getElementById("addon-bar");
 				addonbar.appendChild(dict_sound);
 			}
 			dict_sound.setAttribute("src", uri);
@@ -2054,13 +2054,12 @@ let dict = {
 			}
 			
 		} else {
-			// var value= "http://www.strangecube.com/audioplay/online/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=yes&sendstop=yes&repeat=1&buttondir=http://www.strangecube.com/audioplay/online/alpha_buttons/negative&bgcolor=0xffffff&mode=playstop";
-			var value= "file:///home/eric/Downloads/audioplay/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=no&sendstop=yes&repeat=1&buttondir=file:///home/eric/Downloads/audioplay/buttons/negative&bgcolor=0xffffff&mode=playstop&einterface=yes";
+			var value= "http://www.strangecube.com/audioplay/online/audioplay.swf?file="+encodeURIComponent(uri)+"&auto=yes&sendstop=yes&repeat=1&buttondir=http://www.strangecube.com/audioplay/online/alpha_buttons/negative&bgcolor=0xffffff&mode=playstop";
 
 			var dict_sound = document.getElementById("dict-sound");
 			if (!dict_sound) {
 				dict_sound = util.xmlToDom(<embed id="dict-sound" src={value} quality="high" wmode="transparent" width="0" height="0" align="" hidden="true" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" allowScriptAccess="always" xmlns={XHTML}/>, document);
-				var addonbar = document.getElementById("addon-bar"); // FIXME: firefox 3.6 support
+				var addonbar = document.getElementById("addon-bar");
 				addonbar.appendChild(dict_sound);
 			}
 			dict_sound.setAttribute("src", value);
@@ -2072,10 +2071,6 @@ let dict = {
 		if (!options["dict-hasaudio"])
 			return false;
 		dict.speak(uri);
-	},
-
-	_clear: function() { // TODO: more tests
-		dactyl.echo("", commandline.FORCE_SINGLELINE);
 	},
 
 	_eolToSpace: function(str) {
@@ -2121,7 +2116,7 @@ let dict = {
 				timeout: Date.now() + 15000
 			}
 		);
-		dactyl.execute('style chrome://* .popup-notification-icon[popupid="dict-popup"] { background:transparent url("'+dict.engine.logo+'") no-repeat left -8px;}');
+		ex.style('chrome://* .popup-notification-icon[popupid="dict-popup"] { background:transparent url("'+dict.engine.logo+'") no-repeat left -8px;}');
 
 	},
 
@@ -2358,12 +2353,8 @@ function dblclick(event) {
 
 	if (event.detail == 2 && keyword.length && re.test(keyword))
 		ex.dict();
-	else {
-		if (options.get("dict-simple").value)
-			dict._clear(); // TODO
-		else
-			if (mow.visible) events.feedkeys("<Space>");
-	}
+	else
+		ex.redraw();
 }
 
 group.options.add(["dict-dblclick", "dicd"],
@@ -2648,7 +2639,7 @@ if (config.OS.isWindows) {
 	var removePlayer = function () {
 		var dict_sound = document.getElementById("dict-sound");
 		if (dict_sound) {
-			var addonbar = document.getElementById("addon-bar"); // FIXME: firefox 3.6 support
+			var addonbar = document.getElementById("addon-bar");
 			addonbar.removeChild(dict_sound);
 		}
 	};

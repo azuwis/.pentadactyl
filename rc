@@ -255,21 +255,6 @@ command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 "" set title to url
 "autocmd! LocationChange .* :set titlestring=<url>
 
-"" find duplicated tab
-autocmd! -javascript PageLoad .* <<EOF
-var dtabs = [];
-tabs.allTabs.forEach(function (t, i) {
-    if (t.linkedBrowser.lastURI && doc.location == t.linkedBrowser.lastURI.spec && tab != i + 1 && t.linkedBrowser.lastURI.spec != "about:blank") {
-        dtabs.push(i + 1);
-        config.removeTab(tabs.getTab(i));
-    }
-});
-if (dtabs.length > 0) {
-    dactyl.echo("Tab " + dtabs.join(",") + " duplicated");
-    dactyl.beep();
-}
-EOF
-
 "" use google to get lwn subscription link
 autocmd! -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
 if (doc.title.match(/subscription/i)) {

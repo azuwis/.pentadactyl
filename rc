@@ -312,14 +312,7 @@ command! bml-readability -description "Bookmarklet: Make webpage readable using 
 silent cd ~
 
 "" plugins
-set loadplugins=!'TabGroupie','\.(css|js|penta)$'
-
-"" workaround for TabGroupie
-js <<EOF
-setTimeout(function(){
-    dactyl.execute("runtime plugins/tabgroupie/TabGroupie.js");
-}, 90000);
-EOF
+set loadplugins='\.(css|js|penta)$'
 
 "" when follow link, switch to buffer if found or open it
 :js <<EOF

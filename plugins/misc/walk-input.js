@@ -86,7 +86,7 @@ var xpath = '//input[(' + types + ' or not(@type)) and not(@disabled)] | //texta
 
 function isVisible (elem) {
   while (elem && !(elem instanceof HTMLDocument)) {
-    if (/^none$/i.test(getComputedStyle(elem, '').display))
+    if (/^none$/i.test(elem.ownerDocument.defaultView.getComputedStyle(elem, '').display))
       return false;
     elem  = elem.parentNode;
   }
@@ -135,7 +135,7 @@ var walkinput = function (forward) {
     if (!current || current.frame != elem.frame)
       buffer.focusElement(elem.frame);
     buffer.focusElement(elem.element);
-    DOM(elem.element).scrollIntoView();
+    elem.element.scrollIntoView(true);
     elem.element.style.boxShadow="0 0 1px 1px RoyalBlue";
     dactyl.timeout(function () {elem.element.style.boxShadow=boxShadow;}, 1000);
 };

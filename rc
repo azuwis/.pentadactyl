@@ -194,9 +194,15 @@ nmap -builtin <Leader>r :smartReader<CR>
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
 "" open current tab conditionally
-command! smartOpen -js <<EOF
+command! smartOpen -count -js <<EOF
 var flvcd = function(url) {
-    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: "super"}}).responseText;
+    var format_list = ["", "super", "high", "normal"];
+    if (count) {
+        format = format_list[count];
+    } else {
+        format = "super";
+    }
+    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
     var m3u = $(html).find('form[name="m3uForm"] input[name="inf"]');
     if (m3u) {
         var tmpFile = io.createTempFile('m3u');
@@ -232,7 +238,7 @@ if (config.OS.isMacOSX) {
     dactyl.execute("tabopen " + url);
 }
 EOF
-nmap -builtin ge :smartOpen<CR>
+nmap -builtin -count ge :<count>smartOpen<CR>
 
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN

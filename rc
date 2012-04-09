@@ -246,7 +246,13 @@ nmap -builtin -count ge :<count>smartOpen<CR>
 command! coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
 nmap -builtin gp :coralcdn<CR>
 
-command! gohttps -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
+command! gohttps -js <<EOF
+if (buffer.URL.indexOf('http://') === 0) {
+    dactyl.open(String.replace(buffer.URL, /^http/i, 'https'));
+} else if (buffer.URL.indexOf('https://') === 0) {
+    dactyl.open(String.replace(buffer.URL, /^https/i, 'http'));
+}
+EOF
 nmap -builtin gs :gohttps<CR>
 
 "" display calendar

@@ -77,6 +77,7 @@ hi WarningMsg           color: #CC9393; background: #242421;
 
 hi Hint		font-family: "Modaco"; line-height: 6px; text-shadow: 1px 1px 1px #000; padding: 5px 6px 6px; font-size: 11px; font-weight: normal; color: white; background-color: rgba(0, 0, 0, 0.6); -moz-border-radius: 1em; -moz-box-shadow: 0 0 4px rgba(0,0,0,1); text-transform: uppercase;
 hi Hint[active]	background: rgba(0, 0, 0, 0.6);
+hi Hint[ambiguous] background: rgba(0, 0, 255, 0.6);
 "hi HintElem	background-color: rgba(255, 255, 0, 0.5) !important; -moz-border-radius: 2px;
 hi HintElem	background: rgba(255, 255, 255, 0);
 "hi HintActive	background-color: rgba(255, 255, 0, 1) !important; color: black !important; -moz-border-radius: 2px;

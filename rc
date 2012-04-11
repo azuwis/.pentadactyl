@@ -150,7 +150,7 @@ set popups=tab,resized
 
 "" home row as hintkeys
 "set hintkeys=asdfg;lkjh
-set hintkeys="4;/.123"
+"set hintkeys="4;/.123"
 
 "" only follow hints when press enter
 "set followhints=1

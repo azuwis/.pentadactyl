@@ -1,0 +1,4 @@
+nmap -builtin vn :tgroup-new<Space>
+nmap -builtin vc :tgroup-change<Space>
+nmap -builtin vs :tgroup-switch<Space>
+nmap -builtin vd :tgroup-delete<Space>

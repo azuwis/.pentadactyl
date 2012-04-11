@@ -2,7 +2,7 @@
 XML.ignoreWhitespace = false;
 XML.prettyPrinting   = false;
 var INFO =
-<plugin name="TapGroupie" version="0.9"
+<plugin name="TabGroupie" version="0.9"
         href="https://github.com/eri451/TabGroupie"
         summary="TabGroupie Plugin"
         xmlns={NS}>
@@ -13,20 +13,6 @@ var INFO =
         This plugin allows you to create tabgroups,
         rename or delete them and move the currently use tab from group to group.
     </p>
-    <item>
-        <tags>:tgt :tgroup-title </tags>
-        <spec>:tgroup-title <oa>newName</oa></spec>
-        <description>
-            Sets a new title to the currently used group
-        </description>
-    </item>
-    <item>
-       <tags>:tgn :tgroup-new</tags>
-       <spec>:tgroup-new <oa>newGroupname</oa></spec>
-       <description>
-            Create a new tabgroup.
-       </description>
-    </item>
     <item>
         <tags>:tgc :tgroup-change</tags>
         <spec>:tgroup-change <oa>targetGroup</oa></spec>
@@ -47,6 +33,27 @@ var INFO =
         <spec>:tgroup-delete <oa>GroupName</oa></spec>
         <description>
             This is deleting the given tabgroup incl. its items.
+        </description>
+    </item>
+    <item>
+       <tags>:tgn :tgroup-new</tags>
+       <spec>:tgroup-new <oa>newGroupname</oa></spec>
+       <description>
+            Create a new tabgroup.
+       </description>
+    </item>
+    <item>
+        <tags>:tgs :tgroup-switch </tags>
+        <spec>:tgroup-switch <oa>targetGroup</oa></spec>
+        <description>
+            switch to last viewed tab of a specified group
+        </description>
+    </item>
+    <item>
+        <tags>:tgt :tgroup-title </tags>
+        <spec>:tgroup-title <oa>newName</oa></spec>
+        <description>
+            Sets a new title to the currently used group
         </description>
     </item>
 </plugin>;
@@ -104,7 +111,7 @@ let TabGroupie = {
         }
 
         if (targetGroupId != null){
-            if (activeTab._tabViewTabItem.parent._children.length > 1){
+            if (tabs.visibleTabs.length > 1){
                 TabView.moveTabTo(activeTab, targetGroupId);
                 TabView.hide();
                 commandline.input("Switch to that Group? [Y/n] ", ask, {argCount: "1"})
@@ -119,7 +126,10 @@ let TabGroupie = {
 
 
     changeTitle: function changeTitle(newTitle){
-        window.gBrowser.selectedTab._tabViewTabItem.parent.setTitle(newTitle);
+        tabs.getGroups( function ({ GroupItems }) {
+            let activeGroup = GroupItems.getActiveGroupItem();
+            activeGroup.setTitle(newTitle);
+        });
     },
 
 
@@ -150,6 +160,21 @@ let TabGroupie = {
                 let item = items[i];
                 if (item.id === TabGroupie.getIdByTitle(title)){
                     item.closeAll();
+                    break;
+                }
+            }
+        });
+    },
+
+    switchto: function switchto(title){
+        tabs.getGroups( function ({ GroupItems }) {
+            let items = GroupItems.groupItems;
+            for (let i = 0; i < items.length; i+=1) {
+                let item = items[i];
+                if (item.id === TabGroupie.getIdByTitle(title)){
+                    let activeTab = item.getActiveTab();
+                    let index = tabs.allTabs.indexOf(activeTab.tab);
+                    config.tabbrowser.mTabContainer.selectedIndex = index;
                     break;
                 }
             }
@@ -204,6 +229,20 @@ group.commands.add(["tgroup-d[elete]", "tgd"],
                     "delete a tabgroup incl. its items",
                     function (args) {
                         TabGroupie.deleter("" + args[0]);
+                        TabGroupie.init();
+                    },
+                    {
+                        argCount: "1",
+                        completer: function (context) {   //thanks to Kris Maglione
+                            context.keys = { text: "title", description: "id" };
+                            context.completions = TabGroupie.TabGroups;
+                        }
+                    });
+
+group.commands.add(["tgroup-s[witch]", "tgs"],
+                    "switch to last viewed tab of a specified group",
+                    function (args){
+                        TabGroupie.switchto("" + args[0]);
                         TabGroupie.init();
                     },
                     {

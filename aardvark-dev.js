@@ -128,8 +128,16 @@ var INFO =
     <item>
         <tags>A_s</tags>
         <spec>s</spec>
-        <description>
+        <description short="true">
             <p>Select the given element or the contents of the frontmost display box.</p>
+        </description>
+    </item>
+
+    <item>
+        <tags>A_t</tags>
+        <spec>t</spec>
+        <description short="true">
+            <p>Thunk the element in a global variable.</p>
         </description>
     </item>
 
@@ -637,6 +645,18 @@ var Aardvark = Class("Aardvark", {
         return true;
     },
 
+    global: function xpath(target) {
+        commandline.input("Variable name: ", function (res) {
+            if (res) {
+                userContext[res] = target;
+                DOM(target.ownerDocument.defaultView).unload(function () {
+                    if (userContext[res] == target)
+                        delete userContext[res];
+                });
+            }
+        });
+    },
+
     xpath: function xpath(target) {
         AardvarkDBox(this, {
             selectLink: true,
@@ -969,7 +989,7 @@ var Aardvark = Class("Aardvark", {
         var y = pos.y;
 
         let width = parseFloat(this.borderElems.left.style.borderLeftWidth);
-        DOM(values(this.borderElems)).map(function (e) e[0]).css({
+        DOM(values(this.borderElems).map(function (e) e[0])).css({
             left: pos.x - width + "px",
             top: pos.y - width + "px",
             width: elem.offsetWidth + 2 * width + "px",
@@ -1155,7 +1175,8 @@ var Aardvark = Class("Aardvark", {
 
 //-----------------------------------------------------
     getPos: function getPos(elem) {
-        let style = DOM(this.doc.body || this.doc.documentElement).style;
+        let body = this.doc.body || this.doc.documentElement;
+        let style = DOM(body).style;
 
         if (~["absolute", "fixed", "relative"].indexOf(style.position)) {
             let rect = body.getClientRects()[0];
@@ -1236,6 +1257,7 @@ var commands = [
     ["javascript",   "makeJavascript", true],
     ["paste",        "paste",          true],
     ["select",       "select",         false],
+    ["thunk",        "global",         true],
     ["xpath",        "xpath",          true],
     ["help",         "showMenu",       false],
 ];

@@ -258,6 +258,13 @@ nmap -builtin gs :gohttps<CR>
 "" display calendar
 command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
+"" google translate
+command! trans -js <<EOF
+if (buffer.URL.indexOf('http://translate.google.com/') ===0) {
+    dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL));
+}
+EOF
+
 "" workaround for tabgroups manager causing P misbehave
 "nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
 
@@ -310,6 +317,13 @@ silent cd ~
 
 "" plugins
 set loadplugins='\.(css|js|penta)$'
+
+"" workaround for TabGroupie
+js <<EOF
+setTimeout(function(){
+    plugins.tabgroupieTabGroupie.TabGroupie.init()
+}, 90000);
+EOF
 
 "" when follow link, switch to buffer if found or open it
 :js <<EOF

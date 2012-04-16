@@ -260,10 +260,23 @@ command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 "" google translate
 command! trans -js <<EOF
-if (buffer.URL.indexOf('http://translate.google.com/') ===0) {
+var getParameterByName = function(url, name) {
+    name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    var regexS = '[\\?&]' + name + '=([^&#]*)';
+    var regex = new RegExp(regexS);
+    var results = regex.exec(url);
+    if (results == null)
+        return '';
+    else
+        return decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+if (buffer.URL.indexOf('http://translate.google.com/') !==0) {
     dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL));
+} else {
+    dactyl.open(getParameterByName(buffer.URL, 'u'));
 }
 EOF
+nmap -builtin <Leader>t :trans<CR>
 
 "" workaround for tabgroups manager causing P misbehave
 "nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>

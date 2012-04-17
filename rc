@@ -363,6 +363,11 @@ document.addEventListener('click', function (event) {
     }
 }, true);
 EOF
+
+"" custom hint
+js <<EOF
+hints.addMode("g", "Follow specfic hint in a new tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, ["a.l"]);
+EOF
 "" }}}
 
 "" {{{ Firefox Setting

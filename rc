@@ -96,11 +96,11 @@ map -modes hints <C-b> -ex normal! <C-b>
 "" from http://www.slimeden.com/2011/03/firefox/pentadactyl
 ":map t -js content.getSelection().toString()!=""?dactyl.execute(":tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
 ":map o -js content.getSelection().toString()!=""?dactyl.execute(":open "+ content.getSelection()):CommandExMode().open("open ")
-command! -nargs=* -complete=search search execute 'tabopen <args> ' + content.getSelection().toString()
+command -nargs=* -complete=search search execute 'tabopen <args> ' + content.getSelection().toString()
 map s :search<Space>
-command! -nargs=? -complete=search switchSearch execute 'open <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
+command -nargs=? -complete=search switchSearch execute 'open <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
 map S gi<ESC> :switchSearch<Space>
-command! -nargs=* siteSearch execute "tabopen <args> site:" + window.content.location.hostname
+command -nargs=* siteSearch execute "tabopen <args> site:" + window.content.location.hostname
 
 "" search engines
 "" hide all browser search engines except google(for suggestion)
@@ -168,7 +168,7 @@ set scrolltime=0
 
 "" {{{ Command
 "" smart reload
-command! smartReload -js <<EOF
+command smartReload -js <<EOF
 if (buffer.URL.spec.indexOf('#') >= 0) {
     dactyl.execute("reload");
 } else {
@@ -177,7 +177,7 @@ if (buffer.URL.spec.indexOf('#') >= 0) {
 EOF
 nmap -builtin r :smartReload<CR>
 
-command! smartReader -js <<EOF
+command smartReader -js <<EOF
 if (typeof __readable_by_evernote === "object") {
     dactyl.execute("emenu Tools.Clearly");
 } else if (typeof FirefoxReader === "object") {
@@ -191,11 +191,11 @@ EOF
 nmap -builtin <Leader>r :smartReader<CR>
 
 "" flush browser dns
-command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
+command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
 "" open current tab conditionally
 "" TODO use sitefilter and make site specfic
-command! smartOpen -count -js <<EOF
+command smartOpen -count -js <<EOF
 var flvcd = function(url) {
     var format_list = ["", "super", "high", "normal"];
     if (count) {
@@ -244,10 +244,10 @@ nmap -builtin -count ge :<count>smartOpen<CR>
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN
 "" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830
-command! coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
+command coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
 nmap -builtin gp :coralcdn<CR>
 
-command! gohttps -js <<EOF
+command gohttps -js <<EOF
 if (buffer.URL.indexOf('http://') === 0) {
     dactyl.open(String.replace(buffer.URL, /^http/i, 'https'));
 } else if (buffer.URL.indexOf('https://') === 0) {
@@ -257,10 +257,10 @@ EOF
 nmap -builtin gs :gohttps<CR>
 
 "" display calendar
-command! cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
+command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 "" google translate
-command! trans -js <<EOF
+command trans -js <<EOF
 var getParameterByName = function(url, name) {
     name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
     var regexS = '[\\?&]' + name + '=([^&#]*)';
@@ -283,13 +283,13 @@ nmap -builtin <Leader>t :trans<CR>
 "nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
 
 "" use https for some sites
-"autocmd! PageLoad '^http://((reader|groups|docs|spreadsheets)\.google\.com|www\.google\.com/(search|reader))' -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
+"autocmd PageLoad '^http://((reader|groups|docs|spreadsheets)\.google\.com|www\.google\.com/(search|reader))' -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
 
 "" set title to url
-"autocmd! LocationChange .* :set titlestring=<url>
+"autocmd LocationChange .* :set titlestring=<url>
 
 "" use google to get lwn subscription link
-autocmd! -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
+autocmd -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
 if (doc.title.match(/subscription/i)) {
     var title = doc.getElementsByClassName("ArticleText")[0].getElementsByTagName("a")[0].innerHTML;
     dactyl.open("g site:lwn.net/SubscriberLink " + title);
@@ -305,12 +305,12 @@ colorscheme mybeta1
 "" {{{ Bookmarklet
 nmap -builtin <Leader>b :bml-
 nmap -builtin <Leader>s :bml-subscribe<CR>
-command! bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
-command! bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
-command! bml-share -description "Bookmarklet: Google reader official bookmarklet" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');void(b.appendChild(z));}else{}
-command! bml-subscribe -description "Bookmarklet: Subscribe using Google reader" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/subscribe-bookmarklet.js');void(b.appendChild(z));}else{location='http://www.google.com/reader/view/feed/'+encodeURIComponent(location.href)}
-command! bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());
-command! bml-readability -description "Bookmarklet: Make webpage readable using readability" open javascript:(%28function%28%29%7Bwindow.baseUrl%3D%27http%3A//www.readability.com%27%3Bwindow.readabilityToken%3D%27%27%3Bvar%20s%3Ddocument.createElement%28%27script%27%29%3Bs.setAttribute%28%27type%27%2C%27text/javascript%27%29%3Bs.setAttribute%28%27charset%27%2C%27UTF-8%27%29%3Bs.setAttribute%28%27src%27%2CbaseUrl%2B%27/bookmarklet/read.js%27%29%3Bdocument.documentElement.appendChild%28s%29%3B%7D%29%28%29)
+command bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
+command bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
+command bml-share -description "Bookmarklet: Google reader official bookmarklet" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');void(b.appendChild(z));}else{}
+command bml-subscribe -description "Bookmarklet: Subscribe using Google reader" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/subscribe-bookmarklet.js');void(b.appendChild(z));}else{location='http://www.google.com/reader/view/feed/'+encodeURIComponent(location.href)}
+command bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());
+command bml-readability -description "Bookmarklet: Make webpage readable using readability" open javascript:(%28function%28%29%7Bwindow.baseUrl%3D%27http%3A//www.readability.com%27%3Bwindow.readabilityToken%3D%27%27%3Bvar%20s%3Ddocument.createElement%28%27script%27%29%3Bs.setAttribute%28%27type%27%2C%27text/javascript%27%29%3Bs.setAttribute%28%27charset%27%2C%27UTF-8%27%29%3Bs.setAttribute%28%27src%27%2CbaseUrl%2B%27/bookmarklet/read.js%27%29%3Bdocument.documentElement.appendChild%28s%29%3B%7D%29%28%29)
 "" }}}
 
 "" {{{ Misc
@@ -324,7 +324,7 @@ set loadplugins='\.(css|js|penta)$'
 js <<EOF
 setTimeout(function(){
     plugins.tabgroupieTabGroupie.TabGroupie.init()
-}, 90000);
+}, 5000);
 EOF
 
 "" when follow link, switch to buffer if found or open it

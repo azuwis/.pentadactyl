@@ -1,0 +1,80 @@
+"" {{{ Search Engines
+"" hide all browser search engines except google(for suggestion)
+js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google") e.hidden = true})
+silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s&lr=lang_zh-CN|lang_zh-TW|lang_en -keyword g
+silent bmark -tags searchengine -title='Google Code Search' http://google.com/codesearch?q=%s -keyword gc
+silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
+silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t
+silent bmark -tags searchengine -title='Debian Package Search' http://packages.debian.org/search?keywords=%s -keyword d
+silent bmark -tags searchengine -title='Debian File Search' http://packages.debian.org/search?searchon=contents&mode=exactfilename&keywords=%s -keyword df
+silent bmark -tags searchengine -title='Mtime Movie Search' http://search.mtime.com/search/?%s -keyword m
+silent bmark -tags searchengine -title='Douban Movie Search' http://movie.douban.com/subject_search?search_text=%s&cat=1002 -keyword dm
+silent bmark -tags searchengine -title='Shooter Subtitle Search' http://shooter.cn/search/%s -keyword s
+silent bmark -tags searchengine -title='Baidu Search' -charset=GB2312 http://www.baidu.com/s?wd=%s&rsv_bp=0&rsv_spt=3 -keyword b
+silent bmark -tags searchengine -title='KTXP Torrent Search' http://bt.ktxp.com/search.php?keyword=%s -keyword k
+silent bmark -tags searchengine -title='CHDBits Search' http://chdbits.org/torrents.php?incldead=1&spstate=0&inclbookmarked=0&search=%s&search_area=0&search_mode=0 -keyword c
+silent bmark -tags searchengine -title='Baidu MP3 Search' -charset=GB2312 http://mp3.baidu.com/m?f=ms&rf=idx&tn=baidump3&ct=134217728&lf=&rn=&word=%s&lm=-1 -keyword bm
+silent bmark -tags searchengine -title='Mobilism' http://forum.mobilism.org/search.php?keywords=%s&fid[]=398&sc=1&sr=topics&sf=titleonly -keyword mo
+"" }}}
+
+"" {{{ Firefox Setting
+set! ui.caretWidth=5
+set! ui.caretBlinkTime=0
+"" disable web page accesskey, this leads to key conflict
+set! ui.key.generalAccessKey=0
+set! browser.tabs.closeWindowWithLastTab=false
+set! browser.tabs.insertRelatedAfterCurrent=true
+set! network.dns.disableIPv6=true
+set! browser.startup.homepage="about:blank"
+set! browser.download.useDownloadDir=false
+set! browser.download.manager.showWhenStarting=false
+set! browser.download.manager.showAlertOnComplete=true
+set! general.warnOnAboutConfig=false
+set! intl.accept_languages="en-us,en,zh-cn,zh"
+set! view_source.wrap_long_lines=true
+"" do not reload tabs when restarting firefox, see http://blog.zpao.com/post/1140456188/cascaded-session-restore-a-hidden-bonus
+set! browser.sessionstore.restore_on_demand=true
+"" save session every 5min, see http://lifehacker.com/5342636/
+set! browser.sessionstore.interval=300000
+"" http://www.stayupdate.com/firefox/increase-firefox-speed-and-decrease-firefox-memory-usage-20-tips/567
+set! nglayout.initialpaint.delay=0
+set! content.notify.interval=500000
+set! content.notify.ontimer=true
+set! content.switch.threshold=250000
+set! content.interrupt.parsing=false
+"" disable addons compatibility check
+set! extensions.checkCompatibility.9.0=false
+set! extensions.checkCompatibility.10.0=false
+"" disable the install-dialog delay
+set! security.dialog_enable_delay=0
+"" disable tabgroup animation
+set! browser.panorama.animate_zoom=false
+if config.OS.isMacOSX
+set! font.name.monospace.x-western="Menlo"
+end
+if config.OS.isWindows
+set! font.name.monospace.zh-CN="Consolas"
+set! font.name.sans-serif.zh-CN="微软雅黑"
+set! font.name.serif.zh-CN="微软雅黑"
+end
+"" }}}
+
+"" {{{ Extension
+"" adblock plus
+set! extensions.adblockplus.frameobjects=false
+set! extensions.adblockplus.showinstatusbar=true
+set! extensions.adblockplus.showintoolbar=false
+
+"" vertical tabs
+set! extensions.verticaltabs.width=260
+
+"" tabgroups manager
+set! extensions.tabgroupsmanager.groupBarPosition=2
+set! extensions.tabgroupsmanager.dispGroupTabCount=false
+set! extensions.tabgroupsmanager.dispGroupTabIconReading=false
+
+"" session manager
+set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_on_restart=true
+"" }}}
+
+" vim: set ft=pentadactyl fdm=marker:

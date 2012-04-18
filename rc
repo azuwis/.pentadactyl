@@ -194,6 +194,7 @@ nmap -builtin <Leader>r :smartReader<CR>
 command! flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
 "" open current tab conditionally
+"" TODO use sitefilter and make site specfic
 command! smartOpen -count -js <<EOF
 var flvcd = function(url) {
     var format_list = ["", "super", "high", "normal"];

@@ -185,7 +185,7 @@ var flvcd = function(url) {
         format = format_list[count];
     }
     var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
-    var links = $(html).find("td a[onclick]").map(function(){return $(this).attr("href")}).get();
+    var links = $(html).find("td a[onclick]").map(function(){return $(this).attr("href");}).get();
     return links;
 };
 var dta = function(urls) {
@@ -252,7 +252,7 @@ command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 "" google translate
 command trans -js <<EOF
 var getParameterByName = function(url, name) {
-    name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    var name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
     var regexS = '[\\?&]' + name + '=([^&#]*)';
     var regex = new RegExp(regexS);
     var results = regex.exec(url);

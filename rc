@@ -227,14 +227,14 @@ nmap -builtin -count ge :<count>smartOpen<CR>
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN
 "" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830
-command coralcdn -js dactyl.open( String.replace(buffer.URL, /(\.\w{2,4})\//, "$1.nyud.net/") )
+command coralcdn -js dactyl.open( String.replace(buffer.URL.spec, /(\.\w{2,4})\//, "$1.nyud.net/") )
 nmap -builtin gp :coralcdn<CR>
 
 command gohttps -js <<EOF
-if (buffer.URL.indexOf('http://') === 0) {
-    dactyl.open(String.replace(buffer.URL, /^http/i, 'https'));
-} else if (buffer.URL.indexOf('https://') === 0) {
-    dactyl.open(String.replace(buffer.URL, /^https/i, 'http'));
+if (buffer.URL.spec.indexOf('http://') === 0) {
+    dactyl.open(String.replace(buffer.URL.spec, /^http/i, 'https'));
+} else if (buffer.URL.spec.indexOf('https://') === 0) {
+    dactyl.open(String.replace(buffer.URL.spec, /^https/i, 'http'));
 }
 EOF
 nmap -builtin gs :gohttps<CR>
@@ -254,10 +254,10 @@ var getParameterByName = function(url, name) {
     else
         return decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
-if (buffer.URL.indexOf('http://translate.google.com/') !==0) {
-    dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL));
+if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
+    dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL.spec));
 } else {
-    dactyl.open(getParameterByName(buffer.URL, 'u'));
+    dactyl.open(getParameterByName(buffer.URL.spec, 'u'));
 }
 EOF
 nmap -builtin <Leader>t :trans<CR>
@@ -317,7 +317,7 @@ EOF
 "" when follow link, switch to buffer if found or open it
 :js <<EOF
 var switchOrOpen = function (url) {
-    if (buffer.URL == url) return false;
+    if (buffer.URL.spec === url) return false;
     var matches = array.nth(tabs.allTabs, function (t)(t.linkedBrowser.lastURI || {}).spec === url, 0);
     if (matches) {
         tabs.select(matches, false);

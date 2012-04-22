@@ -202,7 +202,7 @@ var url = args.length ? args : buffer.URL.spec;
 dta(flvcd(url));
 EOF
 group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/* flvcd
-nmap -builtin -group flvcd ge :flvcd<CR>
+nmap -builtin ge :flvcd<CR>
 group user
 
 "" open chdbits torrent
@@ -217,7 +217,7 @@ var chdbits = function (url) {
 chdbits(buffer.URL.spec);
 EOF
 group -locations http://chdbits.org/details.php?id=* chdbits
-nmap -builtin -group chdbits ge :chdbits<CR>
+nmap -builtin ge :chdbits<CR>
 group user
 
 "" open using external browser

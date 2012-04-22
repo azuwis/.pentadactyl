@@ -16,3 +16,6 @@
 /* make ime inactive on commandline and statubline */
 #dactyl-commandline-command input {ime-mode: inactive;}
 #dactyl-statusline-field-commandline-command input {ime-mode: inactive;}
+
+/* style for unloaded tabs */
+.tabbrowser-tab[pending] {opacity: .5;}

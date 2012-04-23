@@ -370,6 +370,21 @@ overlay.overlayObject(statusline, {
     }
 });
 EOF
+
+"" source boostrap.penta if modified
+js <<EOF
+var bootstrapFile = "bootstrap.penta";
+var bootstrapPref = "extensions.dactyl.bootstrapTime";
+var file = io.File(IO.runtimePath + "/" + bootstrapFile);
+if (file.exists() && file.isFile() && file.isReadable()) {
+    var mtime = Math.floor(file.lastModifiedTime / 1000);
+    var btime = prefs.get(bootstrapPref);
+    if (!btime || mtime > btime) {
+        dactyl.execute("runtime " + bootstrapFile);
+        prefs.set(bootstrapPref, Math.floor(Date.now() / 1000));
+    }
+}
+EOF
 "" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

@@ -7,7 +7,7 @@
 hi Bell                 border: 0 none; background-color: black;
 hi Boolean              color: #CC9393;
 hi CmdLine              background: white; color: black; -moz-transition: all 0.25s;
-hi CmdLine>*            font-family: monaco,consolas,monospace; font-weight: normal;
+hi CmdLine>*            font-family: "lucida console",consolas,monospace; font-weight: normal;
 hi CmdOutput            white-space: pre;
 hi CompDesc             color: gray; width: 50%;font-size: 9pt;
 hi CompGroup:not(:first-of-type)    margin-top: 1ex;
@@ -27,15 +27,15 @@ hi CompTitle            font-weight: blod !important; background: -moz-linear-gr
 hi CompTitle>* color: #444; border-top: 1px solid gray !important; border-bottom: 1px solid #BBB; padding: 0px 0.5ex; text-shadow: 1px 1px 0px #E0E0E0;
 hi CompItem:nth-child(2n+1) background: white;
 hi CompTitleSep          border-top: 1px solid gray;
-hi ErrorMsg             color: #242421; background: #CC9393; font-weight: bold;
+hi ErrorMsg             color: #242421; background: white; font-weight: bold;
 hi Filter               border-radius: 3px; background: #ffec8b; border: 1px solid orange !important;
 hi FrameIndicator       background-color: #CC9393; opacity: 0.5; z-index: 999; position: fixed; top: 0; bottom: 0; left: 0; right: 0;
 hi Function             color: navy;
 hi Gradient             height: 1px; margin-bottom: -1px; margin-top: -1px;
 hi GradientLeft         background-color: #87af87;
 hi GradientRight        background-color: #242421;
-"hi Hint                 font-family: monaco,consolas,monospace; font-size: 12px; font-weight: bold; color: #385F38; background-color: #F8F893; border-color: ButtonShadow; border-width: 1px; border-style: solid; padding 0px 1px 0px 1px;
-"hi Hint                 border-radius: 1px; background: #ffec8b; border: 1px solid orange; font-family: monaco,consolas,monospace; font-size: 11px;
+"hi Hint                 font-family: "lucida console",consolas,monospace; font-size: 12px; font-weight: bold; color: #385F38; background-color: #F8F893; border-color: ButtonShadow; border-width: 1px; border-style: solid; padding 0px 1px 0px 1px;
+"hi Hint                 border-radius: 1px; background: #ffec8b; border: 1px solid orange; font-family: "lucida console",consolas,monospace; font-size: 11px;
 "hi Hint::after          content: attr(number);
 "hi HintActive           background: 666666; color: black;
 "hi HintElem             background-color: transparent;
@@ -50,12 +50,12 @@ hi NonText              color: #94BFF3; min-height: 16px; padding-left: 2px;
 hi Normal               color: black; background: white; font-weight: normal; 
 hi Null                 color: #94BFF3;
 hi Number               color: #94BFF3;
-hi Normal               color: black !important; background: white !important; font-weight: normal !important;font-family: monaco,consolas,monospace !important;
+hi Normal               color: black !important; background: white !important; font-weight: normal !important;font-family: "lucida console",consolas,monospace !important;
 hi Object               color: maroon;
 hi Preview              color: #4B9CEB;
 hi Question             color: #9ECE9E; background: #242421; font-weight: bold;
 hi Search               font-size: inherit; padding: 0; color: #385F38; background-color: #F8F893; padding: 0;
-hi StatusLine           background: #f0f0f0 !important; font-size: 9pt; font-family: monaco,consolas,monospace; font-weight: 600; padding: 0px 3px;
+hi StatusLine           background: #f0f0f0 !important; font-size: 10pt; font-family: "lucida console",consolas,monospace; font-weight: 600; padding: 0px 3px;
 hi StatusInfoMsg        background: #f0f0f0 !important; font-size: 9pt;       
 hi StatusLineNormal     color: black !important; background: #f0f0f0 !important; font-size: 9pt;
 hi StatusLineBroken     background: #f0f0f0 !important; font-size: 9pt;
@@ -71,11 +71,11 @@ hi URL:hover            text-decoration: underline; cursor: pointer;
 hi WarningMsg           color: #CC9393; background: #242421;
 
 "===修正DACTYL的标签编号显示不正确问题(DACTYL已修正，但这条CSS可以以VIMPREATOR 3PRE的风格显示)===
-"style! -name tabnum chrome://* #TabsToolbar { counter-reset:tabn; } #TabsToolbar tab::after { counter-increment:tabn; content:counter(tabn); font:bold 0.84em monaco,consolas,monospace; } #TabsToolbar tab:not([pinned])::after { display:block; padding-bottom:0.4em; }
+"style! -name tabnum chrome://* #TabsToolbar { counter-reset:tabn; } #TabsToolbar tab::after { counter-increment:tabn; content:counter(tabn); font:bold 0.84em "lucida console",consolas,monospace; } #TabsToolbar tab:not([pinned])::after { display:block; padding-bottom:0.4em; }
 "====命令栏输入法自动默认为INACTIVE===
 "style! -name commandline-ime chrome://* #dactyl-commandline-command input {ime-mode: inactive;}
 
-hi Hint		font-family: "Modaco"; line-height: 6px; text-shadow: 1px 1px 1px #000; padding: 5px 6px 6px; font-size: 11px; font-weight: normal; color: white; background-color: rgba(0, 0, 0, 0.6); -moz-border-radius: 1em; -moz-box-shadow: 0 0 4px rgba(0,0,0,1); text-transform: uppercase;
+hi Hint		font-family: "lucida console",consolas; line-height: 6px; text-shadow: 1px 1px 1px #000; padding: 5px 6px 6px; font-size: 11px; font-weight: normal; color: white; background-color: rgba(0, 0, 0, 0.6); -moz-border-radius: 1em; -moz-box-shadow: 0 0 4px rgba(0,0,0,1); text-transform: uppercase;
 hi Hint[active]	background: rgba(0, 0, 0, 0.6);
 hi Hint[ambiguous] background: rgba(0, 0, 255, 0.6);
 "hi HintElem	background-color: rgba(255, 255, 0, 0.5) !important; -moz-border-radius: 2px;

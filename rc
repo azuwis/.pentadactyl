@@ -272,7 +272,7 @@ if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
 EOF
 nmap -builtin <Leader>t :trans<CR>
 
-command bootstrap :runtime bootstrap.penta
+command bootstrap :runtime bootstrap
 "" }}}
 
 "" {{{ AutoCMD
@@ -376,9 +376,9 @@ overlay.overlayObject(statusline, {
 });
 EOF
 
-"" source boostrap.penta if modified
+"" source boostrap if modified
 js <<EOF
-var bootstrapFile = "bootstrap.penta";
+var bootstrapFile = "bootstrap";
 var bootstrapPref = "extensions.dactyl.bootstrapTime";
 var file = io.File(IO.runtimePath + "/" + bootstrapFile);
 if (file.exists() && file.isFile() && file.isReadable()) {

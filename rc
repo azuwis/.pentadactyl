@@ -67,6 +67,9 @@ nmap -builtin <Leader>R :rehash<CR>
 "" private mode
 nmap -builtin <Leader>p :set private!<CR>
 
+"" fullscreen
+nmap -builtin <Leader>f :set fullscreen!<CR>
+
 "" display download
 nmap -builtin <Leader>d :downloads<CR>
 

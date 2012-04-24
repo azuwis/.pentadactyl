@@ -1,7 +1,7 @@
 "" {{{ Search Engines
 "" hide all browser search engines except google(for suggestion)
 js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google") e.hidden = true})
-silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s&lr=lang_zh-CN|lang_zh-TW|lang_en -keyword g
+silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s&ion=0&lr=lang_zh-CN|lang_zh-TW|lang_en -keyword g
 silent bmark -tags searchengine -title='Google Code Search' http://google.com/codesearch?q=%s -keyword gc
 silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
 silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t

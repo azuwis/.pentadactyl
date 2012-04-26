@@ -352,8 +352,9 @@ EOF
 
 "" custom hint
 js <<EOF
-hints.addMode("g", "Follow specfic hint in new tab", function (elem) buffer.followLink(elem, dactyl.NEW_TAB), null, ["a.l", "a.GHEXDV0CMG.GHEXDV0CFHC"]);
-hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, ["a.l", "a.GHEXDV0CMG.GHEXDV0CFHC"]);
+var selectors = ["a.l", "a.GHEXDV0CMG"];
+hints.addMode("g", "Follow specfic hint in new tab", function (elem) buffer.followLink(elem, dactyl.NEW_TAB), null, selectors);
+hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, selectors);
 EOF
 group -locations www.google.com,groups.google.com customHint
 nmap -builtin f ;g

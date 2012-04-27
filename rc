@@ -196,6 +196,16 @@ var dta = function(urls) {
         dactyl.echo("DownThemAll not installed");
         return;
     }
+    var renaming = JSON.parse(prefs.get("extensions.dta.renaming"));
+    var videoRenaming = "video-*m*.*d*-*hh*.*mm*.*ss*/*inum*.*ext*";
+    var index = renaming.indexOf(videoRenaming);
+    if (index == -1) {
+        renaming.splice(0, 0, videoRenaming);
+    } else if (index > 0) {
+        renaming[index] = renaming[0];
+        renaming[0] = videoRenaming;
+    }
+    prefs.set("extensions.dta.renaming", JSON.stringify(renaming));
     var anchors = [], images = [];
     var wrapURL = function(url, cs) { return new DTA.URL(DTA.IOService.newURI(url, cs, null)); };
     anchors = urls.map(function(elem){ return {url: wrapURL(elem, "UTF-8")}; });

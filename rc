@@ -371,6 +371,11 @@ nmap -builtin f ;g
 nmap -builtin F g;G
 group user
 
+"" google docs viewer
+js <<EOF
+hints.addMode("d", "Open link using google docs", function (elem) dactyl.open("https://docs.google.com/viewer?url=" + encodeURIComponent(elem.href), dactyl.NEW_TAB));
+EOF
+
 "" display tabgroup title on statusline
 js <<EOF
 overlay.overlayObject(statusline, {

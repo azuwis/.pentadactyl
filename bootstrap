@@ -42,9 +42,6 @@ set! content.notify.interval=500000
 set! content.notify.ontimer=true
 set! content.switch.threshold=250000
 set! content.interrupt.parsing=false
-"" disable addons compatibility check
-set! extensions.checkCompatibility.9.0=false
-set! extensions.checkCompatibility.10.0=false
 "" disable the install-dialog delay
 set! security.dialog_enable_delay=0
 "" disable tabgroup animation
@@ -57,6 +54,11 @@ set! font.name.monospace.zh-CN="Consolas"
 set! font.name.sans-serif.zh-CN="微软雅黑"
 set! font.name.serif.zh-CN="微软雅黑"
 end
+"" disable addons compatibility check
+js <<EOF
+var appVersion = prefs.get("extensions.lastAppVersion");
+prefs.set("extensions.checkCompatibility." + appVersion, false);
+EOF
 "" }}}
 
 "" {{{ Extension

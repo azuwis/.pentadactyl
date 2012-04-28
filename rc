@@ -362,7 +362,7 @@ EOF
 
 "" custom hint
 js <<EOF
-var selectors = ["a.l", "a.GHEXDV0CMG"];
+var selectors = ["a.l", "a[href^='#!topic/']"];
 hints.addMode("g", "Follow specfic hint in new tab", function (elem) buffer.followLink(elem, dactyl.NEW_TAB), null, selectors);
 hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, selectors);
 EOF

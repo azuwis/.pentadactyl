@@ -338,6 +338,7 @@ EOF
 :js <<EOF
 var switchOrOpen = function (url) {
     if (buffer.URL.spec === url) return false;
+    if (url.substr(-1) === "#") return false;
     var matches = array.nth(tabs.allTabs, function (t)(t.linkedBrowser.lastURI || {}).spec === url, 0);
     if (matches) {
         tabs.select(matches, false);

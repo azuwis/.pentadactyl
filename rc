@@ -299,7 +299,7 @@ command bootstrap :runtime bootstrap
 autocmd -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
 if (doc.title.match(/subscription/i)) {
     var title = doc.getElementsByClassName("ArticleText")[0].getElementsByTagName("a")[0].innerHTML;
-    dactyl.open(options["defsearch"] + ' site:lwn.net/SubscriberLink "' + title + '"');
+    dactyl.open('gl site:lwn.net/SubscriberLink "' + title + '"');
 }
 EOF
 "" }}}

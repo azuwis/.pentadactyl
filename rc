@@ -126,7 +126,7 @@ set newtab=all
 set showtabline=multitab
 
 "" highlight search
-set hlfind
+"set hlfind
 
 "" complete search engine suguest
 set complete=location,suggestion

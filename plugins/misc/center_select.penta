@@ -1,0 +1,2 @@
+nmap -builtin n n:centerselect<CR>
+nmap -builtin N N:centerselect<CR>

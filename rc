@@ -348,7 +348,7 @@ var switchOrOpen = function (url) {
     }
 };
 var fakeDomain = function (str) {
-    var m = str.match(/^(?:[A-Za-z0-9-]+\.)+([A-Za-z]+)$/);
+    var m = str.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)$/);
     return (m && !m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl)$/));
 };
 overlay.overlayObject(dactyl, {

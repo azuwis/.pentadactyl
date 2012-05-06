@@ -132,7 +132,7 @@ set showtabline=multitab
 set complete=location,suggestion
 
 "" allow popups popup
-set popups=tab,resized
+"set popups=tab,resized
 
 "" home row as hintkeys
 "set hintkeys=asdfg;lkjh

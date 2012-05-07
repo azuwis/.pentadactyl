@@ -48,7 +48,7 @@ var CenterSelect;
 CenterSelect = {}; 
 CenterSelect.Selector = {};
 // shortcut for commandline
-CS = CenterSelect.Selector;
+//CS = CenterSelect.Selector;
 
 // @source: http://www.michaelapproved.com/articles/object-position-top-and-left-offset-on-a-page/
 function ObjectPosition(obj) {
@@ -65,9 +65,9 @@ function ObjectPosition(obj) {
 
 var SELECTFOCUSSTYLE = "border: 2px solid orange; border-radius: 0.5em; z-index: 100;";
 var selectFocusStyle = "border: 2px solid orange; border-radius: 0.5em; z-index: 100;";
-var selectFocus;
 function createSelectFocus(bodyObj)
 {
+	var selectFocus;
 	if(content.document.getElementById("selectFocus") == null)
 	{
 		selectFocus = content.document.createElement('div');
@@ -80,6 +80,7 @@ function createSelectFocus(bodyObj)
 	{
 		selectFocus = content.document.getElementById("selectFocus");
 	}
+	return selectFocus;
 }
 
 var target_positions = {"top":0, "center":1, "bottom":2};
@@ -89,9 +90,10 @@ CenterSelect.Selector.animate = function(element, target_position){
 
 	var scrolltopDE = content.document.documentElement.scrollTop;
 	var scrolltopBD = content.document.body.scrollTop;
-	bodyObj = (scrolltopDE > 0 ? content.document.documentElement : content.document.body);
-	createSelectFocus(bodyObj);
+	var bodyObj = (scrolltopDE > 0 ? content.document.documentElement : content.document.body);
+	var selectFocus = createSelectFocus(bodyObj);
 
+	var target;
 	switch(target_position) {
 		case target_positions.top:
 			target = bodyObj.scrollTop ;
@@ -104,7 +106,7 @@ CenterSelect.Selector.animate = function(element, target_position){
 			break;
 	}
 
-	newOffset = ObjectPosition(visibleElement)[1] - target;
+	var newOffset = ObjectPosition(visibleElement)[1] - target;
 	
 	content.scrollTo(0, bodyObj.scrollTop + newOffset);
 
@@ -168,7 +170,7 @@ CenterSelect.Selector.center = function(mystyle){
 	{
 		var st = CenterSelect.Selector.getSelected();
 		if(st!=''){
-			obj = st.anchorNode.parentNode;
+			var obj = st.anchorNode.parentNode;
 			//obj = jQuery(st.anchorNode).parent();
 			CenterSelect.Selector.animate(obj, target_positions.center);
 			//CenterSelect.Selector.animate(jQuery(st).parent()); 
@@ -183,7 +185,7 @@ CenterSelect.Selector.top = function(mystyle){
 	try {
 		var st = CenterSelect.Selector.getSelected();
 		if(st!=''){
-			obj = st.anchorNode.parentNode;
+			var obj = st.anchorNode.parentNode;
 			CenterSelect.Selector.animate(obj, target_positions.top);
 		}
 	} catch(e) {
@@ -196,14 +198,14 @@ CenterSelect.Selector.bottom = function(mystyle){
 	try {
 		var st = CenterSelect.Selector.getSelected();
 		if(st!=''){
-			obj = st.anchorNode.parentNode;
+			var obj = st.anchorNode.parentNode;
 			CenterSelect.Selector.animate(obj, target_positions.bottom);
 		}
 	} catch(e) {
 		};
 };
 CenterSelect.Selector.remove = function(){
-	// var sf = content.document.getElementById("selectFocus");
+	var selectFocus = content.document.getElementById("selectFocus");
 	if( selectFocus ) {
 		selectFocus.parentNode.removeChild(selectFocus);
 	}

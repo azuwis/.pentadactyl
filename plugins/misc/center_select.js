@@ -63,8 +63,8 @@ function ObjectPosition(obj) {
 	return [curleft,curtop];
 }
 
-var SELECTFOCUSSTYLE = "border: 2px solid orange; border-radius: 0.5em; z-index: 100;";
-var selectFocusStyle = "border: 2px solid orange; border-radius: 0.5em; z-index: 100;";
+var SELECTFOCUSSTYLE = "border: 2px solid orange; border-radius: 0.5em; z-index: 100; pointer-events: none;";
+var selectFocusStyle = "border: 2px solid orange; border-radius: 0.5em; z-index: 100; pointer-events: none;";
 function createSelectFocus(bodyObj)
 {
 	var selectFocus;

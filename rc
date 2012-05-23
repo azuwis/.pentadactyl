@@ -56,7 +56,8 @@ nmap -builtin ZR zr
 nmap -builtin zZ zz
 
 "" set <Leader>
-map , <Leader>
+nmap , <Leader>
+map -builtin -modes hints , \
 
 "" open addons manager
 nmap -builtin <Leader>a :dialog addons<CR>

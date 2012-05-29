@@ -94,6 +94,10 @@ map -modes hints <C-f> -ex normal! <C-f>
 map -modes hints <C-b> -ex normal! <C-b>
 "map -modes hints gg    -ex normal! gg
 "map -modes hints G     -ex normal! G
+
+"" focus on main frame
+nmap -builtin gw ;F1<CR>
+
 "" }}}
 
 "" {{{ Searching

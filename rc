@@ -3,9 +3,9 @@
 nmap -builtin j 10j
 nmap -builtin k 10k
 
-"" swap d/D, and workaround for / tend to cause zombie compartments
-nmap -builtin d /❤❤❤❤<CR>D
-nmap -builtin D /❤❤❤❤<CR>d
+"" swap d/D
+nmap -builtin d D
+nmap -builtin D d
 "nmap -builtin d :js config.removeTab(tabs.getTab())<CR>
 
 "" swap y/Y

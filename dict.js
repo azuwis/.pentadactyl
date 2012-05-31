@@ -39,6 +39,14 @@ p,dd,dt,h1,h2,h3,h4,h5,h6,h7,li,td,th {white-space:normal; word-wrap: break-word
 	width: 30px;
 }
 
+.ciyf-cn01 strong, .block-1 strong {
+	float:left;
+}
+#dict_js_d em.hot {
+	font-weight:bolder;
+	font-style:normal;
+}
+
 #dict_js_z * {background-image:none;}
 #dict_js_z .notice {clear:both;overflow:hidden;}
 #dict_js_z .dicpy {font-weight: bolder;}
@@ -126,7 +134,9 @@ var tr = {
 		43: "Net Sentences",
 		44: "Situational Dialogues",
 		45: "The 21st Century Unabridged English-Chinese Dictionary",
-		46: "Collins"
+		46: "Collins",
+		47: "Word Usage",
+		48: "Dictionary"
 	},
 	"zh-CN": {
 		1:  "描述",
@@ -173,7 +183,9 @@ var tr = {
 		43: "网络例句",
 		44: "情景对话",
 		45: "21世纪大英汉词典",
-		46: "柯林斯高级英汉双解词典"
+		46: "柯林斯高级英汉双解词典",
+		47: "词语用法",
+		48: "英英解释"
 	}
 };
 
@@ -520,18 +532,34 @@ let youdao = {
 		return ret;
 	},
 
+	_simple: function (document) {
+		var pron = document.querySelectorAll("#results .phonetic");
+		var simple = {};
+		simple["word"] = decodeURIComponent(youdao.keyword);
+		simple["pron"] = pron.length ? pron[0].textContent.trim().replace(/^\[,?|\]$/g, "").replace(/, ,/g, ", ") : false; // @TODO: pron[0]
+		var audio = document.querySelectorAll("#results .phonetic+a");
+		simple["audio"] = false;
+		if (audio.length) {
+			let datarel = audio[0].getAttribute("data-rel"); // @TODO: audio[0]
+			simple["audio"] = "http://dict.youdao.com/dictvoice?audio=" + encodeURIComponent(datarel) + "&le=" + (dict.args["-l"] || options["dict-langpair"]["y"] || options.get("dict-langpair").defaultValue["y"]);
+		}
+		var def = Array.map(Array.slice(document.querySelectorAll("#phrsListTab .trans-container>ul, #results-contents #jcTrans+.trans-container, #results-contents #wordGroup>ul")), function(node) node.textContent.trim().replace(/\s*\n+\s*/g, " ")).join(' | ');
+		simple["def"] = def.length ? def : false;
+		return simple;
+	},
+
 	_full: function (document) {
 		var full = {title: "", sub: {}};
-		var simp = youdao._simple(document);
-		var keyword_url = youdao.href({keyword: simp["word"], le: dict.args["-l"]});
-		if (simp["pron"]) {
+		var simple = youdao._simple(document);
+		var keyword_url = youdao.href({keyword: simple["word"], le: dict.args["-l"]});
+		if (simple["pron"]) {
 			full["title"] = "" + <p class="title">
-			<a href={keyword_url} target="_new" highlight="URL">{simp["word"]}</a>
-				<span>[{simp["pron"]}]</span>
+			<a href={keyword_url} target="_new" highlight="URL">{simple["word"]}</a>
+				<span>[{simple["pron"]}]</span>
 			</p>;
 		} else {
 			full["title"] = "" + <p class="title">
-				<a href={keyword_url} target="_blank" highlight="URL">{simp["word"]}</a>
+				<a href={keyword_url} target="_blank" highlight="URL">{simple["word"]}</a>
 			</p>;
 		}
 
@@ -564,22 +592,6 @@ let youdao = {
 			full["sub"][T(13)] = dict.tidyNodes(mor, "div");
 
 		return full;
-	},
-
-	_simple: function (document) {
-		var pron = document.querySelectorAll("#results .phonetic");
-		var simp = {};
-		simp["word"] = decodeURIComponent(youdao.keyword);
-		simp["pron"] = pron.length ? pron[0].textContent.trim().replace(/^\[,?|\]$/g, "").replace(/, ,/g, ", ") : false; // @TODO: pron[0]
-		var audio = document.querySelectorAll("#results .phonetic+a");
-		simp["audio"] = false;
-		if (audio.length) {
-			let datarel = audio[0].getAttribute("data-rel"); // @TODO: audio[0]
-			simp["audio"] = "http://dict.youdao.com/dictvoice?audio=" + encodeURIComponent(datarel) + "&le=" + (dict.args["-l"] || options["dict-langpair"]["y"] || options.get("dict-langpair").defaultValue["y"]);
-		}
-		var def = Array.map(Array.slice(document.querySelectorAll("#phrsListTab .trans-container>ul, #results-contents #jcTrans+.trans-container, #results-contents #wordGroup>ul")), function(node) node.textContent.trim().replace(/\s*\n+\s*/g, " ")).join(' | ');
-		simp["def"] = def.length ? def : false;
-		return simp;
 	},
 
 	generate: function(context, args) {
@@ -786,6 +798,7 @@ let qq = {
 		}
 		return full;
 	},
+	
 	_simple: function(e) {
 		let local = e["local"];
 		let t = local[0];
@@ -996,8 +1009,8 @@ let dict_cn = {
 		dict.req = req;
 		dict_cn.keyword = keyword;
 		dict_cn.url = dict_cn.href({keyword: decodeURIComponent(keyword)});
-		req.open("POST",
-			"http://dict.cn/ws.php?utf8=true&q="+keyword
+		req.open("GET",
+			"http://dict.cn/"+keyword
 		);
 		req.onreadystatechange = function(ev) {
 			dict.ready(dict_cn, req);
@@ -1014,88 +1027,243 @@ let dict_cn = {
 
 	process: function(text) { // FIXME: kiss
 		let ret = {
-			notfound: false,
+			notfound: true,
 			pron: false,
 			def: false,
 			simple: false,
 			full: false,
-			audio: false
+			audio: false // http://audio.dict.cn/mp3.php?q=YWVyP
 		};
-		var parser = new DOMParser();
-		var xml = parser.parseFromString(text, "text/xml");
-		var def = xml.getElementsByTagName("def");
-		if (def.length && (def[0].textContent !== "Not Found")) {
-			ret["full"] = {title: "", sub: {}};
+		let doc = dict.htmlToDom(text, 'http://dict.cn', true);
+		let noword = doc.querySelectorAll('.no-word');
 
-			// key
-			var keyelem = xml.getElementsByTagName("key");
-			ret["keyword"] = keyelem.length ? keyelem[0].textContent : false;
-			// pron
-			var pronelem = xml.getElementsByTagName("pron");
-			ret["pron"] = pronelem.length ? pronelem[0].textContent : false;
+		if (noword.length == 0) {
+			let data = doc.querySelector('#data-js');
+			let dict_data_declare = data.innerHTML.split('\n')[3]; // 'var $dict_data="";'
+			let sb = new Components.utils.Sandbox("http://www.example.com/");
+			Components.utils.evalInSandbox(dict_data_declare.trim(), sb); // get $dict_data
+			_data = dict_cn._x(sb.$dict_data, 100); // @TODO: $dict_key, hardcode.
 
-			if (ret["pron"]) {
-				ret["full"]["title"] = <p class="title">
-					<a href={dict_cn.url} target="_blank" highlight="URL">{ret["keyword"]}</a>
-					<span>[{ret["pron"]}]</span>
-				</p>.toXMLString();
-			} else {
-				ret["full"]["title"] = <p class="title"><a href={dict_cn.url} target="_blank" highlight="URL">{ret["keyword"]}</a></p>.toXMLString();
-			}
-
-			// def
-			ret["def"] = [];
-			Array.forEach(def, function (node) {
-				ret["def"].push(node.textContent);
-			})
-			ret["def"] = ret["def"].join("\n");
-			let piece = <></>;
-			let ps = ret["def"].trim().split("\n");
-			for (let [i, v] in Iterator(ps))
-				piece += <><span>{v}</span><br/></>;
-			ret["full"]["sub"][T(8)] = <div>{piece}</div>.toXMLString();
-
-			// origTrans
-			var sentelems = xml.getElementsByTagName("sent");
-			if (sentelems.length) {
-				var origTrans = [];
-				let oT = <></>;
-				for (var i = 0; i < sentelems.length; i++) {
-					let org = sentelems[i].firstChild.textContent
-					let trans = sentelems[i].lastChild.textContent;
-					let dt = new XML("<dt>"+org+"</dt>");
-					let dd = new XML("<dd>"+trans+"</dd>");
-					oT += <>{dt}{dd}</>;
-
-					origTrans.push([org, trans]);
-				}
-				ret["full"]["sub"][T(18)] = <dl>{oT}</dl>.toXMLString();
-			}
-
-			// rel
-			var rels = xml.getElementsByTagName("rel");
-			if (rels.length) {
-				let rs = <></>;
-				for (var i = 0; i < rels.length; i++) {
-					let url = dict_cn.href({keyword: rels[i].textContent.trim()});
-					rs += <><span><a href={url} target="_blank" highlight="URL">{rels[i].textContent}</a></span></>;
-				}
-				ret["full"]["sub"][T(9)] = rs.toXMLString();
-			}
-
-			// audio
-			var audioelem = xml.getElementsByTagName("audio");
-			ret["audio"] = audioelem.length ? audioelem[0].textContent : false;
-
-			ret["simple"] = ret["keyword"] + ": ";
-			if (ret["pron"])
-				ret["simple"] += "["+ret["pron"] +"] ";
-			ret["simple"] += dict._eolToSpace(ret["def"]);
-
-		} else {
-			ret["notfound"] = true;
+			$data = _data.data;
+			
+			let _ret = dict_cn._simple(doc, $data);
+			if (_ret["pron"])
+				_ret["simple"] = _ret["keyword"] + " " + _ret["pron"] + " " + _ret["def"];
+			else
+				_ret["simple"] = _ret["keyword"] + " " + _ret["def"];
+			_ret["full"] = dict_cn._full(doc, $data);
+			_ret['notfound'] = false;
+			ret = update(ret, _ret);
 		}
 		return ret;
+	},
+
+	_x: function(e, l) {
+		for (var n = "", o = [], r = e.length, m = 0; m < r; m++) {
+			var s = e.charCodeAt(m);
+			m % 2 == 0 ? o.push(~s & 127) : o.push(s ^ l)
+		}
+		n = String.fromCharCode.apply(n, o)
+		try {
+			let sb = new Components.utils.Sandbox("http://www.example.com/");
+			return Components.utils.evalInSandbox("(" + n + ")", sb);
+		} catch (f) {
+			throw f;
+		}
+	},
+
+	_simple: function(document, data) {
+		let simple = {pron: false, keyword: decodeURIComponent(dict_cn.keyword), audio: false, def: false}; // @TODO: audio
+		let prons = document.querySelectorAll('.yinbiao');
+		if (prons.length) {
+			var pron_raws = [];
+			Array.forEach(prons, function(pron) {
+				pron_raws.push(pron.textContent.trim());
+			});
+			simple['pron'] = pron_raws.join(' ');
+		}
+
+		if (data.expPart && data.expPart.length) {
+			let exps = data.expPart;
+			var raws = [];
+			Array.forEach(exps, function(exp) {
+				if (typeof exp === "string") {
+					raws.push(exp);
+				} else {
+					var line = exp.p;
+					var exp_es = [];
+					if (exp.exp.length) {
+						Array.forEach(exp.exp, function(item) {
+							exp_es.push(item.e);
+						});
+						line += exp_es.join(',');
+					}
+					raws.push(line);
+				}
+			});
+			simple['def'] = raws.join(' | ');
+		}
+		return simple;
+	},
+
+	// 解析单词词形变化
+	_word_transform: function(document) {
+		let transforms = document.querySelectorAll('#word-transform a');
+		if (transforms.length) {
+			let output = "<p class=\"title\">";
+			output += T(13) + " :";
+			Array.forEach(transforms, function(t) {
+					output += "<span><span>" + t.getAttribute('desc') + "</span> <span><a href=\"" + dict_cn.href({keyword: t.textContent}) + "\">" + t.textContent + "</a></span></span>";
+			});
+			output +="</p>";
+			return output;
+		} else {
+			let word_change = document.querySelector('#word-transform .w-change');
+			if (word_change) {
+				let wc = word_change.textContent.trim();
+				if (wc)
+					return "<p class=\"title\">" + wc + "</p>";
+			}
+			return false;
+		}
+	},
+
+	_full: function(document, data) {
+		var full = {title: "", sub: {}};
+		var simple = dict_cn._simple(document, data);
+		var keyword_url = dict_cn.href({keyword: simple["keyword"]});
+		if (simple["pron"]) {
+			full["title"] = "" + <p class="title">
+			<a href={keyword_url} target="_new" highlight="URL">{simple["keyword"]}</a>
+				<span>{simple["pron"]}</span><span>{simple["def"]}</span>
+			</p>;
+		} else {
+			full["title"] = "" + <p class="title">
+				<a href={keyword_url} target="_blank" highlight="URL">{simple["keyword"]}</a>
+				<span>{simple["def"]}</span>
+				</p>;
+		}
+
+		let transforms = dict_cn._word_transform(document);
+		if (transforms) {
+			full["title"] += transforms;
+			full["title"] = "<div>" + dict.tidyStr(full["title"]) + "</div>";
+		}
+
+		if (data.expPart && data.expPart.length) {
+			var s = "";
+			data.expPart.forEach(function(item) {
+				if (typeof item === "string") {
+					s += "<div>" + item + "</div>";
+				} else {
+					var exps = item.exp;
+					var change = "<p>" + item.p + "</p>";
+					var parags = "";
+					if (exps.length) {
+						exps.forEach(function(exp) {
+							var sents = "";
+							if (exp.s) {
+								var sample_sents = exp.s;
+								if (sample_sents.length) {
+									sample_sents.forEach(function(sent) {
+										if (typeof sent === "string")
+											sents += "<p>" + sent + "</p>";
+										else {
+											sents += "<p>" + sent.k + "</p>";
+											sents += "<p>" + sent.v + "</p>";
+										}
+									});
+								}
+							}
+							var _s = "<p>" + exp.e + "</p>";
+							parags += "<div style=\"padding-left:2em;\">" + _s + "<div style=\"padding-left:2em;\">" + sents + "</div></div>";
+						});
+					}
+					s += "<div>" + change + parags + "</div>";
+				}
+			});
+			full["sub"][T(8)] = "<div>" + dict.tidyStr(s) + "</div>";
+		}
+
+		if (data.sentPart && data.sentPart.length) {
+			let parag = "";
+			data.sentPart.forEach(function(item, idx) {
+				parag += "<dt>" + (idx + 1) + ". " + item.k + "</dt>";
+				parag += "<dd>&nbsp;&nbsp;&nbsp;" + item.v + "</dd>";
+			});
+			full["sub"][T(18)] = "<dl>" + dict.tidyStr(parag) + "</dl>";
+		}
+
+		if (data.jiangjiePart) {
+			let jiangjie = "";
+			jiangjie += '<dl><dt>[词源解说]</dt><dd>' + data.jiangjiePart.cy + '</dd>';
+			if (data.jiangjiePart.yf) {
+				let yf = data.jiangjiePart.yf;
+				if (yf.point) {
+					jiangjie += "<dt>[词语用法]</dt>";
+					let point = yf.point;
+					let point_outputs = "<dd>";
+					point.forEach(function(item) {
+							point_outputs += "<ul>";
+							point_outputs += "<li>" + item + "</li>";
+							point_outputs += "</ul>";
+					})
+					point_outputs += "</dd>";
+					jiangjie += point_outputs;
+				}
+				if (yf.eg) {
+					jiangjie += '<dt>[错句举例与错句分析]</dt>';
+					let eg = yf.eg;
+					let eg_outputs = "<dd>";
+					eg.forEach(function(item) {
+							eg_outputs += "<ul>";
+							eg_outputs += "<li><b>错句：</b>" + item.w + "</li>";
+							eg_outputs += "<li><b>纠正：</b>" + item.r + "</li>";
+							eg_outputs += "<li><b>翻译：</b>" + item.t + "</li>";
+							eg_outputs += "<li><b>分析：</b>" + item.e + "</li>";
+							eg_outputs += "</ul>";
+					})
+					eg_outputs += "</dd>";
+					jiangjie += eg_outputs;
+				}
+			}
+
+			jiangjie += "<dl>";
+			full["sub"][T(47)] = '<div class="basic">' + dict.tidyStr(jiangjie) + "</div>";
+		}
+
+		let dictionary = document.querySelector("#ee");
+		if (dictionary)
+			full["sub"][T(48)] = dict.tidy(dictionary);
+
+		if (data.antonymPart && data.antonymPart.length) {
+			let mor = "";
+			data.antonymPart.forEach(function(item) {
+				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
+				mor += "<span>" + item[1] + "</span></p>";
+			});
+			full["sub"][T(11)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
+		}
+		
+		if (data.wordPart && data.wordPart.length) {
+			let mor = "";
+			data.wordPart.forEach(function(item) {
+				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
+				mor += "<span>" + item[1] + "</span></p>";
+			});
+			full["sub"][T(9)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
+		}
+		
+		if (data.synonymPart && data.synonymPart.length) {
+			let mor = "";
+			data.synonymPart.forEach(function(item) {
+				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
+				mor += "<span>" + item[1] + "</span></p>";
+			});
+			full["sub"][T(12)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
+		}
+
+		return full;
 	},
 
 	generate: function(context, args) {

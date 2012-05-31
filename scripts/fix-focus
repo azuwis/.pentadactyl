@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+# Automator -> Serive -> Run Shell Script -> Service receives: no input -> in: Firefox ->
+# Shell: /bin/bash -> content: path-to-this-script -> Saveas: fix-focus
+
+# System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> fix-focus -> bind a key
+
+from Quartz.CoreGraphics import *
+
+def mouseEvent(type, posx, posy):
+        theEvent = CGEventCreateMouseEvent(
+                    None, 
+                    type, 
+                    (posx,posy), 
+                    kCGMouseButtonLeft)
+        CGEventPost(kCGHIDEventTap, theEvent)
+
+def mousemove(posx,posy):
+        mouseEvent(kCGEventMouseMoved, posx,posy);
+
+def mouseclick(posx,posy):
+        mouseEvent(kCGEventLeftMouseDown, posx,posy);
+        mouseEvent(kCGEventLeftMouseUp, posx,posy);
+
+# Save current mouse position
+ourEvent = CGEventCreate(None);
+currentpos = CGEventGetLocation(ourEvent);
+
+# Click bottom right coner
+mainMonitor = CGDisplayBounds(CGMainDisplayID())
+mouseclick(int(mainMonitor.size.width - 3), int(mainMonitor.size.height - 16));
+
+# Press ESC
+keyEvent = CGEventCreateKeyboardEvent(None, 53, True)
+CGEventPost(kCGHIDEventTap, keyEvent)
+
+# Restore mouse position
+mousemove(int(currentpos.x),int(currentpos.y));

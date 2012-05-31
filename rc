@@ -6,7 +6,7 @@ nmap -builtin k 10k
 "" swap d/D
 nmap -builtin d D
 nmap -builtin D d
-"nmap -builtin d :js config.removeTab(tabs.getTab())<CR>
+nmap -builtin gd :js config.removeTab(tabs.getTab())<CR>
 
 "" swap y/Y
 "nmap -builtin y Y

@@ -36,6 +36,13 @@ var INFO =
         </description>
     </item>
     <item>
+        <tags>:tgg :tgroup-get</tags>
+        <spec>:tgroup-get <oa>TabIndex</oa></spec>
+        <description>
+            This moves a tab to the current group.
+        </description>
+    </item>
+    <item>
        <tags>:tgn :tgroup-new</tags>
        <spec>:tgroup-new <oa>newGroupname</oa></spec>
        <description>
@@ -180,6 +187,17 @@ let TabGroupie = {
             }
         });
     },
+
+    getTab: function getTab(index){
+        tabs.getGroups( function ({ GroupItems }) {
+            let activeGroup = GroupItems.getActiveGroupItem();
+            let tab = tabs.getTab(index - 1,false);  // cause we count from 0
+
+            TabView.moveTabTo(tab, activeGroup.id);
+            let tabIndex = tabs.allTabs.indexOf(tab);
+            config.tabbrowser.mTabContainer.selectedIndex = tabIndex;
+        });
+    },
 }
 
 try{
@@ -250,5 +268,18 @@ group.commands.add(["tgroup-s[witch]", "tgs"],
                         completer: function (context) {   //thanks to Kris Maglione
                             context.keys = { text: "title", description: "id" };
                             context.completions = TabGroupie.TabGroups;
+                        }
+                    });
+
+group.commands.add(["tgroup-g[et]", "tgg"],
+                    "get a tab to the current group",
+                    function (args){
+                        TabGroupie.getTab(args[0]);
+                        TabGroupie.init();
+                    },
+                    {
+                        argCount: "1",
+                        completer: function (context) {
+                            completion.buffer(context);
                         }
                     });

@@ -10,13 +10,14 @@ Firefox 4.0 (or similar) or higher
 
 install:
 Just copy the TabGroupie.js to ~/.pentadactyl/plugins/ (on Windows: %USERPROFILE%\pentadactyl\plugins)
-and it will work with these five commands:
+and it will work with these six commands:
 
     tgroup-change [TARGETGROUPTITLE]
     tgroup-delete [GROUPTITLE]
-    tgroup-new [NEWGROUPTITLE]
+    tgroup-get    [TABINDEX]
+    tgroup-new    [NEWGROUPTITLE]
     tgroup-switch [TARGETGROUPTITLE]
-    tgroup-title [NEWTITLE]
+    tgroup-title  [NEWTITLE]
 after restarting pentadactyl.
 
 uninstall:

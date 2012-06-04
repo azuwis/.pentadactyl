@@ -344,6 +344,7 @@ EOF
 var switchOrOpen = function (url) {
     if (buffer.URL.spec === url) return false;
     if (url.indexOf("#", url.length - 1) !== -1) return false;
+    if (url.indexOf("http://") !==0 && url.indexOf("https://") !==0 && url.indexOf("about:") !== 0) return false;
     var matches = array.nth(tabs.allTabs, function (t)(t.linkedBrowser.lastURI || {}).spec === url, 0);
     if (matches) {
         tabs.select(matches, false);

@@ -48,6 +48,8 @@ set! content.interrupt.parsing=false
 set! security.dialog_enable_delay=0
 "" disable tabgroup animation
 set! browser.panorama.animate_zoom=false
+"" do not track
+set! privacy.donottrackheader.enabled=true
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

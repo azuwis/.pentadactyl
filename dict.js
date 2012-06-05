@@ -6,7 +6,7 @@ var SPACE = ' ';
 
 var STYLE = <style type="text/css">
 <![CDATA[
-body { white-space:normal; }
+body { white-space:normal;}
 * {line-height:24px;}
 th, dt { font-weight:bolder; }
 dt { list-style-type: disc; }
@@ -45,6 +45,16 @@ p,dd,dt,h1,h2,h3,h4,h5,h6,h7,li,td,th {white-space:normal; word-wrap: break-word
 #dict_js_d em.hot {
 	font-weight:bolder;
 	font-style:normal;
+}
+
+.dict_block {
+	width:600px;
+	margin-left:1em;
+	font-size:110%;
+}
+
+#dict_js_d .fold, #dict_js_d .unfold, #dict_js_d .folds, #dict_js_d .cont-one .choose {
+	display:none;
 }
 
 #dict_js_z * {background-image:none;}
@@ -1029,7 +1039,7 @@ let dict_cn = {
 		let ret = {
 			notfound: true,
 			pron: false,
-			def: false,
+			def: '',
 			simple: false,
 			full: false,
 			audio: false // http://audio.dict.cn/mp3.php?q=YWVyP
@@ -1037,43 +1047,21 @@ let dict_cn = {
 		let doc = dict.htmlToDom(text, 'http://dict.cn', true);
 		let noword = doc.querySelectorAll('.no-word');
 
-		if (noword.length == 0) {
-			let data = doc.querySelector('#data-js');
-			let dict_data_declare = data.innerHTML.split('\n')[3]; // 'var $dict_data="";'
-			let sb = new Components.utils.Sandbox("http://www.example.com/");
-			Components.utils.evalInSandbox(dict_data_declare.trim(), sb); // get $dict_data
-			_data = dict_cn._x(sb.$dict_data, 100); // @TODO: $dict_key, hardcode.
-
-			$data = _data.data;
-			
-			let _ret = dict_cn._simple(doc, $data);
+		if (true) {
+			let _ret = dict_cn._simple(doc);
 			if (_ret["pron"])
 				_ret["simple"] = _ret["keyword"] + " " + _ret["pron"] + " " + _ret["def"];
 			else
 				_ret["simple"] = _ret["keyword"] + " " + _ret["def"];
-			_ret["full"] = dict_cn._full(doc, $data);
+			_ret["full"] = dict_cn._full(doc);
 			_ret['notfound'] = false;
 			ret = update(ret, _ret);
 		}
 		return ret;
 	},
 
-	_x: function(e, l) {
-		for (var n = "", o = [], r = e.length, m = 0; m < r; m++) {
-			var s = e.charCodeAt(m);
-			m % 2 == 0 ? o.push(~s & 127) : o.push(s ^ l)
-		}
-		n = String.fromCharCode.apply(n, o)
-		try {
-			let sb = new Components.utils.Sandbox("http://www.example.com/");
-			return Components.utils.evalInSandbox("(" + n + ")", sb);
-		} catch (f) {
-			throw f;
-		}
-	},
-
-	_simple: function(document, data) {
-		let simple = {pron: false, keyword: decodeURIComponent(dict_cn.keyword), audio: false, def: false}; // @TODO: audio
+	_simple: function(document) {
+		let simple = {pron: '', keyword: decodeURIComponent(dict_cn.keyword), audio: false, def: ''}; // @TODO: audio
 		let prons = document.querySelectorAll('.yinbiao');
 		if (prons.length) {
 			var pron_raws = [];
@@ -1083,32 +1071,16 @@ let dict_cn = {
 			simple['pron'] = pron_raws.join(' ');
 		}
 
-		if (data.expPart && data.expPart.length) {
-			let exps = data.expPart;
-			var raws = [];
-			Array.forEach(exps, function(exp) {
-				if (typeof exp === "string") {
-					raws.push(exp);
-				} else {
-					var line = exp.p;
-					var exp_es = [];
-					if (exp.exp.length) {
-						Array.forEach(exp.exp, function(item) {
-							exp_es.push(item.e);
-						});
-						line += exp_es.join(',');
-					}
-					raws.push(line);
-				}
-			});
-			simple['def'] = raws.join(' | ');
+		let def = document.querySelector('.cont-one:first-of-type');
+		if (def) {
+			simple['def'] = def.textContent.trim();
 		}
 		return simple;
 	},
 
 	// 解析单词词形变化
 	_word_transform: function(document) {
-		let transforms = document.querySelectorAll('#word-transform a');
+		let transforms = document.querySelectorAll('#word-transform .w-change a');
 		if (transforms.length) {
 			let output = "<p class=\"title\">";
 			output += T(13) + " :";
@@ -1124,13 +1096,13 @@ let dict_cn = {
 				if (wc)
 					return "<p class=\"title\">" + wc + "</p>";
 			}
-			return false;
+			return '';
 		}
 	},
 
-	_full: function(document, data) {
+	_full: function(document) {
 		var full = {title: "", sub: {}};
-		var simple = dict_cn._simple(document, data);
+		var simple = dict_cn._simple(document);
 		var keyword_url = dict_cn.href({keyword: simple["keyword"]});
 		if (simple["pron"]) {
 			full["title"] = "" + <p class="title">
@@ -1150,119 +1122,18 @@ let dict_cn = {
 			full["title"] = "<div>" + dict.tidyStr(full["title"]) + "</div>";
 		}
 
-		if (data.expPart && data.expPart.length) {
-			var s = "";
-			data.expPart.forEach(function(item) {
-				if (typeof item === "string") {
-					s += "<div>" + item + "</div>";
-				} else {
-					var exps = item.exp;
-					var change = "<p>" + item.p + "</p>";
-					var parags = "";
-					if (exps.length) {
-						exps.forEach(function(exp) {
-							var sents = "";
-							if (exp.s) {
-								var sample_sents = exp.s;
-								if (sample_sents.length) {
-									sample_sents.forEach(function(sent) {
-										if (typeof sent === "string")
-											sents += "<p>" + sent + "</p>";
-										else {
-											sents += "<p>" + sent.k + "</p>";
-											sents += "<p>" + sent.v + "</p>";
-										}
-									});
-								}
-							}
-							var _s = "<p>" + exp.e + "</p>";
-							parags += "<div style=\"padding-left:2em;\">" + _s + "<div style=\"padding-left:2em;\">" + sents + "</div></div>";
-						});
-					}
-					s += "<div>" + change + parags + "</div>";
-				}
-			});
-			full["sub"][T(8)] = "<div>" + dict.tidyStr(s) + "</div>";
-		}
+		let titles = document.querySelectorAll('.tab h6 span');
+		let contents = document.querySelectorAll('.tab .tabcontent');
 
-		if (data.sentPart && data.sentPart.length) {
-			let parag = "";
-			data.sentPart.forEach(function(item, idx) {
-				parag += "<dt>" + (idx + 1) + ". " + item.k + "</dt>";
-				parag += "<dd>&nbsp;&nbsp;&nbsp;" + item.v + "</dd>";
-			});
-			full["sub"][T(18)] = "<dl>" + dict.tidyStr(parag) + "</dl>";
-		}
-
-		if (data.jiangjiePart) {
-			let jiangjie = "";
-			jiangjie += '<dl><dt>[词源解说]</dt><dd>' + data.jiangjiePart.cy + '</dd>';
-			if (data.jiangjiePart.yf) {
-				let yf = data.jiangjiePart.yf;
-				if (yf.point) {
-					jiangjie += "<dt>[词语用法]</dt>";
-					let point = yf.point;
-					let point_outputs = "<dd>";
-					point.forEach(function(item) {
-							point_outputs += "<ul>";
-							point_outputs += "<li>" + item + "</li>";
-							point_outputs += "</ul>";
-					})
-					point_outputs += "</dd>";
-					jiangjie += point_outputs;
-				}
-				if (yf.eg) {
-					jiangjie += '<dt>[错句举例与错句分析]</dt>';
-					let eg = yf.eg;
-					let eg_outputs = "<dd>";
-					eg.forEach(function(item) {
-							eg_outputs += "<ul>";
-							eg_outputs += "<li><b>错句：</b>" + item.w + "</li>";
-							eg_outputs += "<li><b>纠正：</b>" + item.r + "</li>";
-							eg_outputs += "<li><b>翻译：</b>" + item.t + "</li>";
-							eg_outputs += "<li><b>分析：</b>" + item.e + "</li>";
-							eg_outputs += "</ul>";
-					})
-					eg_outputs += "</dd>";
-					jiangjie += eg_outputs;
+		Array.forEach(titles, function(title, idx) {
+			if (contents[idx]) {
+				let pieces = contents[idx].querySelectorAll('.cont-one');
+				if (pieces.length) {
+					let t = title.textContent.trim();
+					full["sub"][t] = dict.tidyNodes(pieces, 'div');
 				}
 			}
-
-			jiangjie += "<dl>";
-			full["sub"][T(47)] = '<div class="basic">' + dict.tidyStr(jiangjie) + "</div>";
-		}
-
-		let dictionary = document.querySelector("#ee");
-		if (dictionary)
-			full["sub"][T(48)] = dict.tidy(dictionary);
-
-		if (data.antonymPart && data.antonymPart.length) {
-			let mor = "";
-			data.antonymPart.forEach(function(item) {
-				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
-				mor += "<span>" + item[1] + "</span></p>";
-			});
-			full["sub"][T(11)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
-		}
-		
-		if (data.wordPart && data.wordPart.length) {
-			let mor = "";
-			data.wordPart.forEach(function(item) {
-				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
-				mor += "<span>" + item[1] + "</span></p>";
-			});
-			full["sub"][T(9)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
-		}
-		
-		if (data.synonymPart && data.synonymPart.length) {
-			let mor = "";
-			data.synonymPart.forEach(function(item) {
-				mor += "<p><span><a href=\"" + dict_cn.href({keyword:item[0]}) + "\">" + item[0] + "</a></span>";
-				mor += "<span>" + item[1] + "</span></p>";
-			});
-			full["sub"][T(12)] = '<div class="basic">' + dict.tidyStr(mor) + "</div>";
-		}
-
+		});
 		return full;
 	},
 
@@ -1940,7 +1811,7 @@ let dict = {
 						ret["full"]["sub"][prop] = new XML("<r>"+ret["full"]["sub"][prop]+"</r>");
 					}
 
-					var list = template.table(ret["full"]["title"], ret["full"]["sub"]);
+					var list = dict.details(ret);
 					dactyl.echo(<>{STYLE}<div class="dict_block" id={"dict_js_"+(dict.args["-e"] || options["dict-engine"] || options.get("dict-engine").defaultValue)}>{list}</div></>, commandline.FORCE_MULTILINE);
 					// dactyl.echomsg(ret["full"]); // commandline.FORCE_MULTILINE
 				}
@@ -1958,6 +1829,18 @@ let dict = {
 				break;
 			}
 		}
+	},
+
+	details: function(ret) {
+		let sub = ret["full"]["sub"];
+		let title = ret["full"]["title"];
+		let items = <><div class="title">{title}</div></>;
+		let first = true;
+		for ( var prop in sub ) {
+			var e = sub[prop];
+			items += <><div><h4 style="margin-left:1em;">{prop}</h4><div style="margin-left:3em;">{sub[prop]}</div></div></>;
+		}
+		return <div>{items}</div>;
 	},
 
 	ready: function(worker, req) {
@@ -2479,7 +2362,7 @@ group.options.add(["dict-simple", "dics"],
 group.options.add(["dict-engine", "dice"],
 	T(23),
 	"string",
-	"d",
+	"q",
 	{
 		completer: function(context) [
 			["d", T(24)],
@@ -2866,7 +2749,7 @@ var INFO =
         <tags>'dice' 'dict-engine'</tags>
         <spec>'dict-engine' 'dice'</spec>
         <type>string</type>
-        <default>d</default>
+        <default>q</default>
         <description>
 			  <p>Sites that dict.js supports:  </p>
 			  <dl dt="width: 6em;">
@@ -2883,7 +2766,7 @@ var INFO =
         <tags>'dice' 'dict-engine'</tags>
         <spec>'dict-engine' 'dice'</spec>
         <type>string</type>
-        <default>d</default>
+        <default>q</default>
         <description>
 			<p>dict.js 当前支持的网站：</p>
 			<dl dt="width: 6em;">

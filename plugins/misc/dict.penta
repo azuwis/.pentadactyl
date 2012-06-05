@@ -1,3 +1,4 @@
+set dict-engine=y
 nmap -builtin <M-d> :dict<CR>
 nmap -builtin gD :dict!<CR>
 nmap -builtin gl :dict! -e<Space>

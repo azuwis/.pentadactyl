@@ -49,7 +49,7 @@ hints.addMode('C', "Generate curl command for a form", function(elem) {
              ["-A", escape(navigator.userAgent)],
              ["-JOL"],
              [escape(url)]]
-        ).map(function(e) e.join(" ")).join(" \\\n\t")).join(" "), true);
+        ).map(function(e) e.join(" ")).join(" \\\n")).join(" "), true);
 });
 
 /* vim:se sts=4 sw=4 et: */

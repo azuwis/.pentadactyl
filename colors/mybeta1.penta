@@ -54,7 +54,8 @@ hi Normal               color: black !important; background: white !important; f
 hi Object               color: maroon;
 hi Preview              color: #4B9CEB;
 hi Question             color: #9ECE9E; background: #242421; font-weight: bold;
-hi Search               font-size: inherit; padding: 0; color: #385F38; background-color: #F8F893; padding: 0;
+"hi Search               font-size: inherit; padding: 0; color: #385F38; background-color: #F8F893; padding: 0;
+"hi Find                 color: #000000; background-color: #ffffff;
 hi StatusLine           background: ffffff !important; font-size: 10pt; font-family: "lucida console",consolas,monospace; font-weight: 600; padding: 0px 3px;
 hi StatusInfoMsg        background: #ffffff !important; font-size: 9pt;
 hi StatusLineNormal     color: black !important; background: #ffffff !important; font-size: 9pt;

@@ -122,7 +122,7 @@ set previouspattern^='[上前]\s*一?\s*[页张个篇章頁]','\bnewer\s*posts\b
 
 "" do not display right scrollbar and commandline
 "set guioptions+=n
-set guioptions=sbn
+set guioptions=sn
 
 "" open things at new tab
 set newtab=all

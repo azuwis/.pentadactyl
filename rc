@@ -388,7 +388,7 @@ group user
 
 "" google docs viewer
 js <<EOF
-hints.addMode("d", "Open link using google docs", function (elem) dactyl.open("https://docs.google.com/viewer?url=" + encodeURIComponent(elem.href), dactyl.NEW_TAB), null, ["a[href$='.pdf']", "a[href$='.doc']", "a[href$='.ppt']", "a[href$='.odp']"]);
+hints.addMode("d", "Open link using google docs", function (elem) dactyl.open("https://docs.google.com/viewer?url=" + encodeURIComponent(elem.href), dactyl.NEW_TAB), null, ["a[href*='.pdf']", "a[href*='.doc']", "a[href*='.ppt']", "a[href*='.odp']"]);
 EOF
 
 "" display tabgroup title on statusline

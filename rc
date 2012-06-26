@@ -28,6 +28,10 @@ nmap -builtin e <C-n>
 nmap -builtin h <C-o>
 nmap -builtin l <C-i>
 
+"" left/right
+nmap -builtin <C-o> 10<Right>
+nmap -builtin <C-i> 10<Left>
+
 "" prev selected tab
 nmap -builtin x <C-^>
 

@@ -134,6 +134,11 @@ set newtab=all
 "" only show the tab bar when there are multiple tabs
 set showtabline=multitab
 
+"" restore original behavior of showing hovered link
+set showstatuslinks=
+style chrome://browser/content/browser.xul statuspanel#statusbar-display { display:block; visibility: visible }
+style chrome://browser/content/browser.xul statuspanel#statusbar-display[label^="Looking"], statuspanel#statusbar-display[label^="Connecting"], statuspanel#statusbar-display[label^="Connected"], statuspanel#statusbar-display[label^="Transferring"], statuspanel#statusbar-display[label^="Waiting"], statuspanel#statusbar-display[label^="Read"] {opacity: 0 !important; }
+
 "" highlight search
 "set hlfind
 

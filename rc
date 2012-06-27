@@ -385,12 +385,14 @@ EOF
 "" custom hint
 js <<EOF
 var selectors = ["a.l", "a[href^='#!topic/']", "div.links_main"];
-hints.addMode("g", "Follow specfic hint in new tab", function (elem) buffer.followLink(elem, dactyl.NEW_TAB), null, selectors);
+hints.addMode("g", "Follow specfic hint", function (elem) buffer.followLink(elem), null, selectors);
 hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, selectors);
 EOF
 group -locations www.google.com,groups.google.com,duckduckgo.com customHint
-nmap -builtin f ;g
+nmap -builtin f ;G
 nmap -builtin F g;G
+group -locations groups.google.com customHintGoogleGroups
+nmap -builtin f ;g
 group user
 
 "" google docs viewer

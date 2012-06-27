@@ -295,8 +295,6 @@ if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
 }
 EOF
 nmap -builtin <Leader>t :trans<CR>
-
-command bootstrap :runtime bootstrap
 "" }}}
 
 "" {{{ AutoCMD
@@ -417,6 +415,7 @@ overlay.overlayObject(statusline, {
 EOF
 
 "" source boostrap if modified
+command bootstrap :runtime bootstrap
 js <<EOF
 var bootstrapFile = "bootstrap";
 var bootstrapPref = "extensions.dactyl.bootstrapTime";

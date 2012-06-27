@@ -50,6 +50,7 @@ set! security.dialog_enable_delay=0
 set! browser.panorama.animate_zoom=false
 "" do not track
 set! privacy.donottrackheader.enabled=true
+set! browser.newtabpage.enabled=false
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

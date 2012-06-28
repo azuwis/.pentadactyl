@@ -434,6 +434,15 @@ if (file.exists() && file.isFile() && file.isReadable()) {
     }
 }
 EOF
+
+"" change EX mode prompt
+js <<EOF
+overlay.overlayObject(modes, {
+    _getModeMessage: function _getModeMessage() {
+        return _getModeMessage.superapply(this, arguments).replace(/^-- EX --/, "➜ ");
+    }
+});
+EOF
 "" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

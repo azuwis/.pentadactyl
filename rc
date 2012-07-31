@@ -371,7 +371,7 @@ overlay.overlayObject(dactyl, {
     open: function open(urls, params, force) {
         if (typeof urls === "string") {
             if (switchOrOpen(urls)) return;
-            if (fakeDomain(urls)) arguments[0] = options["defsearch"] + " " + arguments[0];
+            if (fakeDomain(urls) || arguments[0].indexOf("google ") === 0) arguments[0] = options["defsearch"] + " " + arguments[0];
         }
         open.superapply(this, arguments);
     }

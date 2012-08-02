@@ -164,9 +164,6 @@ set strictfocus^=tao123.com:despotic
 "" disable smooth scroll
 set scrollsteps=1
 set scrolltime=0
-
-"" workaround for google search
-set passkeys+=www.google.com:'<CR>'
 "" }}}
 
 "" {{{ Command

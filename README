@@ -3,6 +3,10 @@ INITIALIZE
 
 $ ln -s .pentadactyl/rc ${HOME}/.pentadactylrc
 
+TIPS
+====
+<C-c> stop page load and gif animation
+
 ORIGINS
 =======
 

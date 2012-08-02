@@ -8,7 +8,6 @@ gmail-dev.penta
 useragent-dev.js
 tab-options-dev.js
 jscompletion-dev.js
-browser-improvements-dev.js
 aardvark-dev.js
 flashblock-dev.js
 http-headers-dev.js

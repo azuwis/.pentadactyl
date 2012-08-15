@@ -295,6 +295,24 @@ if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
 }
 EOF
 nmap -builtin <Leader>t :trans<CR>
+
+"" jump to a command, mapping or option source definition, from https://gist.github.com/3331062
+command jumptodef,jd -literal=1 -nargs=1 -complete help -js <<EOF
+function sourceLocation(str) {
+    if (isArray(str))
+        str = str[0];
+    function mapping(s) {
+        let [, mc, key] = /(?:(.)_)?(.*)/.exec(s);
+        return mappings.get(mc ? modes.modeChars[mc] : modes.NORMAL, key) ||
+            dactyl.echoerr("Bad bad: " + s);
+    }
+    let frame = ((str[0] === ":") ? commands.get(str.substr(1)) :
+        /'.*?'/.test(str) ? options.get(str.slice(1,-1)) :
+        mapping(str)).definedAt;
+    return { url: util.fixURI(frame.filename), line: frame.lineNumber };
+}
+buffer.viewSource(sourceLocation(args[0]))
+EOF
 "" }}}
 
 "" {{{ AutoCMD

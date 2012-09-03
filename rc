@@ -422,14 +422,18 @@ EOF
 js <<EOF
 overlay.overlayObject(statusline, {
     updateTabCount: function updateTabCount(delayed) {
-        let title;
-        tabs.getGroups( function ({ GroupItems }) {
-            activeGroup = GroupItems.getActiveGroupItem();
-            title = (activeGroup.getTitle() === "")?
-                "" + activeGroup.id : activeGroup.getTitle();
-        });
         updateTabCount.superapply(this, arguments);
-        if (!delayed) this.widgets.tabcount.value = "(" + title + ")" + this.widgets.tabcount.value;
+        if (!delayed) {
+            let title = "";
+            let groups = services.sessionStore.getWindowValue(window, "tabview-groups");
+            if (groups) {
+                let active = JSON.parse(groups).activeGroupId;
+                let groupData = services.sessionStore.getWindowValue(window, "tabview-group");
+                title = JSON.parse(groupData)[active].title;
+            }
+
+            if (title) this.widgets.tabcount.value = "(" + title + ")" + this.widgets.tabcount.value;
+        }
     }
 });
 EOF

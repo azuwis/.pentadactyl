@@ -14,12 +14,11 @@ var INFO =
         rename or delete them and move the currently use tab from group to group.
     </p>
     <item>
-        <tags>:tgc :tgroup-change</tags>
-        <spec>:tgroup-change <oa>targetGroup</oa></spec>
+        <tags>:tgc :tgroup-move</tags>
+        <spec>:tgroup-move <oa>targetGroup</oa></spec>
         <description>
             <p>
-                Changes the specified group for the tab that is
-                open at this moment.
+                Move the current tab to the specified group.
             </p>
             <p>
                 A groupname, that is not listed, will be handled as a new group
@@ -111,25 +110,12 @@ let TabGroupie = {
         let activeTab = window.gBrowser.selectedTab;
         let targetGroupId = this.getIdByTitle(TargetGroupTitle);
 
-        function ask(args){
-            if (args.length === 0
-                || "" + args[0] === "y"
-                || "" + args[0] === "Y"){ tabs.selectAlternateTab();}
-        }
-
         if (targetGroupId != null){
-            if (tabs.visibleTabs.length > 1){
-                TabView.moveTabTo(activeTab, targetGroupId);
-                TabView.hide();
-                commandline.input("Switch to that Group? [Y/n] ", ask, {argCount: "1"})
-            }
-            else{
-                TabView.moveTabTo(activeTab, targetGroupId);
-                TabView.hide();
-                tabs.selectAlternateTab();
-            }
+            TabView.moveTabTo(activeTab, targetGroupId);
+            TabView.hide();
+            tabs.selectAlternateTab();
         }
-   },
+    },
 
 
     changeTitle: function changeTitle(newTitle){
@@ -174,18 +160,30 @@ let TabGroupie = {
     },
 
     switchto: function switchto(title){
-        tabs.getGroups( function ({ GroupItems }) {
-            let items = GroupItems.groupItems;
-            for (let i = 0; i < items.length; i+=1) {
-                let item = items[i];
-                if (item.id === TabGroupie.getIdByTitle(title)){
-                    let activeTab = item.getActiveTab();
-                    let index = tabs.allTabs.indexOf(activeTab.tab);
-                    config.tabbrowser.mTabContainer.selectedIndex = index;
-                    break;
+        if (title){
+            tabs.getGroups( function ({ GroupItems }) {
+                let items = GroupItems.groupItems;
+                for (let i = 0; i < items.length; i+=1) {
+                    let item = items[i];
+                    if (item.id === TabGroupie.getIdByTitle(title)){
+//                        alert(item.id);
+                        let activeTab = item.getActiveTab();
+                        let index = tabs.allTabs.indexOf(activeTab.tab);
+                        config.tabbrowser.mTabContainer.selectedIndex = index;
+                        break;
+                    }
                 }
-            }
-        });
+            });
+        }else{
+//            alert("yep your are in the else");
+            tabs.getGroups( function ({ GroupItems }) {
+                let lastGroup = GroupItems.getLastActiveGroupItem();
+//                alert(lastGroup.id);
+                let activeTab = lastGroup.getActiveTab();
+                let index = tabs.allTabs.indexOf(activeTab.tab);
+                config.tabbrowser.mTabContainer.selectedIndex = index;
+            });
+        }
     },
 
     getTab: function getTab(index){
@@ -207,7 +205,7 @@ catch (err){
     dactyl.echoerr("Tabgroupie.init() failed");
 }
 
-group.commands.add(["tgroup-c[hange]", "tgc"],
+group.commands.add(["tgroup-mo[ve]", "tgm"],
                     "Change current tab to another group.",
                     function (args){
                         TabGroupie.changeGroup("" + args[0]);
@@ -260,11 +258,16 @@ group.commands.add(["tgroup-d[elete]", "tgd"],
 group.commands.add(["tgroup-s[witch]", "tgs"],
                     "switch to last viewed tab of a specified group",
                     function (args){
-                        TabGroupie.switchto("" + args[0]);
+                        if (args[0] != undefined){
+//                            alert("arg:" +  args[0]);
+                            TabGroupie.switchto("" + args[0]);
+                        }else{
+                            TabGroupie.switchto();          // go to last active Group
+                        }
                         TabGroupie.init();
                     },
                     {
-                        argCount: "1",
+                        argCount: "?",
                         completer: function (context) {   //thanks to Kris Maglione
                             context.keys = { text: "title", description: "id" };
                             context.completions = TabGroupie.TabGroups;

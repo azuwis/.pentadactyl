@@ -801,6 +801,7 @@ let qq = {
 		if (t.mor) { // Inflected
 			let mor = <></>;
 			t.mor.forEach(function(item) {
+                item["m"] = dict.htmlToDom(item["m"]).textContent.trim();
 				let href = qq.href({"keyword": item["m"]});
 				mor += <><span><b>{item["c"]}</b><a href={href} highlight="URL">{item["m"]}</a></span></>;
 			});
@@ -813,9 +814,8 @@ let qq = {
 		let local = e["local"];
 		let t = local[0];
 		let _ret = {};
-		_ret["word"] = t.word;
-		if (t.sd)
-			_ret["audio"] = qq._audioUri(t.sd);
+        _ret["word"] = dict.htmlToDom(t.word).textContent.trim();
+        _ret["audio"] = "http://dict.youdao.com/dictvoice?audio="+encodeURIComponent(_ret["word"]);
 		if (t.pho)
 			_ret["pron"] = dict.htmlToDom(t.pho.join(", ")).textContent.trim();
 		if (t.des) {
@@ -2446,7 +2446,7 @@ group.options.add(["dict-langpair", "dicl"], // stringmap google:en|zh-CN,youdao
 	}
 );
 
-group.commands.add(["di[ct]", "dic"],
+group.commands.add(["di[ct]"],
 	T(31),
 	dict.init,
 	{

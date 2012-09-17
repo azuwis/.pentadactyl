@@ -178,9 +178,9 @@ EOF
 nmap -builtin r :smartReload<CR>
 
 command smartReader -js <<EOF
-if (typeof __readable_by_evernote === "object") {
+if (typeof window.__readable_by_evernote === "object") {
     dactyl.execute("emenu Tools.Clearly");
-} else if (typeof FirefoxReader === "object") {
+} else if (typeof window.FirefoxReader === "object") {
     dactyl.execute("feedkeys <M-A-z>");
 } else if (typeof commands.get("readability") === "object") {
     dactyl.execute("readability");
@@ -206,7 +206,7 @@ var flvcd = function(url) {
     return links;
 };
 var dta = function(urls) {
-    if (!DTA) {
+    if (!window.DTA) {
         dactyl.echo("DownThemAll not installed");
         return;
     }
@@ -221,9 +221,9 @@ var dta = function(urls) {
     }
     prefs.set("extensions.dta.renaming", JSON.stringify(renaming));
     var anchors = [], images = [];
-    var wrapURL = function(url, cs) { return new DTA.URL(DTA.IOService.newURI(url, cs, null)); };
+    var wrapURL = function(url, cs) { return new window.DTA.URL(window.DTA.IOService.newURI(url, cs, null)); };
     anchors = urls.map(function(elem){ return {url: wrapURL(elem, "UTF-8")}; });
-    DTA.saveLinkArray(null, anchors, images);
+    window.DTA.saveLinkArray(null, anchors, images);
 };
 var url = args.length ? args : buffer.URL.spec;
 dta(flvcd(url));
@@ -359,7 +359,7 @@ set loadplugins='\.(css|js|penta)$'
 
 "" workaround for TabGroupie
 js <<EOF
-setTimeout(function(){
+window.setTimeout(function(){
     plugins.tabgroupieTabGroupie.TabGroupie.init()
 }, 5000);
 EOF

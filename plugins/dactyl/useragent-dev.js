@@ -116,7 +116,7 @@ group.options.add(["useragent", "ua"],
             context.title = ["Name", "User-Agent"];
             context.keys = { text: "name", description: "useragent" };
             context.completions = array(values(useragents)).concat(
-                [{ name: "default", useragent: navigator.userAgent }]);
+                [{ name: "default", useragent: window.navigator.userAgent }]);
         },
         setter: function (value) {
             init();
@@ -170,7 +170,7 @@ group.commands.add(["useragent", "ua"],
             init();
 
             if (args.completeArg == 1)
-                context.completions = [[navigator.userAgent, "Default"]].concat(
+                context.completions = [[window.navigator.userAgent, "Default"]].concat(
                     [[v.useragent, k] for ([k, v] in Iterator(useragents))]);
         },
         literal: 1,

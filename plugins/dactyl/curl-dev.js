@@ -46,7 +46,7 @@ hints.addMode('C', "Generate curl command for a form", function(elem) {
             [["--form-string", escape(datum)] for ([n, datum] in Iterator(elements || []))],
             postData != null && !elements.length ? [["-d", escape("")]] : [],
             [["-H", escape("Cookie: " + elem.ownerDocument.cookie)],
-             ["-A", escape(navigator.userAgent)],
+             ["-A", escape(window.navigator.userAgent)],
              ["-JOL"],
              [escape(url)]]
         ).map(function(e) e.join(" ")).join(" \\\n")).join(" "), true);

@@ -212,7 +212,7 @@ let wikipedia = {
 	logo: "", // TODO: dynamic
 	favicon: "", // TODO: dynamic
 	init: function(keyword, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		req.open("GET", options["dictw-api"] + "?action=parse&format=json&page="+encodeURIComponent(args[0]));
 		req.onreadystatechange = function(ev) {
@@ -266,7 +266,7 @@ let wikipedia = {
 	},
 
 	generate: function(context, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
@@ -321,7 +321,7 @@ let zdic = {
 			pieces.push(pair.join("="));
 		});
 
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		req.open("POST", "http://www.zdic.net/sousuo/");
 		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -449,7 +449,7 @@ let zdic = {
 				pieces.push(pair.join("="));
 		});
 
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
@@ -502,7 +502,7 @@ let youdao = {
 	favicon: "http://shared.ydstatic.com/images/favicon.ico",
 	init: function(keyword, args) {
 		youdao.keyword = keyword;
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		req.open("GET", youdao.href({keyword: decodeURIComponent(keyword), le: args["-l"]}));
 		req.onreadystatechange = function (ev) {
@@ -605,7 +605,7 @@ let youdao = {
 	},
 
 	generate: function(context, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
@@ -646,7 +646,7 @@ let qq = {
 	logo: "http://im-img.qq.com/inc/images/new_header2/logo.gif",
 	favicon: "http://dict.qq.com/favicon.ico",
 	init: function(keyword, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		req.open("GET", "http://dict.qq.com/dict?f=web&q="+keyword);
 		req.setRequestHeader("Referer", "http://dict.qq.com/");
@@ -850,7 +850,7 @@ let qq = {
 	},
 
 	generate: function(context, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
@@ -908,7 +908,7 @@ let google = {
 		let langpair = args["-l"] || options["dict-langpair"]["g"] || options.get("dict-langpair").defaultValue["g"];
 		let langpairs = google._langpairs(langpair);
 		google.langpairs = langpairs;
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		req.open("GET",
 			'http://translate.google.com/translate_a/t?client=t&hl=auto&sl='+langpairs[0]+'&tl='+langpairs[1]+'&text=' + keyword
@@ -1015,7 +1015,7 @@ let dict_cn = {
 	favicon: "http://dict.cn/favicon.ico",
 	logo: "http://dict.cn/imgs/logo_b.png",
 	init: function(keyword, args) {
-		var req = new XMLHttpRequest();
+		var req = new window.XMLHttpRequest();
 		dict.req = req;
 		dict_cn.keyword = keyword;
 		dict_cn.url = dict_cn.href({keyword: decodeURIComponent(keyword)});
@@ -1138,7 +1138,7 @@ let dict_cn = {
 	},
 
 	generate: function(context, args) {
-		let req = new XMLHttpRequest();
+		let req = new window.XMLHttpRequest();
 		if (dict.suggestReq)
 			dict.suggestReq.abort();
 		dict.suggestReq = req;
@@ -1170,7 +1170,7 @@ let dict_cn = {
 					if (req.status == 404) {
 						// 辞海的自动补全需要 cookie
 						// 因此我们对dict.cn请求一次
-						var xhr = new XMLHttpRequest();
+						var xhr = new window.XMLHttpRequest();
 						xhr.open("GET", "http://en.dict.cn/api/article/hotwords");
 						xhr.onreadystatechange = function () {
 							if (xhr.readyState == 4) {
@@ -1772,7 +1772,7 @@ let dict = {
 				var uri = "http://dict.youdao.com/dictvoice?audio=" + dict.keyword; // TODO: support langpair
 				dict._play(uri);
 			} else {
-				var req = new XMLHttpRequest();
+				var req = new window.XMLHttpRequest();
 				req.open("GET",
 					'http://translate.google.com/translate_a/t?client=t&hl=auto&sl=auto&tl=en&text=' + dict.keyword
 				);
@@ -2100,7 +2100,7 @@ let dict = {
 			if (dict_sound.Play)
 				dict_sound.Play();
 			else {
-				setTimeout(function () dict_sound.controls.play(), 1000);
+				window.setTimeout(function () dict_sound.controls.play(), 1000);
 				dict_sound.controls.play();
 			}
 			
@@ -2114,7 +2114,7 @@ let dict = {
 				addonbar.appendChild(dict_sound);
 			}
 			dict_sound.setAttribute("src", value);
-			setTimeout(function () dict_sound.playMusic(), 1000);
+			window.setTimeout(function () dict_sound.playMusic(), 1000);
 		}
 	},
 
@@ -2204,7 +2204,7 @@ let dict = {
 	},
 
 	_getFlSl: function() { // get google translate langpairs
-		let req = new XMLHttpRequest();
+		let req = new window.XMLHttpRequest();
 		req.open('GET', 'http://translate.google.cn/?hl=en');
 
 		req.onreadystatechange = function(ev) {
@@ -2604,7 +2604,7 @@ group.commands.add(["spe[ak]"],
 			dict.speak(dict.getSoundUriByLocaleKeyword(le, words));
 		} else {
 			// 自动检测语言
-			var req = new XMLHttpRequest();
+			var req = new window.XMLHttpRequest();
 			req.open("GET",
 				'http://translate.google.com/translate_a/t?client=t&hl=auto&sl=auto&tl=en&text=' + encodeURIComponent(words)
 			);
@@ -2699,7 +2699,7 @@ if (config.OS.isWindows) {
 	};
 	window.addEventListener("fullscreen", fullscreen, false);
 }
-gBrowser.addEventListener("mousemove", mousemove, false);
+window.gBrowser.addEventListener("mousemove", mousemove, false);
 
 function onUnload() {
 	if (config.OS.isWindows) {

@@ -111,8 +111,8 @@ let TabGroupie = {
         let targetGroupId = this.getIdByTitle(TargetGroupTitle);
 
         if (targetGroupId != null){
-            TabView.moveTabTo(activeTab, targetGroupId);
-            TabView.hide();
+            window.TabView.moveTabTo(activeTab, targetGroupId);
+            window.TabView.hide();
             tabs.selectAlternateTab();
         }
     },
@@ -129,8 +129,8 @@ let TabGroupie = {
     newTabGroup: function newTabGroup(title, tab, callback){
         this.createGroup(title, function ({ id }) {
             tab = tab || window.gBrowser.addTab(prefs.get("browser.startup.homepage"));
-            TabView.moveTabTo(tab, id);
-            TabView.hide();
+            window.TabView.moveTabTo(tab, id);
+            window.TabView.hide();
             if (callback) callback(tab);
         });
 
@@ -191,7 +191,7 @@ let TabGroupie = {
             let activeGroup = GroupItems.getActiveGroupItem();
             let tab = tabs.getTab(index - 1,false);  // cause we count from 0
 
-            TabView.moveTabTo(tab, activeGroup.id);
+            window.TabView.moveTabTo(tab, activeGroup.id);
             let tabIndex = tabs.allTabs.indexOf(tab);
             config.tabbrowser.mTabContainer.selectedIndex = tabIndex;
         });

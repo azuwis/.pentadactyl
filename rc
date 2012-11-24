@@ -207,7 +207,7 @@ var flvcd = function(url) {
     var parser = new window.DOMParser();
     var doc = parser.parseFromString(html, "text/html");
     var links = DOM(doc).find("td a[onclick]").map(function(){return DOM(this).attr("href");});
-    return links;
+    return Array.prototype.slice.call(links);
 };
 var dta = function(urls) {
     if (!window.DTA) {
@@ -229,8 +229,14 @@ var dta = function(urls) {
     anchors = urls.map(function(elem){ return {url: wrapURL(elem, "UTF-8")}; });
     window.DTA.saveLinkArray(null, anchors, images);
 };
+var mplayer = function(urls) {
+    var mpcmd = "mplayer \\\n'" + urls.join("' \\\n'") + "'";
+    dactyl.clipboardWrite(mpcmd);
+    io.system("urxvtcd -e " + mpcmd);
+};
 var url = args.length ? args : buffer.URL.spec;
-dta(flvcd(url));
+//dta(flvcd(url));
+mplayer(flvcd(url));
 EOF
 group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/* flvcd
 nmap -builtin ge :flvcd<CR>

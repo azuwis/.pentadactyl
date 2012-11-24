@@ -1,0 +1,57 @@
+js <<EOF
+overlay.overlayObject(rangefinder, {
+    find: function find(pattern, backwards) {
+        this.modules.marks.push();
+        this.bootstrap(pattern, backwards);
+        let fastFind = config.browser.fastFind;
+        let result = fastFind.find(pattern, false);
+        this.lastFindPattern = pattern;
+
+        this.displayFindResult(result, backwards);
+        return result;
+    },
+
+    findAgain: function (backwards) {
+        if (config.browser.fastFind.searchString != this.lastFindPattern)
+            this.find(this.lastFindPattern,backwards);
+
+        let result = config.browser.fastFind.findAgain(backwards, false);
+        this.displayFindResult(result, backwards);
+
+    },
+
+    displayFindResult: function displayFindResult(result, backwards) {
+        if (result == Ci.nsITypeAheadFind.FIND_NOTFOUND) {
+            this.commandline.echo("Pattern not found: " + this.lastFindPattern,
+                                  "Normal", this.commandline.FORCE_SINGLELINE);
+        }
+        else if (result == Ci.nsITypeAheadFind.FIND_WRAPPED) {
+            let msg = backwards ? "Search hit TOP, continuing at BOTTOM" : "Search hit BOTTOM, continuing at TOP";
+            this.commandline.echo(msg, this.commandline.HL_WARNINGMSG, this.commandline.FORCE_SINGLELINE);
+        }
+        //else if (result == Ci.nsITypeAheadFind.FIND_FOUND) {
+        //    this.commandline.echo("Found pattern: " + this.lastFindPattern,
+        //                          "Normal", this.commandline.FORCE_SINGLELINE);
+        //}
+    }
+});
+EOF
+set noincfind
+"" finding hack
+"nmap -builtin / -js <<EOF
+"var findToolbar = document.getElementById("FindToolbar")
+"if (findToolbar === null || findToolbar.hidden) {
+"    dactyl.execute("feedkeys! <M-f>");
+"} else {
+"    findToolbar.close();
+"}
+"EOF
+"imap -builtin / -js <<EOF
+"var findToolbar = document.getElementById("FindToolbar")
+"if (findToolbar === null || findToolbar.hidden) {
+"    dactyl.execute("feedkeys! /");
+"} else {
+"    findToolbar.close();
+"}
+"EOF
+

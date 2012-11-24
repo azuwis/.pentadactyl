@@ -40,11 +40,11 @@ set! browser.sessionstore.restore_on_demand=true
 "" save session every 5min, see http://lifehacker.com/5342636/
 set! browser.sessionstore.interval=300000
 "" http://www.stayupdate.com/firefox/increase-firefox-speed-and-decrease-firefox-memory-usage-20-tips/567
-set! nglayout.initialpaint.delay=0
-set! content.notify.interval=500000
-set! content.notify.ontimer=true
-set! content.switch.threshold=250000
-set! content.interrupt.parsing=false
+"set! nglayout.initialpaint.delay=150
+"set! content.notify.interval=500000
+"set! content.notify.ontimer=true
+"set! content.switch.threshold=250000
+"set! content.interrupt.parsing=false
 "" disable the install-dialog delay
 set! security.dialog_enable_delay=0
 "" disable tabgroup animation
@@ -64,6 +64,7 @@ end
 js <<EOF
 var appVersion = prefs.get("extensions.lastAppVersion");
 prefs.set("extensions.checkCompatibility." + appVersion, false);
+prefs.set("extensions.checkCompatibility." + parseInt(appVersion) + 1 + ".0", false);
 EOF
 "" }}}
 
@@ -75,11 +76,6 @@ set! extensions.adblockplus.showintoolbar=false
 
 "" vertical tabs
 set! extensions.verticaltabs.width=260
-
-"" tabgroups manager
-set! extensions.tabgroupsmanager.groupBarPosition=2
-set! extensions.tabgroupsmanager.dispGroupTabCount=false
-set! extensions.tabgroupsmanager.dispGroupTabIconReading=false
 
 "" session manager
 set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_on_restart=true

@@ -6,7 +6,7 @@ nmap -builtin k 10k
 "" swap d/D
 nmap -builtin d D
 nmap -builtin D d
-nmap -builtin gd :js config.removeTab(tabs.getTab())<CR>
+nmap -builtin gd :js config.tabbrowser.removeTab(tabs.getTab())<CR>
 
 "" swap y/Y
 "nmap -builtin y Y
@@ -164,6 +164,8 @@ set strictfocus^=tao123.com:despotic
 "" disable smooth scroll
 set scrollsteps=1
 set scrolltime=0
+
+set maxitems=10
 "" }}}
 
 "" {{{ Command
@@ -202,7 +204,9 @@ var flvcd = function(url) {
         format = format_list[count];
     }
     var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
-    var links = $(html).find("td a[onclick]").map(function(){return $(this).attr("href");}).get();
+    var parser = new window.DOMParser();
+    var doc = parser.parseFromString(html, "text/html");
+    var links = DOM(doc).find("td a[onclick]").map(function(){return DOM(this).attr("href");});
     return links;
 };
 var dta = function(urls) {
@@ -311,7 +315,30 @@ function sourceLocation(str) {
         mapping(str)).definedAt;
     return { url: util.fixURI(frame.filename), line: frame.lineNumber };
 }
-buffer.viewSource(sourceLocation(args[0]))
+buffer.viewSource(sourceLocation(args[0]));
+EOF
+
+"" delete duplicate tabs
+command -description "Delete duplicate tabs" tabcloseduplicates,tabclosed -js <<EOF
+let seen = {}, vtabs = tabs.visibleTabs, i = vtabs.length;
+while (i--) {
+    let loc = vtabs[i].linkedBrowser.contentDocument.location.href || "";
+    if (Object.prototype.hasOwnProperty.call(seen, loc)) {
+        config.tabbrowser.removeTab(vtabs[i]);
+    } else {
+        seen[loc] = true;
+    }
+}
+EOF
+nmap -builtin <Leader>D :tabcloseduplicates<CR>
+
+"" ramback kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
+command! ramback -js <<EOF
+var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
+observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
+observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
+observerService.notifyObservers(null, "dump-mem-stats", "clean up, pig!");
 EOF
 "" }}}
 
@@ -335,7 +362,13 @@ EOF
 "" }}}
 
 "" {{{ Style
-colorscheme mybeta1
+"colorscheme mybeta1
+colorscheme solarized-light
+colorscheme solarized-light-append
+hi FontFixed font-size: 10pt; font-family: "Letter Gothic Std Bold", "Lucida Console", Consolas, monospace !important; font-weight: normal;
+hi FontCode font-size: 10pt; font-family: "Letter Gothic Std Bold", "Lucida Console", Consolas, monospace !important;
+hi -a FontProportional font-size: 12pt;
+hi -a StatusLine font-weight: normal;
 "highlight WarningMsg display:none;
 "" }}}
 
@@ -348,6 +381,7 @@ command bml-share -description "Bookmarklet: Google reader official bookmarklet"
 command bml-subscribe -description "Bookmarklet: Subscribe using Google reader" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/subscribe-bookmarklet.js');void(b.appendChild(z));}else{location='http://www.google.com/reader/view/feed/'+encodeURIComponent(location.href)}
 command bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());
 command bml-readability -description "Bookmarklet: Make webpage readable using readability" open javascript:(%28function%28%29%7Bwindow.baseUrl%3D%27http%3A//www.readability.com%27%3Bwindow.readabilityToken%3D%27%27%3Bvar%20s%3Ddocument.createElement%28%27script%27%29%3Bs.setAttribute%28%27type%27%2C%27text/javascript%27%29%3Bs.setAttribute%28%27charset%27%2C%27UTF-8%27%29%3Bs.setAttribute%28%27src%27%2CbaseUrl%2B%27/bookmarklet/read.js%27%29%3Bdocument.documentElement.appendChild%28s%29%3B%7D%29%28%29)
+command bml-pocket -description "Bookmarklet: Save to pocket" open javascript:(function(){ISRIL_H='7a0b';PKT_D='getpocket.com';ISRIL_SCRIPT=document.createElement('SCRIPT');ISRIL_SCRIPT.type='text/javascript';ISRIL_SCRIPT.src='http://'+PKT_D+'/b/r.js';document.getElementsByTagName('head')[0].appendChild(ISRIL_SCRIPT)})();
 "" }}}
 
 "" {{{ Misc
@@ -364,40 +398,35 @@ window.setTimeout(function(){
 }, 5000);
 EOF
 
-"" when follow link, switch to buffer if found or open it
-:js <<EOF
-var switchOrOpen = function (url) {
-    if (buffer.URL.spec === url) return false;
-    if (url.indexOf("#", url.length - 1) !== -1) return false;
-    if (url.indexOf("http://") !==0 && url.indexOf("https://") !==0 && url.indexOf("about:") !== 0) return false;
-    var matches = array.nth(tabs.allTabs, function (t)(t.linkedBrowser.lastURI || {}).spec === url, 0);
-    if (matches) {
-        tabs.select(matches, false);
-        return true;
-    } else {
+"" try to guess if param of :open is a url, and add buffer to :open/tabopen complition
+js <<EOF
+var isURL = function (url) {
+    if (typeof url !== "string")
         return false;
-    }
-};
-var fakeDomain = function (str) {
-    var m = str.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)$/);
-    return (m && !m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de)$/));
+    if (url.indexOf("google ") === 0)
+        return false;
+    if (url.indexOf("~/") === 0)
+        return true;
+    var m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
+    return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm)$/));
 };
 overlay.overlayObject(dactyl, {
     open: function open(urls, params, force) {
         if (typeof urls === "string") {
-            if (switchOrOpen(urls)) return;
-            if (fakeDomain(urls) || arguments[0].indexOf("google ") === 0) arguments[0] = options["defsearch"] + " " + arguments[0];
+            let matches = urls.match(/^(\d+): /);
+            if (matches) {
+                tabs.switchTo(urls, true);
+                return;
+            }
+        }
+        if (!isURL(urls)) {
+            arguments[0] = options["defsearch"] + " " + arguments[0];
         }
         open.superapply(this, arguments);
     }
 });
-document.addEventListener('click', function (event) {
-    let e = event.target;
-    if (e && event.which < 3 && e.tagName.match(/^a$/i) && e.href && switchOrOpen(e.href)) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-}, true);
+completion.addUrlCompleter("buffer", "Open Tabs", completion.buffer);
+options["complete"].splice(0, 0, "buffer");
 EOF
 
 "" custom hint

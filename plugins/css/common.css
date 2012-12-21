@@ -10,8 +10,8 @@
 .toolbarbutton-menubutton-dropmarker {display:none !important;}
 .toolbarbutton-menu-dropmarker {display:none !important;}
 
-/* no tab close button */
-.tab-close-button {display:none !important;}
+/* no tab close button on selected tab*/
+.tabbrowser-tab[selected="true"] .tab-close-button {display:none !important;}
 
 /* make ime inactive on commandline and statubline */
 #dactyl-commandline-command input {ime-mode: inactive;}

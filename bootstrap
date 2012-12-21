@@ -28,6 +28,8 @@ set! ui.key.generalAccessKey=0
 set! browser.tabs.closeWindowWithLastTab=false
 set! browser.tabs.insertRelatedAfterCurrent=true
 set! network.dns.disableIPv6=true
+"" shorten http connection timout
+set! network.http.connection-timeout=15
 set! browser.startup.homepage="about:blank"
 set! browser.download.useDownloadDir=false
 set! browser.download.manager.showWhenStarting=false

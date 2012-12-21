@@ -59,36 +59,32 @@ nmap -builtin ZO zo
 nmap -builtin ZR zr
 nmap -builtin zZ zz
 
-"" set <Leader>
-nmap , <Leader>
-map -builtin -modes hints , \
-
 "" open addons manager
-nmap -builtin <Leader>a :dialog addons<CR>
+nmap -builtin ,a :dialog addons<CR>
 
 "" rehash
-nmap -builtin <Leader>R :rehash<CR>
+nmap -builtin ,R :rehash<CR>
 
 "" private mode
-nmap -builtin <Leader>p :set private!<CR>
+nmap -builtin ,p :set private!<CR>
 
 "" fullscreen
-nmap -builtin <Leader>F :set fullscreen!<CR>
+nmap -builtin ,F :set fullscreen!<CR>
 
 "" display download
-nmap -builtin <Leader>d :downloads<CR>
+nmap -builtin ,d :downloads<CR>
 
 "" about:config
-nmap -builtin <Leader>c :tabopen about:config<CR>
+nmap -builtin ,c :tabopen about:config<CR>
 
 "" auto add -tags option when adding bookmark
 nmap -builtin a a<Space>-tags<Space>
 
 "" tabgroup
 if config.OS.isMacOSX
-nmap -builtin <Leader>e <S-M-e>
+nmap -builtin ,e <S-M-e>
 else
-nmap -builtin <Leader>e <S-C-e>
+nmap -builtin ,e <S-C-e>
 end
 
 "" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
@@ -190,7 +186,7 @@ if (typeof window.__readable_by_evernote === "object") {
     dactyl.execute("bml-readability");
 }
 EOF
-nmap -builtin <Leader>r :smartReader<CR>
+nmap -builtin ,r :smartReader<CR>
 
 "" flush browser dns
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
@@ -304,7 +300,7 @@ if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
     dactyl.open(getParameterByName(buffer.URL.spec, 'u'));
 }
 EOF
-nmap -builtin <Leader>t :trans<CR>
+nmap -builtin ,t :trans<CR>
 
 "" jump to a command, mapping or option source definition, from https://gist.github.com/3331062
 command jumptodef,jd -literal=1 -nargs=1 -complete help -js <<EOF
@@ -336,7 +332,7 @@ while (i--) {
     }
 }
 EOF
-nmap -builtin <Leader>D :tabcloseduplicates<CR>
+nmap -builtin ,D :tabcloseduplicates<CR>
 
 "" ramback kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
 command! ramback -js <<EOF
@@ -379,8 +375,8 @@ hi -a StatusLine font-weight: normal;
 "" }}}
 
 "" {{{ Bookmarklet
-nmap -builtin <Leader>b :bml-
-nmap -builtin <Leader>s :bml-subscribe<CR>
+nmap -builtin ,b :bml-
+nmap -builtin ,s :bml-subscribe<CR>
 command bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
 command bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
 command bml-share -description "Bookmarklet: Google reader official bookmarklet" open javascript:var%20b=document.body;var%20GR________bookmarklet_domain='http://www.google.com';if(b&&!document.xmlVersion){void(z=document.createElement('script'));void(z.src='http://www.google.com/reader/ui/link-bookmarklet.js');void(b.appendChild(z));}else{}

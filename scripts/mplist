@@ -1,0 +1,18 @@
+#!/bin/bash
+ua="$1"
+plist="$2"
+mpl() {
+    mplayer -http-header-fields "User-Agent: ${ua}" -playlist "$@"
+}
+cat "$plist"
+while read -p "Start from sesion: " i
+do
+    if [[ "$i" =~ ^[0-9]+$ ]]; then
+        sed "1,${i}d" "$plist" >"${plist}.sed"
+        mpl "${plist}.sed"
+    else
+        mpl "$plist"
+    fi
+echo
+cat "$plist"
+done

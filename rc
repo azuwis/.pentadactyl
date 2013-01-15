@@ -228,11 +228,17 @@ var dta = function(urls) {
 var mplayer = function(urls) {
     var mpcmd = "mplayer \\\n'" + urls.join("' \\\n'") + "'";
     dactyl.clipboardWrite(mpcmd);
-    io.system("urxvtcd -e " + mpcmd);
+    io.system("urxvt -e " + mpcmd);
+};
+var mplist = function(urls) {
+    var plist = "/tmp/mplist"
+    io.File(plist).write(urls.join("\n") + "\n");
+    io.run("urxvt", ["-e", io.File(IO.runtimePath).path + "/scripts/mplist", window.navigator.userAgent, plist]);
 };
 var url = args.length ? args : buffer.URL.spec;
 //dta(flvcd(url));
-mplayer(flvcd(url));
+//mplayer(flvcd(url));
+mplist(flvcd(url));
 EOF
 group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/* flvcd
 nmap -builtin ge :flvcd<CR>

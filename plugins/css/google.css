@@ -1,0 +1,11 @@
+@-moz-document domain(www.google.com) {
+body { background-color: #fdf6e3 !important; }
+body, td, div, .p, a { font-family: sans-serif !important; }
+a.l { color: #6c71c4 !important; }
+a.l:visited { color: #d33682 !important; }
+a.l:hover { background-color: #eee8d5 !important; }
+.f a:link { color: #268bd2 !important; }
+.s { color: #657b83 !important; }
+.s em { color: #657b83 !important; }
+/*cite { color: #859900 !important; }*/
+}

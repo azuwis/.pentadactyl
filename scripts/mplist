@@ -5,7 +5,7 @@ mpl() {
     mplayer -http-header-fields "User-Agent: ${ua}" -playlist "$@"
 }
 cat "$plist"
-while read -p "Start from sesion: " i
+while read -p "Start from part: " i
 do
     if [[ "$i" =~ ^[0-9]+$ ]]; then
         sed "1,${i}d" "$plist" >"${plist}.sed"

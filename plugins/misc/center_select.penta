@@ -1,3 +1,0 @@
-nmap -builtin n n:centerselect<CR>
-nmap -builtin N N:centerselect<CR>
-nmap -builtin -modes find <CR> <CR>:centerselect<CR>

@@ -213,7 +213,7 @@ var dta = function(urls) {
     var renaming = JSON.parse(prefs.get("extensions.dta.renaming"));
     var videoRenaming = "video-*m*.*d*-*hh*.*mm*.*ss*/*inum*.*ext*";
     var index = renaming.indexOf(videoRenaming);
-    if (index == -1) {
+    if (index === -1) {
         renaming.splice(0, 0, videoRenaming);
     } else if (index > 0) {
         renaming[index] = renaming[0];
@@ -299,8 +299,8 @@ var getParameterByName = function(url, name) {
         return '';
     else
         return decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-if (buffer.URL.spec.indexOf('http://translate.google.com/') !==0) {
+};
+if (buffer.URL.spec.indexOf('http://translate.google.com/') !== 0) {
     dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL.spec));
 } else {
     dactyl.open(getParameterByName(buffer.URL.spec, 'u'));

@@ -233,7 +233,7 @@ var mplayer = function(urls) {
 var mplist = function(urls) {
     var plist = "/tmp/mplist"
     io.File(plist).write(urls.join("\n") + "\n");
-    io.run("urxvt", ["-e", io.File(IO.runtimePath).path + "/scripts/mplist", window.navigator.userAgent, plist]);
+    io.run("urxvt", ["-g", "72x60", "-e", io.File(IO.runtimePath).path + "/scripts/mplist", window.navigator.userAgent, plist]);
 };
 var url = args.length ? args : buffer.URL.spec;
 //dta(flvcd(url));

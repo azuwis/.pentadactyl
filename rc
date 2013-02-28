@@ -240,7 +240,7 @@ var url = args.length ? args : buffer.URL.spec;
 //mplayer(flvcd(url));
 mplist(flvcd(url));
 EOF
-group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/cover/*,http://film.qq.com/cover/* flvcd
+group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/*,http://film.qq.com/* flvcd
 nmap -builtin ge :flvcd<CR>
 group user
 

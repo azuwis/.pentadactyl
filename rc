@@ -286,7 +286,7 @@ EOF
 nmap -builtin gs :gohttps<CR>
 
 "" display calendar
-command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
+"command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
 "" google translate
 command trans -js <<EOF

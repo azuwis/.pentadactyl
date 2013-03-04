@@ -1,14 +1,14 @@
 [plugins/grassofhust]
 checkout =
-	git clone 'git://github.com/grassofhust/dotfiles.git' 'grassofhust' &&
-	cd grassofhust &&
-	git config core.sparsecheckout true &&
+	git clone 'git://github.com/grassofhust/dotfiles.git' 'grassofhust'
+	cd grassofhust
+	git config core.sparsecheckout true
 	echo ".pentadactyl/plugins/chinese-hints.js
 	.pentadactyl/plugins/readability.js
 	.pentadactyl/plugins/shorten.js
 	.pentadactyl/archives/walk-input.js
-	.pentadactyl/archives/caret-hint.js" >.git/info/sparse-checkout &&
-	git read-tree -m -u HEAD &&
+	.pentadactyl/archives/caret-hint.js" >.git/info/sparse-checkout
+	git read-tree -m -u HEAD
 	ln -s .pentadactyl/*/*.js .
 
 [colors/solarized]

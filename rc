@@ -376,10 +376,9 @@ EOF
 "colorscheme mybeta1
 colorscheme solarized-light
 colorscheme solarized-light-append
-hi FontFixed font-size: 10pt; font-family: Cousine, "Letter Gothic Std Bold", "Lucida Console", Consolas, monospace !important; font-weight: normal;
+hi FontFixed font-size: 10pt; font-family: Cousine, "Letter Gothic Std Bold", "Lucida Console", Consolas, monospace !important;
 hi FontCode font-size: 10pt; font-family: Cousine "Letter Gothic Std Bold", "Lucida Console", Consolas, monospace !important;
 hi -a FontProportional font-size: 12pt; font-family: sans-serif;
-hi -a StatusLine font-weight: normal;
 "highlight WarningMsg display:none;
 "" }}}
 

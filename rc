@@ -162,6 +162,9 @@ set scrollsteps=1
 set scrolltime=0
 
 set maxitems=10
+
+"" press tab to begin completion of :open :tabopen cmd
+set autocomplete=!/ex/(tab)?open,.?
 "" }}}
 
 "" {{{ Command

@@ -1,6 +1,6 @@
 [plugins/grassofhust]
-checkout =
-	git clone 'git://github.com/grassofhust/dotfiles.git' 'grassofhust'
+checkout = git clone 'git://github.com/grassofhust/dotfiles.git' 'grassofhust'
+post_checkout = 
 	cd grassofhust
 	git config core.sparsecheckout true
 	echo ".pentadactyl/plugins/chinese-hints.js
@@ -12,9 +12,8 @@ checkout =
 	ln -s .pentadactyl/*/*.js .
 
 [colors/solarized]
-checkout =
-	git clone 'git://github.com/claytron/pentadactyl-solarized.git' 'solarized' &&
-	ln -s solarized/colors/*.penta .
+checkout = git clone 'git://github.com/claytron/pentadactyl-solarized.git' 'solarized'
+post_checkout = ln -s solarized/colors/*.penta .
 
 [plugins/tabgroupie]
 checkout = git clone 'git://github.com/eri451/TabGroupie.git' 'tabgroupie'

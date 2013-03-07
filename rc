@@ -351,6 +351,17 @@ observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
 observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
 observerService.notifyObservers(null, "dump-mem-stats", "clean up, pig!");
 EOF
+
+"" toggle auto load plugins
+command! pluginstoggle -description "Allow/unset plugins permission for current site" -js <<EOF
+if (services.permissions.testPermission(buffer.uri, "plugins") !== Sanitizer.PERMS["allow"]) {
+    dactyl.echo("SET plugins permission for " + buffer.uri.host);
+    services.permissions.add(buffer.uri, "plugins", Sanitizer.PERMS["allow"]);
+} else {
+    dactyl.echo("UNSET plugins permission for " + buffer.uri.host);
+    services.permissions.remove(buffer.uri.host, "plugins");
+}
+EOF
 "" }}}
 
 "" {{{ AutoCMD

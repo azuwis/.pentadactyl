@@ -313,20 +313,24 @@ nmap -builtin ,t :trans<CR>
 
 "" jump to a command, mapping or option source definition, from https://gist.github.com/3331062
 command jumptodef,jd -literal=1 -nargs=1 -complete help -js <<EOF
-function sourceLocation(str) {
-    if (isArray(str))
-        str = str[0];
-    function mapping(s) {
+let sourceLocation = function(str) {
+    let mapping = function(s) {
         let [, mc, key] = /(?:(.)_)?(.*)/.exec(s);
         return mappings.get(mc ? modes.modeChars[mc] : modes.NORMAL, key) ||
             dactyl.echoerr("Bad bad: " + s);
-    }
+    };
+    if (isArray(str))
+        str = str[0];
     let frame = ((str[0] === ":") ? commands.get(str.substr(1)) :
         /'.*?'/.test(str) ? options.get(str.slice(1,-1)) :
         mapping(str)).definedAt;
     return { url: util.fixURI(frame.filename), line: frame.lineNumber };
-}
-buffer.viewSource(sourceLocation(args[0]));
+};
+//buffer.viewSource(sourceLocation(args[0]));
+let loc = sourceLocation(args[0]);
+window.openDialog("chrome://global/content/viewSource.xul",
+    "_blank", "all,dialog=no",
+    loc.url, null, null, loc.line);
 EOF
 
 "" delete duplicate tabs

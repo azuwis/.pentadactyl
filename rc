@@ -366,6 +366,9 @@ if (services.permissions.testPermission(buffer.uri, "plugins") !== Sanitizer.PER
     services.permissions.remove(buffer.uri.host, "plugins");
 }
 EOF
+
+"" Unload current tab using BarTab
+command! unload -description "Unload current tab" -js gBrowser.BarTabHandler.unloadTab(gBrowser.mCurrentTab)
 "" }}}
 
 "" {{{ AutoCMD

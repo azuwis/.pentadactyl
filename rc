@@ -116,9 +116,9 @@ set defsearch=g
 "" {{{ Option
 "" ]]/[[ turn next/previous page
 set nextpattern&
-set nextpattern^='[下后]\s*一?\s*[页张个篇章頁]','\bolder\s*posts\b'
+set nextpattern^='[下后]\s*一?\s*[页张个篇章頁]','\bolder\s*posts\b','^→$'
 set previouspattern&
-set previouspattern^='[上前]\s*一?\s*[页张个篇章頁]','\bnewer\s*posts\b'
+set previouspattern^='[上前]\s*一?\s*[页张个篇章頁]','\bnewer\s*posts\b','^←$'
 
 "" do not display right scrollbar and commandline
 "set guioptions+=n

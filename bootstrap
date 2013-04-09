@@ -28,6 +28,7 @@ set! ui.key.generalAccessKey=0
 set! browser.tabs.closeWindowWithLastTab=false
 set! browser.tabs.insertRelatedAfterCurrent=true
 set! network.dns.disableIPv6=true
+set! network.proxy.socks_remote_dns=true
 "" shorten http connection timout
 set! network.http.connection-timeout=15
 set! browser.startup.homepage="about:blank"

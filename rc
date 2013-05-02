@@ -133,7 +133,7 @@ set showtabline=multitab
 "" restore original behavior of showing hovered link
 set showstatuslinks=
 style chrome://browser/content/browser.xul statuspanel#statusbar-display { display:block; visibility: visible; overflow-x: hidden; }
-style chrome://browser/content/browser.xul statuspanel#statusbar-display[label^="Looking"], statuspanel#statusbar-display[label^="Connecting"], statuspanel#statusbar-display[label^="Connected"], statuspanel#statusbar-display[label^="Transferring"], statuspanel#statusbar-display[label^="Waiting"], statuspanel#statusbar-display[label^="Read"] {opacity: 0 !important; }
+style chrome://browser/content/browser.xul statuspanel#statusbar-display[label^="Looking"], statuspanel#statusbar-display[label^="Connect"], statuspanel#statusbar-display[label^="Transfer"], statuspanel#statusbar-display[label^="Waiting"], statuspanel#statusbar-display[label^="Read"], statuspanel#statusbar-display[label^="Time"] {opacity: 0 !important; }
 
 "" highlight search
 "set hlfind

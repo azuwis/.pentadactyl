@@ -194,6 +194,33 @@ nmap -builtin ,r :smartReader<CR>
 "" flush browser dns
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
+"" use vlc to play hls video
+command! hls -nargs=? -count -js <<EOF
+var hls = function(url){
+    var m3u8 = youku(url);
+    if (m3u8) {
+        io.run('vlc', [m3u8]);
+    }
+};
+var youku = function(url) {
+    var m = url.match('v_show/id_(.*)\.html');
+    if (m) {
+        var id = m[1];
+        var format = 'hd2';
+        if (count) {
+            format = ['', 'hd2', 'mp4', 'flv'][count];
+        }
+        return 'http://v.youku.com/player/getRealM3U8/vid/' + id + '/type/' + format + '/v.m3u8';
+    }
+    return null;
+};
+var url = args.length ? args : buffer.URL.spec;
+hls(url);
+EOF
+group -locations http://v.youku.com/v_show/* hls
+nmap -builtin ge :hls<CR>
+group user
+
 "" use flvcd and DTA to download video
 command! flvcd -nargs=? -count -js <<EOF
 var flvcd = function(url) {
@@ -243,7 +270,7 @@ var url = args.length ? args : buffer.URL.spec;
 //mplayer(flvcd(url));
 mplist(flvcd(url));
 EOF
-group -locations http://v.youku.com/v_show/*,http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/*,http://film.qq.com/* flvcd
+group -locations http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/*,http://film.qq.com/* flvcd
 nmap -builtin ge :flvcd<CR>
 group user
 

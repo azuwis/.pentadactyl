@@ -396,6 +396,17 @@ EOF
 
 "" Unload current tab using BarTab
 command! unload -description "Unload current tab" -js gBrowser.BarTabHandler.unloadTab(gBrowser.mCurrentTab)
+
+"" Manage proxy.pac
+command! reloadPAC -js Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+command! addToPAC,ap -nargs=? -js <<EOF
+let hostname = args.length ? args : window.content.location.hostname;
+let pacfile = io.File(IO.runtimePath + '/proxy.pac');
+let pac = pacfile.read();
+let mpac = pac.replace('//MARK', '|| dnsDomainIs(host, ".' + hostname + "\")\n    //MARK");
+pacfile.write(mpac);
+Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+EOF
 "" }}}
 
 "" {{{ AutoCMD

@@ -29,6 +29,11 @@ set! browser.tabs.closeWindowWithLastTab=false
 set! browser.tabs.insertRelatedAfterCurrent=true
 set! network.dns.disableIPv6=true
 set! network.proxy.socks_remote_dns=true
+"" set proxy.pac
+js <<EOF
+prefs.set("network.proxy.type", 2);
+prefs.set("network.proxy.autoconfig_url", "file://" + io.File(IO.runtimePath).path + "/proxy.pac");
+EOF
 "" shorten http connection timout
 set! network.http.connection-timeout=15
 set! browser.startup.homepage="about:blank"

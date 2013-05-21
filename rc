@@ -196,17 +196,17 @@ command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpira
 
 "" use vlc to play hls video
 command! hls -nargs=? -count -js <<EOF
-var hls = function(url){
-    var m3u8 = youku(url);
+let hls = function(url){
+    let m3u8 = youku(url);
     if (m3u8) {
         io.run('vlc', [m3u8]);
     }
 };
-var youku = function(url) {
-    var m = url.match('v_show/id_(.*)\.html');
+let youku = function(url) {
+    let m = url.match('v_show/id_(.*)\.html');
     if (m) {
-        var id = m[1];
-        var format = 'hd2';
+        let id = m[1];
+        let format = 'hd2';
         if (count) {
             format = ['', 'hd2', 'mp4', 'flv'][count];
         }
@@ -214,7 +214,7 @@ var youku = function(url) {
     }
     return null;
 };
-var url = args.length ? args : buffer.URL.spec;
+let url = args.length ? args : buffer.URL.spec;
 hls(url);
 EOF
 group -locations http://v.youku.com/v_show/* hls
@@ -223,26 +223,26 @@ group user
 
 "" use flvcd and DTA to download video
 command! flvcd -nargs=? -count -js <<EOF
-var flvcd = function(url) {
-    var format_list = ["", "real", "super", "high", "normal"];
-    var format = "super";
+let flvcd = function(url) {
+    let format_list = ["", "real", "super", "high", "normal"];
+    let format = "super";
     if (count) {
         format = format_list[count];
     }
-    var html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
-    var parser = new window.DOMParser();
-    var doc = parser.parseFromString(html, "text/html");
-    var links = DOM(doc).find("td a[onclick]").map(function(){return DOM(this).attr("href");});
+    let html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
+    let parser = new window.DOMParser();
+    let doc = parser.parseFromString(html, "text/html");
+    let links = DOM(doc).find("td a[onclick]").map(function(){return DOM(this).attr("href");});
     return Array.prototype.slice.call(links);
 };
-var dta = function(urls) {
+let dta = function(urls) {
     if (!window.DTA) {
         dactyl.echo("DownThemAll not installed");
         return;
     }
-    var renaming = JSON.parse(prefs.get("extensions.dta.renaming"));
-    var videoRenaming = "video-*m*.*d*-*hh*.*mm*.*ss*/*inum*.*ext*";
-    var index = renaming.indexOf(videoRenaming);
+    let renaming = JSON.parse(prefs.get("extensions.dta.renaming"));
+    let videoRenaming = "video-*m*.*d*-*hh*.*mm*.*ss*/*inum*.*ext*";
+    let index = renaming.indexOf(videoRenaming);
     if (index === -1) {
         renaming.splice(0, 0, videoRenaming);
     } else if (index > 0) {
@@ -250,22 +250,22 @@ var dta = function(urls) {
         renaming[0] = videoRenaming;
     }
     prefs.set("extensions.dta.renaming", JSON.stringify(renaming));
-    var anchors = [], images = [];
-    var wrapURL = function(url, cs) { return new window.DTA.URL(window.DTA.IOService.newURI(url, cs, null)); };
+    let anchors = [], images = [];
+    let wrapURL = function(url, cs) { return new window.DTA.URL(window.DTA.IOService.newURI(url, cs, null)); };
     anchors = urls.map(function(elem){ return {url: wrapURL(elem, "UTF-8")}; });
     window.DTA.saveLinkArray(null, anchors, images);
 };
-var mplayer = function(urls) {
-    var mpcmd = "mplayer \\\n'" + urls.join("' \\\n'") + "'";
+let mplayer = function(urls) {
+    let mpcmd = "mplayer \\\n'" + urls.join("' \\\n'") + "'";
     dactyl.clipboardWrite(mpcmd);
     io.system("urxvt -e " + mpcmd);
 };
-var mplist = function(urls) {
-    var plist = "/tmp/mplist"
+let mplist = function(urls) {
+    let plist = "/tmp/mplist"
     io.File(plist).write(urls.join("\n") + "\n");
     io.run("urxvt", ["-g", "72x60", "-e", io.File(IO.runtimePath).path + "/scripts/mplist", window.navigator.userAgent, plist]);
 };
-var url = args.length ? args : buffer.URL.spec;
+let url = args.length ? args : buffer.URL.spec;
 //dta(flvcd(url));
 //mplayer(flvcd(url));
 mplist(flvcd(url));
@@ -276,9 +276,9 @@ group user
 
 "" open chdbits torrent
 command! chdbits -js <<EOF
-var chdbits = function (url) {
-    var torrent = 'http://chdbits.org/download.php?id=' + url.match(/\?id=([0-9]+)/)[1];
-    var tmpFile = io.createTempFile('torrent');
+let chdbits = function (url) {
+    let torrent = 'http://chdbits.org/download.php?id=' + url.match(/\?id=([0-9]+)/)[1];
+    let tmpFile = io.createTempFile('torrent');
     buffer.saveURI(util.newURI(torrent), tmpFile, function() {
         tmpFile.launch();
     });
@@ -291,7 +291,7 @@ group user
 
 "" open using external browser
 command! openEx -nargs=? -js <<EOF
-var url = args.length ? args : buffer.URL.spec;
+let url = args.length ? args : buffer.URL.spec;
 if (config.OS.isMacOSX) {
     io.system("open -a Safari '" + url + "'");
 } else {
@@ -320,11 +320,11 @@ nmap -builtin gs :gohttps<CR>
 
 "" google translate
 command trans -js <<EOF
-var getParameterByName = function(url, name) {
-    var name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-    var regexS = '[\\?&]' + name + '=([^&#]*)';
-    var regex = new RegExp(regexS);
-    var results = regex.exec(url);
+let getParameterByName = function(url, name) {
+    let name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    let regexS = '[\\?&]' + name + '=([^&#]*)';
+    let regex = new RegExp(regexS);
+    let results = regex.exec(url);
     if (results == null)
         return '';
     else
@@ -376,7 +376,7 @@ nmap -builtin ,D :tabcloseduplicates<CR>
 
 "" ramback kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
 command! ramback -js <<EOF
-var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+let observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
 observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
 observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
@@ -422,7 +422,7 @@ EOF
 "" use google to get lwn subscription link
 autocmd -javascript PageLoad 'https://lwn.net/Articles/*' <<EOF
 if (doc.title.match(/subscription/i)) {
-    var title = doc.getElementsByClassName("ArticleText")[0].getElementsByTagName("a")[0].innerHTML;
+    let title = doc.getElementsByClassName("ArticleText")[0].getElementsByTagName("a")[0].innerHTML;
     dactyl.open('gl site:lwn.net/SubscriberLink "' + title + '"');
 }
 EOF
@@ -466,14 +466,14 @@ EOF
 
 "" try to guess if param of :open is a url, and add buffer to :open/tabopen complition
 js <<EOF
-var isURL = function (url) {
+let isURL = function (url) {
     if (typeof url !== "string")
         return false;
     if (url.indexOf("google ") === 0)
         return false;
     if (url.indexOf("~/") === 0)
         return true;
-    var m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
+    let m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
     return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm)$/));
 };
 overlay.overlayObject(dactyl, {
@@ -497,7 +497,7 @@ EOF
 
 "" custom hint
 js <<EOF
-var selectors = ["a[target='_self']", "a[href^='#!topic/']", "div.links_main"];
+let selectors = ["a[target='_self']", "a[href^='#!topic/']", "div.links_main"];
 hints.addMode("g", "Follow specfic hint", function (elem) buffer.followLink(elem), null, selectors);
 hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, selectors);
 EOF
@@ -526,7 +526,6 @@ overlay.overlayObject(statusline, {
                 let groupData = services.sessionStore.getWindowValue(window, "tabview-group");
                 title = JSON.parse(groupData)[active].title;
             }
-
             if (title) this.widgets.tabcount.value = "(" + title + ")" + this.widgets.tabcount.value;
         }
     }
@@ -536,12 +535,12 @@ EOF
 "" source boostrap if modified
 command bootstrap :runtime bootstrap
 js <<EOF
-var bootstrapFile = "bootstrap";
-var bootstrapPref = "extensions.dactyl.bootstrapTime";
-var file = io.File(IO.runtimePath + "/" + bootstrapFile);
+let bootstrapFile = "bootstrap";
+let bootstrapPref = "extensions.dactyl.bootstrapTime";
+let file = io.File(IO.runtimePath + "/" + bootstrapFile);
 if (file.exists() && file.isFile() && file.isReadable()) {
-    var mtime = Math.floor(file.lastModifiedTime / 1000);
-    var btime = prefs.get(bootstrapPref);
+    let mtime = Math.floor(file.lastModifiedTime / 1000);
+    let btime = prefs.get(bootstrapPref);
     if (!btime || mtime > btime) {
         dactyl.execute("runtime " + bootstrapFile);
         prefs.set(bootstrapPref, Math.floor(Date.now() / 1000));

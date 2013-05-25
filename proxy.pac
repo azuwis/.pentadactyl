@@ -7,13 +7,13 @@ function FindProxyForURL(url, host) {
         return direct;
     }
     if (dnsDomainLevels(host) === 1) {
-        if (dnsDomainIs(host, "google.com")
+        if (false
         //MARK1
         ) {
             return proxy;
         }
     }
-    if (dnsDomainIs(host, ".google.com")
+    if (false
     //MARK2
     ) {
         return proxy;

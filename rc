@@ -398,14 +398,27 @@ EOF
 command! unload -description "Unload current tab" -js gBrowser.BarTabHandler.unloadTab(gBrowser.mCurrentTab)
 
 "" Manage proxy.pac
-command! reloadPAC -js Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
-command! addToPAC,ap -nargs=? -js <<EOF
-let hostname = args.length ? args : window.content.location.hostname;
-let pacfile = io.File(IO.runtimePath + '/proxy.pac');
-let pac = pacfile.read();
-let mpac = pac.replace('//MARK', '|| dnsDomainIs(host, ".' + hostname + "\")\n    //MARK");
-pacfile.write(mpac);
-Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+command! reloadPAC,rp -js Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+js <<EOF
+group.commands.add(["pac"],
+    "Add domain to proxy.pac",
+    function (args) {
+        function addDomain(pac, domain) {
+            pac = pac.replace('//MARK1', '|| dnsDomainIs(host, "' + domain + "\")\n        //MARK1");
+            return pac.replace('//MARK2', '|| dnsDomainIs(host, ".' + domain + "\")\n    //MARK2");
+        }
+        let hostname = args.length ? args : util.subdomains(window.content.location.hostname)[0];
+        let pacfile = io.File(IO.runtimePath + '/proxy.pac');
+        let pac = pacfile.read();
+        pac = addDomain(pac, hostname);
+        pacfile.write(pac);
+        Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+    }, {
+        argCount: "?",
+        completer: function (context) {
+            modules.completion.visibleHosts(context);
+        },
+    }, true);
 EOF
 "" }}}
 

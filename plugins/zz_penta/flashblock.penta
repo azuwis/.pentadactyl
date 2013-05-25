@@ -1,3 +1,0 @@
-if plugins.dactylFlashblockDev
-set fbwhitelist=play.baidu.com,box.zhangmen.baidu.com,http://v.youku.com/v_showMini/*
-endif

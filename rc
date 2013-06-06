@@ -218,7 +218,7 @@ let url = args.length ? args : buffer.URL.spec;
 hls(url);
 EOF
 group -locations http://v.youku.com/v_show/* hls
-nmap -builtin ge :hls<CR>
+nmap -builtin -ex ge <count>hls
 group user
 
 "" use flvcd and DTA to download video
@@ -271,7 +271,7 @@ let url = args.length ? args : buffer.URL.spec;
 mplist(flvcd(url));
 EOF
 group -locations http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/*,http://film.qq.com/* flvcd
-nmap -builtin ge :flvcd<CR>
+nmap -builtin -ex ge <count>flvcd
 group user
 
 "" open chdbits torrent

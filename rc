@@ -221,6 +221,19 @@ group -locations http://v.youku.com/v_show/* hls
 nmap -builtin -ex ge <count>hls
 group user
 
+"" use vlc to play youtube video
+command! youtube -nargs=? -count -js <<EOF
+let url = args.length ? args : buffer.URL.spec;
+let format = '';
+if (count) {
+    format = ['', '&fmt=37', '&fmt=22', '&fmt=18'][count];
+}
+io.run('vlc', ['--socks', '127.0.0.1:7070', url+format]);
+EOF
+group -locations http://www.youtube.com/watch* youtube
+nmap -builtin -ex ge <count>youtube
+group user
+
 "" use flvcd and DTA to download video
 command! flvcd -nargs=? -count -js <<EOF
 let flvcd = function(url) {

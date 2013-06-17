@@ -75,6 +75,7 @@ js <<EOF
 var appVersion = prefs.get("extensions.lastAppVersion");
 prefs.set("extensions.checkCompatibility." + appVersion, false);
 prefs.set("extensions.checkCompatibility." + (parseInt(appVersion) + 1) + ".0", false);
+prefs.set("extensions.checkCompatibility.nightly", false);
 EOF
 "" }}}
 

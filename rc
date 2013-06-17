@@ -500,7 +500,7 @@ let isURL = function (url) {
     if (url.indexOf("~/") === 0)
         return true;
     let m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
-    return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm)$/));
+    return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm|io)$/));
 };
 overlay.overlayObject(dactyl, {
     open: function open(urls, params, force) {

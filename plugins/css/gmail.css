@@ -1,0 +1,7 @@
+/* http://userstyles.org/styles/60753/gmail-monospace-font */
+@namespace url(http://www.w3.org/1999/xhtml);
+@-moz-document url-prefix("https://mail.google.com/mail/") {
+.ii, textarea {
+  font-family: Cousine, "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+}
+}

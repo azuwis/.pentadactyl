@@ -74,7 +74,8 @@ set! font.name.serif.zh-CN="微软雅黑"
 end
 "" disable addons compatibility check
 js <<EOF
-var appVersion = prefs.get("extensions.lastAppVersion");
+// get version, kanged from https://addons.mozilla.org/en-us/firefox/addon/checkcompatibility/
+let appVersion = Services.appinfo.version.replace(/^([^\.]+\.[0-9]+[a-z]*).*/i, "$1");
 prefs.set("extensions.checkCompatibility." + appVersion, false);
 prefs.set("extensions.checkCompatibility." + (parseInt(appVersion) + 1) + ".0", false);
 prefs.set("extensions.checkCompatibility.nightly", false);

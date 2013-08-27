@@ -129,6 +129,17 @@ set newtab=all
 
 "" only show the tab bar when there are multiple tabs
 set showtabline=multitab
+"" Firefox 23 remove browser.tabs.autoHide pref, https://bugzil.la/855370
+"" kang code from https://addons.mozilla.org/en-US/firefox/addon/hide-tab-bar-with-one-tab/
+js <<EOF
+let appVersion = Services.appinfo.version.replace(/^([^\.]+\.[0-9]+[a-z]*).*/i, "$1");
+if (parseInt(appVersion) >= 23) {
+    let observer = new MutationObserver(function(mutations) {
+        document.getElementById("tabbrowser-tabs").visible = gBrowser.visibleTabs.length !== 1;
+    });
+    observer.observe(document.querySelector('#tabbrowser-tabs'), { attributes: true });
+}
+EOF
 
 "" restore original behavior of showing hovered link
 set showstatuslinks=

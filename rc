@@ -231,7 +231,7 @@ if (count) {
 }
 io.run('vlc', ['--socks', '127.0.0.1:7070', url+format]);
 EOF
-group -locations http://www.youtube.com/watch* youtube
+group -locations http*://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube
 group user
 

@@ -178,6 +178,7 @@ if (buffer.URL.spec.indexOf('#') >= 0) {
 EOF
 nmap -builtin r :smartReload<CR>
 
+"" smart reader
 command smartReader -js <<EOF
 if (typeof window.__readable_by_evernote === "object") {
     dactyl.execute("emenu Tools.Clearly");

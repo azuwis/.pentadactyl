@@ -314,6 +314,16 @@ if (config.OS.isMacOSX) {
 EOF
 nmap -builtin ge :openEx<CR>
 
+"" yank gerrit
+command! yankgerrit -js <<EOF
+let title = buffer.doc.getElementsByClassName("GENUDFRBOX")[0].innerHTML
+dactyl.clipboardWrite("# " + title + "\n" + buffer.URL.spec);
+dactyl.echo("Yank " + title);
+EOF
+group -locations http://review.cyanogenmod.org/#/c/* gerrit
+nmap -builtin y :yankgerrit<CR>
+group user
+
 "" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
 "" Open current location via Coral CDN
 "" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830

@@ -165,6 +165,9 @@ set maxitems=10
 
 "" press tab to begin completion of :open :tabopen cmd
 "set autocomplete=!/ex/(tab)?open,.?
+
+"" gerrit
+set passkeys+=review.cyanogenmod.org:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
 "" }}}
 
 "" {{{ Command

@@ -179,6 +179,7 @@ set maxitems=10
 
 "" gerrit
 set passkeys+=review.cyanogenmod.org:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
+set passkeys+=review.pac-rom.com:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
 "" }}}
 
 "" {{{ Command

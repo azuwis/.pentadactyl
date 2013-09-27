@@ -169,8 +169,8 @@ set complete=location,suggestion
 set strictfocus^=tao123.com:despotic
 
 "" disable smooth scroll
-"set scrollsteps=1
-"set scrolltime=0
+set scrollsteps=1
+set scrolltime=0
 
 set maxitems=10
 

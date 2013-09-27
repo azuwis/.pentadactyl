@@ -466,11 +466,12 @@ group.commands.add(["proxytype", "pt"],
     "Change proxy type",
     function (args) {
         let types = [
-            "Manual config",
+            "Direct",
+            "Manual",
             "Proxy.pac",
-            "Auto detect",
-            "No proxy",
-            "System config"
+            "",
+            "Auto",
+            "System"
         ];
         let type = 5;
         if (args.length) {
@@ -485,18 +486,18 @@ group.commands.add(["proxytype", "pt"],
                 type = cur_type;
             }
         }
-        dactyl.echo("Proxy type: " + types[type - 1]);
+        dactyl.echo("Proxy type: " + types[type]);
         prefs.set("network.proxy.type", type);
     }, {
         argCount: "?",
         completer: function (context) {
             context.title = "Proxy type";
             context.completions = [
-                ["1", "Manual config"],
+                ["0", "Direct"],
+                ["1", "Manual"],
                 ["2", "Proxy.pac"],
-                ["4", "Auto detect"],
-                ["3", "No proxy"],
-                ["5", "System config"]
+                ["4", "Auto"],
+                ["5", "System"]
             ];
         }
     }, true);

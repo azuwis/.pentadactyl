@@ -331,7 +331,7 @@ nmap -builtin ge :openEx<CR>
 
 "" yank gerrit
 command! yankgerrit -js <<EOF
-let title = buffer.doc.getElementsByClassName("GENUDFRBOX")[0].innerHTML
+let title = buffer.doc.getElementsByClassName("changeScreenDescription")[0].innerHTML
 dactyl.clipboardWrite("# " + title + "\n" + buffer.URL.spec);
 dactyl.echo("Yank " + title);
 EOF

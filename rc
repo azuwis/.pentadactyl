@@ -134,6 +134,7 @@ set showtabline=multitab
 js <<EOF
 let appVersion = Services.appinfo.version.replace(/^([^\.]+\.[0-9]+[a-z]*).*/i, "$1");
 if (parseInt(appVersion) >= 23) {
+    document.getElementById("tabbrowser-tabs").visible = false;
     let observer = new MutationObserver(function(mutations) {
         document.getElementById("tabbrowser-tabs").visible = gBrowser.visibleTabs.length !== 1;
     });

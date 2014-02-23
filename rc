@@ -132,8 +132,7 @@ set showtabline=multitab
 "" Firefox 23 remove browser.tabs.autoHide pref, https://bugzil.la/855370
 "" kang code from https://addons.mozilla.org/en-US/firefox/addon/hide-tab-bar-with-one-tab/
 js <<EOF
-let appVersion = Services.appinfo.version.replace(/^([^\.]+\.[0-9]+[a-z]*).*/i, "$1");
-if (parseInt(appVersion) >= 23) {
+if (config.haveGecko("23")) {
     document.getElementById("tabbrowser-tabs").visible = false;
     let observer = new MutationObserver(function(mutations) {
         document.getElementById("tabbrowser-tabs").visible = gBrowser.visibleTabs.length !== 1;

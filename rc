@@ -185,7 +185,7 @@ set passkeys+=review.pac-rom.com:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
 "" {{{ Command
 "" smart reload
 command smartReload -js <<EOF
-if (buffer.URL.spec.indexOf('#') >= 0) {
+if (buffer.URL.spec.contains('#')) {
     dactyl.execute("reload");
 } else {
     dactyl.open(buffer.URL.spec);
@@ -346,9 +346,9 @@ command coralcdn -js dactyl.open( String.replace(buffer.URL.spec, /(\.\w{2,4})\/
 nmap -builtin gp :coralcdn<CR>
 
 command gohttps -js <<EOF
-if (buffer.URL.spec.indexOf('http://') === 0) {
+if (buffer.URL.spec.startsWith('http://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^http/i, 'https'));
-} else if (buffer.URL.spec.indexOf('https://') === 0) {
+} else if (buffer.URL.spec.startsWith('https://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^https/i, 'http'));
 }
 EOF
@@ -369,10 +369,10 @@ let getParameterByName = function(url, name) {
     else
         return decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
-if (buffer.URL.spec.indexOf('http://translate.google.com/') !== 0) {
-    dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL.spec));
-} else {
+if (buffer.URL.spec.startsWith('http://translate.google.com/')) {
     dactyl.open(getParameterByName(buffer.URL.spec, 'u'));
+} else {
+    dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL.spec));
 }
 EOF
 nmap -builtin ,t :trans<CR>
@@ -565,9 +565,9 @@ js <<EOF
 let isURL = function (url) {
     if (typeof url !== "string")
         return false;
-    if (url.indexOf("google ") === 0)
+    if (url.startsWith("google "))
         return false;
-    if (url.indexOf("~/") === 0)
+    if (url.startsWith("~/"))
         return true;
     let m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
     return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm|io)$/));

@@ -64,6 +64,8 @@ set! privacy.donottrackheader.enabled=true
 set! browser.newtabpage.enabled=false
 "" enable builtin flashblock
 set! plugins.click_to_play=true
+"" disable pdfjs
+set! pdfjs.disabled=true
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

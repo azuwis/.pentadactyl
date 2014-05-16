@@ -141,10 +141,8 @@ if (config.haveGecko("23")) {
 }
 EOF
 
-"" restore original behavior of showing hovered link
+"" dont show link at status line
 set showstatuslinks=
-style chrome://browser/content/browser.xul statuspanel#statusbar-display { display:block; visibility: visible; overflow-x: hidden; }
-style chrome://browser/content/browser.xul statuspanel#statusbar-display[label^="Looking"], statuspanel#statusbar-display[label^="Connect"], statuspanel#statusbar-display[label^="Transfer"], statuspanel#statusbar-display[label^="Waiting"], statuspanel#statusbar-display[label^="Read"], statuspanel#statusbar-display[label^="Time"] {opacity: 0 !important; }
 
 "" highlight search
 "set hlfind

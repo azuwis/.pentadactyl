@@ -4,7 +4,7 @@ post_checkout =
 	cd grassofhust
 	git config core.sparsecheckout true
 	echo ".pentadactyl/plugins/chinese-hints.js
-	.pentadactyl/plugins/readability.js
+	.pentadactyl/plugins/kindle.js
 	.pentadactyl/plugins/shorten.js
 	.pentadactyl/archives/walk-input.js
 	.pentadactyl/archives/caret-hint.js" >.git/info/sparse-checkout

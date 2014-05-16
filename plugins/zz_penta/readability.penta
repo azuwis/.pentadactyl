@@ -1,3 +1,0 @@
-if plugins.grassofhustReadability
-set readability-local
-endif

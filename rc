@@ -178,8 +178,7 @@ set maxitems=10
 "set autocomplete=!/ex/(tab)?open,.?
 
 "" gerrit
-set passkeys+=review.cyanogenmod.org:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
-set passkeys+=review.pac-rom.com:'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
+set passkeys+='^https?://(review|scm|gerrit)\..*/#/':'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
 "" }}}
 
 "" {{{ Command

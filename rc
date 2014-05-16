@@ -192,20 +192,6 @@ if (buffer.URL.spec.contains('#')) {
 EOF
 nmap -builtin r :smartReload<CR>
 
-"" smart reader
-command smartReader -js <<EOF
-if (typeof window.__readable_by_evernote === "object") {
-    dactyl.execute("emenu Tools.Clearly");
-} else if (typeof window.FirefoxReader === "object") {
-    dactyl.execute("feedkeys <M-A-z>");
-} else if (typeof commands.get("readability") === "object") {
-    dactyl.execute("readability");
-} else {
-    dactyl.execute("bml-readability");
-}
-EOF
-nmap -builtin ,r :smartReader<CR>
-
 "" flush browser dns
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 

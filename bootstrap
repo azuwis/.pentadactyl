@@ -98,6 +98,9 @@ set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_on_restart=true
 
 "" bartab
 set! extensions.bartab.unloadAfterTimeout=true
+
+"" nosquint
+set! extensions.nosquint.hideStatus=true
 "" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

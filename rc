@@ -193,6 +193,18 @@ nmap -builtin r :smartReload<CR>
 "" flush browser dns
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
+"" use you-get to download and play video
+command! youget -nargs=? -count -js <<EOF
+let youget = function(url) {
+    io.run("urxvt", ["-hold", "-title", "Floating: mpv", "-g", "72x60", "-e", "you-get", "--output-dir", "/tmp", "--local-play", "--player", "mpv --really-quiet -cache=no", url]);
+};
+let url = args.length ? args : buffer.URL.spec;
+youget(url);
+EOF
+group -locations http://v.youku.com/v_show/* youget
+nmap -builtin -ex ge <count>youget
+group user
+
 "" use vlc to play hls video
 command! hls -nargs=? -count -js <<EOF
 let hls = function(url){
@@ -216,9 +228,6 @@ let youku = function(url) {
 let url = args.length ? args : buffer.URL.spec;
 hls(url);
 EOF
-group -locations http://v.youku.com/v_show/* hls
-nmap -builtin -ex ge <count>hls
-group user
 
 "" use vlc to play youtube video
 command! youtube -nargs=? -count -js <<EOF

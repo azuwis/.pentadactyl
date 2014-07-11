@@ -233,59 +233,6 @@ group -locations http*://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube
 group user
 
-"" use flvcd and DTA to download video
-command! flvcd -nargs=? -count -js <<EOF
-let flvcd = function(url) {
-    let format_list = ["", "real", "super", "high", "normal"];
-    let format = "super";
-    if (count) {
-        format = format_list[count];
-    }
-    let html = util.httpGet("http://www.flvcd.com/parse.php", {params: {kw: url, format: format}}).responseText;
-    let parser = new window.DOMParser();
-    let doc = parser.parseFromString(html, "text/html");
-    let links = DOM(doc).find("td a[onclick]").map(function(){return DOM(this).attr("href");});
-    return Array.prototype.slice.call(links);
-};
-let dta = function(urls) {
-    if (!window.DTA) {
-        dactyl.echo("DownThemAll not installed");
-        return;
-    }
-    let renaming = JSON.parse(prefs.get("extensions.dta.renaming"));
-    let videoRenaming = "video-*m*.*d*-*hh*.*mm*.*ss*/*inum*.*ext*";
-    let index = renaming.indexOf(videoRenaming);
-    if (index === -1) {
-        renaming.splice(0, 0, videoRenaming);
-    } else if (index > 0) {
-        renaming[index] = renaming[0];
-        renaming[0] = videoRenaming;
-    }
-    prefs.set("extensions.dta.renaming", JSON.stringify(renaming));
-    let anchors = [], images = [];
-    let wrapURL = function(url, cs) { return new window.DTA.URL(window.DTA.IOService.newURI(url, cs, null)); };
-    anchors = urls.map(function(elem){ return {url: wrapURL(elem, "UTF-8")}; });
-    window.DTA.saveLinkArray(null, anchors, images);
-};
-let mplayer = function(urls) {
-    let mpcmd = "mplayer \\\n'" + urls.join("' \\\n'") + "'";
-    dactyl.clipboardWrite(mpcmd);
-    io.system("urxvt -e " + mpcmd);
-};
-let mplist = function(urls) {
-    let plist = "/tmp/mplist"
-    io.File(plist).write(urls.join("\n") + "\n");
-    io.run("urxvt", ["-g", "72x60", "-e", io.File(IO.runtimePath).path + "/scripts/mplist", window.navigator.userAgent, plist]);
-};
-let url = args.length ? args : buffer.URL.spec;
-//dta(flvcd(url));
-//mplayer(flvcd(url));
-mplist(flvcd(url));
-EOF
-group -locations http://www.youku.com/playlist_show/*,http://www.tudou.com/programs/view/*,http://www.tudou.com/playlist/*,http://v.qq.com/*,http://film.qq.com/* flvcd
-nmap -builtin -ex ge <count>flvcd
-group user
-
 "" open chdbits torrent
 command! chdbits -js <<EOF
 let chdbits = function (url) {

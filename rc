@@ -502,6 +502,9 @@ let isURL = function (url) {
         return false;
     if (url.startsWith("~/"))
         return true;
+    let m = url.match(/^(\w+)\//);
+    if (m)
+        return (m[1] === "localhost");
     let m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
     return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm|io)$/));
 };

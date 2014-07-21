@@ -222,7 +222,7 @@ let youku = function(url) {
         if (count) {
             format = ['', 'hd2', 'mp4', 'flv'][count];
         }
-        return 'http://v.youku.com/player/getRealM3U8/vid/' + id + '/type/' + format + '/v.m3u8';
+        return 'http://v.youku.com/player/getM3U8/vid/' + id + '/type/' + format + '/video.m3u8';
     }
     return null;
 };

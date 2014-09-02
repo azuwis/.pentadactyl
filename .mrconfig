@@ -15,9 +15,6 @@ post_checkout =
 checkout = git clone 'git://github.com/claytron/pentadactyl-solarized.git' 'solarized'
 post_checkout = ln -s solarized/colors/*.penta .
 
-[plugins/tabgroupie]
-checkout = git clone 'git://github.com/eri451/TabGroupie.git' 'tabgroupie'
-
 [plugins/dict]
 checkout = git clone 'git://github.com/grassofhust/dict.js.git' 'dict'
 

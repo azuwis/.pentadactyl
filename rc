@@ -487,13 +487,6 @@ silent cd ~
 "" plugins
 set loadplugins='\.(css|js|penta)$'
 
-"" workaround for TabGroupie
-js <<EOF
-window.setTimeout(function(){
-    plugins.tabgroupieTabGroupie.TabGroupie.init()
-}, 5000);
-EOF
-
 "" try to guess if param of :open is a url, and add buffer to :open/tabopen complition
 js <<EOF
 let isURL = function (url) {

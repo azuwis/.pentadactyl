@@ -465,7 +465,10 @@ EOF
 "" }}}
 
 "" {{{ Style
-"colorscheme mybeta1
+hi StatusLineNormal color: white; background: #3f3f3f;
+hi StatusLineSecure color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #6ca0a3, #3f3f3f 60px);
+hi StatusLineExtended color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #7f9f7f, #3f3f3f 60px);
+hi StatusLineBroken color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #cc9393, #3f3f3f 60px);
 "" }}}
 
 "" {{{ Bookmarklet

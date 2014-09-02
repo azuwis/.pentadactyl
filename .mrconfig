@@ -11,10 +11,6 @@ post_checkout =
 	git read-tree -m -u HEAD
 	ln -s .pentadactyl/*/*.js .
 
-[colors/solarized]
-checkout = git clone 'git://github.com/claytron/pentadactyl-solarized.git' 'solarized'
-post_checkout = ln -s solarized/colors/*.penta .
-
 [plugins/dict]
 checkout = git clone 'git://github.com/grassofhust/dict.js.git' 'dict'
 

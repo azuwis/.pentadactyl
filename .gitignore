@@ -1,10 +1,6 @@
 *.swp
 *.dis
 /info/
-/colors/solarized/
-/colors/solarized-dark.penta
-/colors/solarized-light.penta
 /plugins/dactyl/
 /plugins/dict/
 /plugins/grassofhust/
-/plugins/tabgroupie/

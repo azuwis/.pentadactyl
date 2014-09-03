@@ -445,6 +445,21 @@ group.commands.add(["proxytype", "pt"],
     }, true);
 EOF
 
+" Get file list of debian package
+command! dfl,debian-package-filelist
+\ -description "Get Debian pkg filelist at packages.debian.org"
+\ -complete custom,'[["squeeze", "old-stable"], ["wheezy", "stable"], ["jessie", "testing"], ["sid", "unstable"]]'
+\ -nargs=+ -js <<EOF
+let dist = "sid";
+let pkg = "";
+if (args.length === 1) {
+    pkg = args[0];
+} else {
+    dist = args[0];
+    pkg = args[1];
+}
+dactyl.open("http://packages.debian.org/" + dist + "/all/" + pkg + "/filelist", dactyl.NEW_TAB);
+EOF
 "" }}}
 
 "" {{{ AutoCMD

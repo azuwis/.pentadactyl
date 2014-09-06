@@ -27,7 +27,6 @@ set! ui.caretBlinkTime=0
 set! ui.key.generalAccessKey=0
 set! browser.tabs.closeWindowWithLastTab=false
 set! browser.tabs.insertRelatedAfterCurrent=true
-set! network.dns.disableIPv6=true
 set! network.proxy.socks="127.0.0.1"
 set! network.proxy.socks_port=7070
 set! network.proxy.socks_remote_dns=true

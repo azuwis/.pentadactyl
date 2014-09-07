@@ -543,7 +543,7 @@ EOF
 
 "" custom hint
 js <<EOF
-let selectors = ["a[target='_blank']", "a[target='_self']", "a[href^='#!topic/']", "div.links_main"];
+let selectors = ["a[onmousedown]", "a[target='_blank']", "a[target='_self']", "a[href^='#!topic/']", "div.links_main"];
 hints.addMode("g", "Follow specfic hint", function (elem) buffer.followLink(elem), null, selectors);
 hints.addMode("G", "Follow specfic hint in a background tab", function (elem) buffer.followLink(elem, dactyl.NEW_BACKGROUND_TAB), null, selectors);
 EOF

@@ -117,12 +117,13 @@ EOF
 installaddon {d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d} https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi
 set! extensions.adblockplus.frameobjects=false
 set! extensions.adblockplus.savestats=false
-"" custom patterns
+"" custom patterns and subscriptions
 js <<EOF
 if ("@adblockplus.org/abp/public;1" in Components.classes) {
     var abpURL = Components.classes["@adblockplus.org/abp/public;1"]
         .getService(Components.interfaces.nsIURI);
     var adp = Components.utils.import(abpURL.spec, null).AdblockPlus;
+    // custom patterns
     adp.addPatterns([
         '||114so.cn^',
         '||shooter.cn/ggsearch/*',
@@ -131,6 +132,28 @@ if ("@adblockplus.org/abp/public;1" in Components.classes) {
         '||pos.baidu.com^',
         'chdbits.org###ad_belowsearchbox',
     ]);
+    // subscriptions
+    let subscriptions = new Map([
+        ["EasyList China", "https://easylist-downloads.adblockplus.org/easylistchina.txt"],
+        ["Adblock Warning Removal List", "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"],
+        ["EasyPrivacy", "https://easylist-downloads.adblockplus.org/easyprivacy.txt"],
+        ["EasyList without element hiding", "https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt"],
+    ]);
+    for (let i = 0; i < adp.subscriptionCount; i++) {
+        subscriptions.delete(adp.getSubscriptionAt(i).title);
+    }
+    subscriptions.forEach(function(url, title) {
+        let subscription = {
+            url: url,
+            title: title,
+            disabled: false,
+            external: false,
+            mainSubscriptionTitle: null,
+            mainSubscriptionURL: null
+        };
+        window.openDialog("chrome://adblockplus/content/ui/subscriptionSelection.xul", "_blank",
+            "chrome,centerscreen,resizable,dialog=no", subscription, null);
+    });
 }
 EOF
 

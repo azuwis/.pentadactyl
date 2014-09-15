@@ -101,6 +101,7 @@ if (config.OS.isUnix) {
     if (result.output === "nuc") {
         prefs.set("layout.css.devPixelsPerPx", "1.3");
         prefs.set("extensions.nosquint.fullZoomLevel", 145);
+        dactyl.execute(":installaddon nosquint@urandom.ca https://addons.mozilla.org/firefox/downloads/latest/2592/addon-2592-latest.xpi");
     } else {
         // DPI tweak
         // https://wiki.archlinux.org/index.php/firefox_tweaks#Configure_the_DPI_value

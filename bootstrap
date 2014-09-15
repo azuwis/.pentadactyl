@@ -21,6 +21,17 @@ silent bmark -tags searchengine -title='Mobilism Search' http://forum.mobilism.o
 silent bmark -tags searchengine -title='Taobao Search' http://s.taobao.com/search?q=%s -keyword tb
 "" }}}
 
+"" {{{ Commands
+"" install extension if not exists
+command! installaddon -nargs=+ -js <<EOF
+AddonManager.getAddonByID(args[0], function(addon) {
+    if(!addon) {
+        dactyl.execute(":extadd " + args[1]);
+    }
+});
+EOF
+"" }}}
+
 "" {{{ Firefox Setting
 set! ui.caretWidth=5
 set! ui.caretBlinkTime=0
@@ -105,15 +116,6 @@ EOF
 "" }}}
 
 "" {{{ Extension
-"" install extension if not exists
-command! installaddon -nargs=+ -js <<EOF
-AddonManager.getAddonByID(args[0], function(addon) {
-    if(!addon) {
-        dactyl.execute(":extadd " + args[1]);
-    }
-});
-EOF
-
 "" adblock plus
 installaddon {d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d} https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi
 set! extensions.adblockplus.frameobjects=false

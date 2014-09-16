@@ -49,6 +49,7 @@ prefs.set("network.proxy.autoconfig_url", "file://" + io.File(IO.runtimePath).pa
 EOF
 "" shorten http connection timout
 set! network.http.connection-timeout=15
+set! browser.startup.page=3
 set! browser.startup.homepage="about:blank"
 set! browser.download.useDownloadDir=false
 set! browser.download.manager.showWhenStarting=false

@@ -73,6 +73,8 @@ set! security.dialog_enable_delay=0
 set! browser.panorama.animate_zoom=false
 "" disable fullscreen animation
 set! browser.fullscreen.animateUp=0
+"" disable tab animation
+set! browser.tabs.animate=false
 "" do not track
 set! privacy.donottrackheader.enabled=true
 set! browser.newtabpage.enabled=false

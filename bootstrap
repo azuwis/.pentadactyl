@@ -71,6 +71,8 @@ set! browser.sessionstore.interval=300000
 set! security.dialog_enable_delay=0
 "" disable tabgroup animation
 set! browser.panorama.animate_zoom=false
+"" disable fullscreen animation
+set! browser.fullscreen.animateUp=0
 "" do not track
 set! privacy.donottrackheader.enabled=true
 set! browser.newtabpage.enabled=false

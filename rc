@@ -486,11 +486,14 @@ hi StatusLineNormal color: white; background: #3f3f3f;
 hi StatusLineSecure color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #6ca0a3, #3f3f3f 60px);
 hi StatusLineExtended color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #7f9f7f, #3f3f3f 60px);
 hi StatusLineBroken color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #cc9393, #3f3f3f 60px);
+"" from https://github.com/remiprev/pentadactyl-files/blob/master/colors/feline.penta
 hi Hint line-height: 6px; text-shadow: 1px 1px 1px #000; padding: 5px 6px 6px; font-size: 13px; font-weight: normal; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 1em; box-shadow: 0 0 4px rgba(0,0,0,1); text-transform: uppercase;
 hi Hint[active] background: rgba(0, 0, 0, 0.8);
 hi Hint[ambiguous] background: rgba(0, 0, 255, 0.6);
 hi HintElem ;
 hi HintActive border-radius: 6px; background-color: rgba(173, 216, 230, 0.6) !important;
+"" from https://www.firefox.net.cn/read-34653
+hi Filter border-radius: 3px; background: #ffec8b; border: 1px solid orange !important;
 "" }}}
 
 "" {{{ Bookmarklet

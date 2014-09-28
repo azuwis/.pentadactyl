@@ -379,25 +379,66 @@ EOF
 command! unload -description "Unload current tab" -js gBrowser.BarTabHandler.unloadTab(gBrowser.mCurrentTab)
 
 "" Manage proxy.pac
-command! reloadPAC,rp -js Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
 js <<EOF
+let reloadPAC = function() {
+    Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+};
+let refreshPAC = function(func, domain) {
+    let pacfile = io.File(IO.runtimePath + '/proxy.pac');
+    let pac = pacfile.read();
+    pac = func(pac);
+    pacfile.write(pac);
+    reloadPAC();
+};
+group.commands.add(["reloadpac", "rp"],
+    "Reload proxy.pac",
+    reloadPAC, {},
+    true);
 group.commands.add(["pac"],
     "Add domain to proxy.pac",
     function (args) {
-        function addDomain(pac, domain) {
+        function addDomain(pac) {
+            if (pac.contains('"' + domain + '"')) {
+                return pac;
+            }
             pac = pac.replace('//MARK1', '|| dnsDomainIs(host, "' + domain + "\")\n        //MARK1");
             return pac.replace('//MARK2', '|| dnsDomainIs(host, ".' + domain + "\")\n    //MARK2");
         }
-        let hostname = args.length ? args : util.subdomains(window.content.location.hostname)[0];
-        let pacfile = io.File(IO.runtimePath + '/proxy.pac');
-        let pac = pacfile.read();
-        pac = addDomain(pac, hostname);
-        pacfile.write(pac);
-        Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
+        let domain = args.length ? args : util.subdomains(window.content.location.hostname)[0];
+        refreshPAC(addDomain);
     }, {
         argCount: "?",
         completer: function (context) {
             modules.completion.visibleHosts(context);
+        },
+    }, true);
+group.commands.add(["delpac"],
+    "Remove domain from proxy.pac",
+    function (args) {
+        function delDomain(pac) {
+            let lines = pac.split("\n");
+            let new_lines = lines.filter(function (line) {
+                return !line.contains('"' + domain + '"') && !line.contains('".' + domain + '"');
+            });
+            return new_lines.join("\n");
+        }
+        let domain = args.length ? args : util.subdomains(window.content.location.hostname)[0];
+        refreshPAC(delDomain);
+    }, {
+        argCount: "?",
+        completer: function (context) {
+            let pacfile = io.File(IO.runtimePath + '/proxy.pac');
+            let pac = pacfile.read();
+            let lines = pac.split("\n");
+            let completions = [];
+            lines.forEach(function (line) {
+                let m = line.match(/dnsDomainIs[^"]+"([^\.][^"]+)"/);
+                if (m) {
+                    let domain = m[1];
+                    completions.push([domain, domain]);
+                }
+            });
+            context.completions = completions;
         },
     }, true);
 EOF

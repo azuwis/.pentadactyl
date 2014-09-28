@@ -412,7 +412,7 @@ group.commands.add(["pac"],
             modules.completion.visibleHosts(context);
         },
     }, true);
-group.commands.add(["delpac"],
+group.commands.add(["delpac", "dp"],
     "Remove domain from proxy.pac",
     function (args) {
         function delDomain(pac) {

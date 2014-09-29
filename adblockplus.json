@@ -1,30 +1,30 @@
 {
   "subscriptions": [
     [
-      "EasyList without element hiding rules",
-      "https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt"
-    ],
-    [
-      "EasyPrivacy",
-      "https://easylist-downloads.adblockplus.org/easyprivacy.txt"
-    ],
-    [
       "Adblock Warning Removal List",
       "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"
     ],
     [
       "EasyList China",
       "https://easylist-downloads.adblockplus.org/easylistchina.txt"
+    ],
+    [
+      "EasyList without element hiding rules",
+      "https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt"
+    ],
+    [
+      "EasyPrivacy",
+      "https://easylist-downloads.adblockplus.org/easyprivacy.txt"
     ]
   ],
   "patterns": [
-    "en.wikipedia.org###siteNotice",
     "chdbits.org###ad_belowsearchbox",
+    "en.wikipedia.org###siteNotice",
     "||114so.cn^",
-    "||shooter.cn/ggsearch/*",
+    "||chdbits.org/pic/forum_pic/chs/donate.gif",
     "||highbd.net^",
     "||pos.baidu.com^",
-    "||chdbits.org/pic/forum_pic/chs/donate.gif",
+    "||shooter.cn/ggsearch/*",
     "||translate.google.com^$domain=youku.com"
   ]
 }

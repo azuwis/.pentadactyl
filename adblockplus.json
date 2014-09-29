@@ -1,0 +1,30 @@
+{
+  "subscriptions": [
+    [
+      "EasyList without element hiding rules",
+      "https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt"
+    ],
+    [
+      "EasyPrivacy",
+      "https://easylist-downloads.adblockplus.org/easyprivacy.txt"
+    ],
+    [
+      "Adblock Warning Removal List",
+      "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"
+    ],
+    [
+      "EasyList China",
+      "https://easylist-downloads.adblockplus.org/easylistchina.txt"
+    ]
+  ],
+  "patterns": [
+    "en.wikipedia.org###siteNotice",
+    "chdbits.org###ad_belowsearchbox",
+    "||114so.cn^",
+    "||shooter.cn/ggsearch/*",
+    "||highbd.net^",
+    "||pos.baidu.com^",
+    "||chdbits.org/pic/forum_pic/chs/donate.gif",
+    "||translate.google.com^$domain=youku.com"
+  ]
+}

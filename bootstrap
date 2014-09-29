@@ -168,6 +168,9 @@ if ("@adblockplus.org/abp/public;1" in Components.classes) {
 }
 EOF
 
+"" https everywhere
+installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere-latest.xpi
+
 "" pwdhash
 installaddon {bb8d77b0-a845-4249-a205-ef7395587b69} https://addons.mozilla.org/firefox/downloads/latest/1033/addon-1033-latest.xpi
 

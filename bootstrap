@@ -48,7 +48,7 @@ prefs.set("network.proxy.type", 2);
 prefs.set("network.proxy.autoconfig_url", "file://" + io.File(IO.runtimePath).path + "/proxy.pac");
 EOF
 "" shorten http connection timout
-set! network.http.connection-timeout=15
+set! network.http.connection-timeout=30
 set! browser.startup.page=3
 set! browser.startup.homepage="about:blank"
 set! browser.download.useDownloadDir=false

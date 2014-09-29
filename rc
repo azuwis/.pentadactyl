@@ -521,11 +521,13 @@ let abpSave = function () {
 		for (let i = 0; i < abp.subscriptionCount; i++) {
 			let subscription = abp.getSubscriptionAt(i);
 			if (subscription.title === 'Ad Blocking Rules' || subscription.title === 'Element Hiding Rules') {
-				setting['patterns'] = subscription.getPatterns().concat(setting['patterns']);
+				setting.patterns = subscription.getPatterns().concat(setting.patterns);
 			} else {
-				setting['subscriptions'].push([subscription.title, subscription.url]);
+				setting.subscriptions.push([subscription.title, subscription.url]);
 			}
 		}
+                setting.subscriptions = setting.subscriptions.sort();
+                setting.patterns = setting.patterns.sort();
 		let json = io.File(abp_json);
 		json.write(JSON.stringify(setting, null, '  ') + "\n");
 	}
@@ -535,7 +537,7 @@ let abpLoad = function () {
 	if (abp) {
 		let setting = JSON.parse(io.File(abp_json).read());
         // subscriptions
-        let subscriptions = new Map(setting.subscriptions.reverse());
+        let subscriptions = new Map(setting.subscriptions);
         for (let i = 0; i < abp.subscriptionCount; i++) {
             subscriptions.delete(abp.getSubscriptionAt(i).title);
         }

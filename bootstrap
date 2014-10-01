@@ -130,7 +130,7 @@ set! extensions.adblockplus.savestats=false
 js <<EOF
 setTimeout(function () {
     dactyl.execute(":abpload");
-    }, 8000);
+    }, 30000);
 EOF
 
 "" https everywhere

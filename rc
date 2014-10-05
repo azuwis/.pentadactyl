@@ -1,4 +1,4 @@
-"" {{{ Mapping
+" Mapping {{{1 
 "" scroll more
 nmap -builtin j 10j
 nmap -builtin k 10k
@@ -98,9 +98,7 @@ map -modes hints <C-b> -ex normal! <C-b>
 "" focus on main frame
 nmap -builtin gw ;F1<CR>
 
-"" }}}
-
-"" {{{ Searching
+" Searching {{{1
 "" from http://www.slimeden.com/2011/03/firefox/pentadactyl
 ":map t -js content.getSelection().toString()!=""?dactyl.execute(":tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
 ":map o -js content.getSelection().toString()!=""?dactyl.execute(":open "+ content.getSelection()):CommandExMode().open("open ")
@@ -111,9 +109,8 @@ map S gi<ESC> :switchSearch<Space>
 command -nargs=* siteSearch execute "tabopen <args> site:" + window.content.location.hostname
 
 set defsearch=g
-"" }}}
 
-"" {{{ Option
+" Option {{{1
 "" ]]/[[ turn next/previous page
 set nextpattern&
 set nextpattern^='[下后]\s*一?\s*[页张个篇章頁]','\bolder\s*posts\b','^→$'
@@ -178,9 +175,8 @@ set maxitems=10
 
 "" gerrit
 set passkeys+='^https?://(review|scm|gerrit)\..*/#/':'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
-"" }}}
 
-"" {{{ Command
+" Command {{{1
 "" smart reload
 command smartReload -js <<EOF
 if (buffer.URL.spec.contains('#')) {
@@ -566,9 +562,8 @@ group.commands.add(["abpload"],
     abpLoad, {},
     true);
 EOF
-"" }}}
 
-"" {{{ AutoCMD
+" AutoCMD {{{1
 "" workaround for tabgroups manager causing P misbehave
 "nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
 
@@ -585,9 +580,8 @@ if (doc.title.match(/subscription/i)) {
     dactyl.open('gl site:lwn.net/SubscriberLink "' + title + '"');
 }
 EOF
-"" }}}
 
-"" {{{ Style
+" Style {{{1
 hi StatusLineNormal color: white; background: #3f3f3f;
 hi StatusLineSecure color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #6ca0a3, #3f3f3f 60px);
 hi StatusLineExtended color: white; background-color: #3f3f3f; background-image: linear-gradient(to right, #7f9f7f, #3f3f3f 60px);
@@ -600,9 +594,8 @@ hi HintElem ;
 hi HintActive border-radius: 6px; background-color: rgba(173, 216, 230, 0.6) !important;
 "" from https://www.firefox.net.cn/read-34653
 hi Filter border-radius: 3px; background: #ffec8b; border: 1px solid orange !important;
-"" }}}
 
-"" {{{ Bookmarklet
+" Bookmarklet {{{1
 nmap -builtin ,b :bml-
 nmap -builtin ,s :bml-subscribe<CR>
 command bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
@@ -610,9 +603,8 @@ command bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javas
 command bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());
 command bml-readability -description "Bookmarklet: Make webpage readable using readability" open javascript:(%28function%28%29%7Bwindow.baseUrl%3D%27http%3A//www.readability.com%27%3Bwindow.readabilityToken%3D%27%27%3Bvar%20s%3Ddocument.createElement%28%27script%27%29%3Bs.setAttribute%28%27type%27%2C%27text/javascript%27%29%3Bs.setAttribute%28%27charset%27%2C%27UTF-8%27%29%3Bs.setAttribute%28%27src%27%2CbaseUrl%2B%27/bookmarklet/read.js%27%29%3Bdocument.documentElement.appendChild%28s%29%3B%7D%29%28%29)
 command bml-pocket -description "Bookmarklet: Save to pocket" open javascript:(function(){ISRIL_H='7a0b';PKT_D='getpocket.com';ISRIL_SCRIPT=document.createElement('SCRIPT');ISRIL_SCRIPT.type='text/javascript';ISRIL_SCRIPT.src='http://'+PKT_D+'/b/r.js';document.getElementsByTagName('head')[0].appendChild(ISRIL_SCRIPT)})();
-"" }}}
 
-"" {{{ Misc
+" Misc {{{1
 "" ~ as pwd
 silent cd ~
 
@@ -714,6 +706,5 @@ overlay.overlayObject(modes, {
     }
 });
 EOF
-"" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

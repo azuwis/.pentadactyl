@@ -75,7 +75,7 @@ nmap -builtin ,F :set fullscreen!<CR>
 nmap -builtin ,d :downloads<CR>
 
 "" about:config
-nmap -builtin ,c :tabopen about:config<CR>
+nmap -builtin ,C :tabopen about:config<CR>
 
 "" auto add -tags option when adding bookmark
 nmap -builtin a a<Space>-tags<Space>
@@ -565,6 +565,25 @@ group.commands.add(["abpload"],
     abpLoad, {},
     true);
 EOF
+
+" emulate mouse click {{{2
+command! click -nargs=? -count -js <<EOF
+let mouse = 1;
+let repeat = 2;
+switch (count) {
+    case 1:
+        mouse = 1;
+        repeat = 1;
+        break;
+    case 3:
+        mouse = 3;
+        repeat = 1;
+        break;
+    default:
+}
+io.run('xdotool', ['mousemove', '--polar', '0', '0', 'click', '--repeat', repeat.toString(), mouse.toString()]);
+EOF
+nmap -builtin -ex ,c <count>click
 
 " AutoCMD {{{1
 "" set title to url

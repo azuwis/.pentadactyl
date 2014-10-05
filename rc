@@ -567,12 +567,6 @@ group.commands.add(["abpload"],
 EOF
 
 " AutoCMD {{{1
-"" workaround for tabgroups manager causing P misbehave
-"nmap -builtin p :js dactyl.execute(":tabopen " + dactyl.clipboardRead())<CR>
-
-"" use https for some sites
-"autocmd PageLoad '^http://((reader|groups|docs|spreadsheets)\.google\.com|www\.google\.com/(search|reader))' -js window.content.location.href=window.content.location.href.replace(/^http/i, "https");
-
 "" set title to url
 "autocmd LocationChange .* :set titlestring=<url>
 

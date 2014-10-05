@@ -177,7 +177,7 @@ set maxitems=10
 set passkeys+='^https?://(review|scm|gerrit)\..*/#/':'/?ojksOur',ga,gc,gd,gi,gm,go,gs,gw
 
 " Command {{{1
-"" smart reload
+" smart reload {{{2
 command smartReload -js <<EOF
 if (buffer.URL.spec.contains('#')) {
     dactyl.execute("reload");
@@ -187,10 +187,10 @@ if (buffer.URL.spec.contains('#')) {
 EOF
 nmap -builtin r :smartReload<CR>
 
-"" flush browser dns
+" flush browser dns {{{2
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
-"" use you-get to download and play video
+" use you-get to download and play video {{{2
 command! youget -nargs=? -count -js <<EOF
 let youget = function(url) {
     io.run("urxvt", ["-hold", "-title", "Floating: mpv", "-g", "72x60", "-e", "you-get", "--output-dir", "/tmp", "--local-play", "--player", "mpv --really-quiet -cache=no", url]);
@@ -202,7 +202,7 @@ group -locations http://v.youku.com/v_show/* youget
 nmap -builtin -ex ge <count>youget
 group user
 
-"" use vlc to play hls video
+" use vlc to play hls video {{{2
 command! hls -nargs=? -count -js <<EOF
 let hls = function(url){
     let m3u8 = youku(url);
@@ -226,7 +226,7 @@ let url = args.length ? args : buffer.URL.spec;
 hls(url);
 EOF
 
-"" use vlc to play youtube video
+" use vlc to play youtube video {{{2
 command! youtube -nargs=? -count -js <<EOF
 let url = args.length ? args : buffer.URL.spec;
 let format = '';
@@ -239,7 +239,7 @@ group -locations http*://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube
 group user
 
-"" open chdbits torrent
+" open chdbits torrent {{{2
 command! chdbits -js <<EOF
 let chdbits = function (url) {
     let torrent = 'http://chdbits.org/download.php?id=' + url.match(/\?id=([0-9]+)/)[1];
@@ -254,7 +254,7 @@ group -locations http://chdbits.org/details.php?id=* chdbits
 nmap -builtin ge :chdbits<CR>
 group user
 
-"" open using external browser
+" open using external browser {{{2
 command! openEx -nargs=? -js <<EOF
 let url = args.length ? args : buffer.URL.spec;
 if (config.OS.isMacOSX) {
@@ -267,7 +267,7 @@ if (config.OS.isMacOSX) {
 EOF
 nmap -builtin ge :openEx<CR>
 
-"" yank gerrit
+" yank gerrit {{{2
 command! yankgerrit -js <<EOF
 let title = buffer.doc.getElementsByClassName("changeScreenDescription")[0].innerHTML
 dactyl.clipboardWrite("# " + title + "\n" + buffer.URL.spec);
@@ -283,6 +283,7 @@ group user
 command coralcdn -js dactyl.open( String.replace(buffer.URL.spec, /(\.\w{2,4})\//, "$1.nyud.net/") )
 nmap -builtin gp :coralcdn<CR>
 
+" toggle http/https {{{2
 command gohttps -js <<EOF
 if (buffer.URL.spec.startsWith('http://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^http/i, 'https'));
@@ -292,10 +293,10 @@ if (buffer.URL.spec.startsWith('http://')) {
 EOF
 nmap -builtin gs :gohttps<CR>
 
-"" display calendar
+" display calenda {{{2
 "command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 
-"" google translate
+" google translate {{{2
 command trans -js <<EOF
 let getParameterByName = function(url, name) {
     let name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
@@ -315,6 +316,7 @@ if (buffer.URL.spec.startsWith('http://translate.google.com/')) {
 EOF
 nmap -builtin ,t :trans<CR>
 
+" jump to source {{{2
 "" jump to a command, mapping or option source definition, from https://gist.github.com/3331062
 command jumptodef,jd -literal=1 -nargs=1 -complete help -js <<EOF
 let sourceLocation = function(str) {
@@ -337,7 +339,7 @@ window.openDialog("chrome://global/content/viewSource.xul",
     loc.url, null, null, loc.line);
 EOF
 
-"" delete duplicate tabs
+" delete duplicate tabs {{{2
 command -description "Delete duplicate tabs" tabcloseduplicates,tabclosed -js <<EOF
 let seen = {}, vtabs = tabs.visibleTabs, i = vtabs.length;
 while (i--) {
@@ -351,7 +353,8 @@ while (i--) {
 EOF
 nmap -builtin ,D :tabcloseduplicates<CR>
 
-"" ramback kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
+" ramback {{{2
+" kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
 command! ramback -js <<EOF
 let observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
@@ -360,7 +363,7 @@ observerService.notifyObservers(null, "memory-pressure", "heap-minimize");
 observerService.notifyObservers(null, "dump-mem-stats", "clean up, pig!");
 EOF
 
-"" toggle auto load plugins
+" toggle auto load plugins {{{2
 command! pluginstoggle -description "Allow/unset plugins permission for current site" -js <<EOF
 if (services.permissions.testPermission(buffer.uri, "plugins") !== Sanitizer.PERMS["allow"]) {
     dactyl.echo("ALLOW plugins permission for " + buffer.uri.host);
@@ -371,10 +374,10 @@ if (services.permissions.testPermission(buffer.uri, "plugins") !== Sanitizer.PER
 }
 EOF
 
-"" Unload current tab using BarTab
+" Unload current tab using BarTab {{{2
 command! unload -description "Unload current tab" -js gBrowser.BarTabHandler.unloadTab(gBrowser.mCurrentTab)
 
-"" Manage proxy.pac
+" Manage proxy.pac {{{2
 js <<EOF
 let reloadPAC = function() {
     Components.classes['@mozilla.org/network/protocol-proxy-service;1'].getService().reloadPAC();
@@ -482,7 +485,7 @@ group.commands.add(["proxytype", "pt"],
     }, true);
 EOF
 
-" Get file list of debian package
+" Get file list of debian package {{{2
 command! dfl,debian-package-filelist
 \ -description "Get Debian pkg filelist at packages.debian.org"
 \ -complete custom,'[["squeeze", "old-stable"], ["wheezy", "stable"], ["jessie", "testing"], ["sid", "unstable"]]'
@@ -498,7 +501,7 @@ if (args.length === 1) {
 dactyl.open("http://packages.debian.org/" + dist + "/all/" + pkg + "/filelist", dactyl.NEW_TAB);
 EOF
 
-"" Save/load adblockplus setting
+" Save/load adblockplus setting {{{2
 js <<EOF
 let abp_json = IO.runtimePath + '/adblockplus.json';
 let getAbp = function () {
@@ -605,13 +608,14 @@ command bml-readability -description "Bookmarklet: Make webpage readable using r
 command bml-pocket -description "Bookmarklet: Save to pocket" open javascript:(function(){ISRIL_H='7a0b';PKT_D='getpocket.com';ISRIL_SCRIPT=document.createElement('SCRIPT');ISRIL_SCRIPT.type='text/javascript';ISRIL_SCRIPT.src='http://'+PKT_D+'/b/r.js';document.getElementsByTagName('head')[0].appendChild(ISRIL_SCRIPT)})();
 
 " Misc {{{1
-"" ~ as pwd
+" ~ as pwd {{{2
 silent cd ~
 
-"" plugins
+" plugins {{{2
 set loadplugins='\.(css|js|penta)$'
 
-"" try to guess if param of :open is a url, and add buffer to :open/tabopen complition
+" override :open {{{2
+" try to guess if param of :open is a url, and add buffer to :open/tabopen complition
 js <<EOF
 overlay.overlayObject(dactyl, {
     open: function open(urls, params, force) {
@@ -645,7 +649,7 @@ completion.addUrlCompleter("buffer", "Open Tabs", completion.buffer);
 options["complete"].splice(0, 0, "buffer");
 EOF
 
-"" custom hint
+" custom hint {{{2
 js <<EOF
 let selectors = ["a[onmousedown]", "a[target='_blank']", "a[target='_self']", "a[href^='#!topic/']", "div.links_main"];
 hints.addMode("g", "Follow specfic hint", function (elem) buffer.followLink(elem), null, selectors);
@@ -658,12 +662,12 @@ group -locations groups.google.com customHintGoogleGroups
 nmap -builtin f ;g
 group user
 
-"" google docs viewer
+" google docs viewer {{{2
 js <<EOF
 hints.addMode("d", "Open link using google docs", function (elem) dactyl.open("https://docs.google.com/viewer?url=" + encodeURIComponent(elem.href), dactyl.NEW_TAB), null, ["a[href*='.pdf']", "a[href*='.doc']", "a[href*='.ppt']", "a[href*='.odp']"]);
 EOF
 
-"" display tabgroup title on statusline
+" display tabgroup title on statusline {{{2
 js <<EOF
 overlay.overlayObject(statusline, {
     updateTabCount: function updateTabCount(delayed) {
@@ -682,7 +686,7 @@ overlay.overlayObject(statusline, {
 });
 EOF
 
-"" source bootstrap if modified
+" source bootstrap if modified {{{2
 command bootstrap :runtime bootstrap
 js <<EOF
 let bootstrapFile = "bootstrap";
@@ -698,7 +702,7 @@ if (file.exists() && file.isFile() && file.isReadable()) {
 }
 EOF
 
-"" change EX mode prompt
+" change EX mode prompt {{{2
 js <<EOF
 overlay.overlayObject(modes, {
     _getModeMessage: function _getModeMessage() {

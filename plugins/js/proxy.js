@@ -79,11 +79,12 @@ let delDomain = function (set, item) {
 
 let updateProxy = function (args, func) {
     let target_domains;
+    let proxy;
     let domains;
     let setting = loadSetting();
     function getFirst(map) {
         for (let [key, value] of map) {
-            return value;
+            return [key, value];
         }
     }
     function defaultDomains() {
@@ -91,19 +92,22 @@ let updateProxy = function (args, func) {
     }
     if (args.length === 0) {
         target_domains = defaultDomains();
-        domains = getFirst(setting.proxies);
+        [proxy, domains] = getFirst(setting.proxies);
     } else if (args.length === 1) {
         if (args[0].match(/^(SOCKS[45] |PROXY |DIRECT$)/)) {
             target_domains = defaultDomains();
-            domains = setting.proxies.get(args[0]);
+            proxy = args[0];
+            domains = setting.proxies.get(proxy);
         } else {
             target_domains = args;
-            domains = getFirst(setting.proxies);
+            [proxy, domains] = getFirst(setting.proxies);
         }
     } else {
         target_domains = args.slice(1);
-        domains = setting.proxies.get(args[0]);
+        proxy = args[0];
+        domains = setting.proxies.get(proxy);
     }
+    dactyl.echomsg(proxy + ' => ' + target_domains.join(','));
     target_domains.forEach(function (domain) {
         func(domains, domain);
     });

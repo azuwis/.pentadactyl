@@ -14,7 +14,7 @@ let generatePAC = function(setting) {
     let pac = [
         "function FindProxyForURL(url, host) {",
         "    if (isPlainHostName(host)) {",
-        "        return direct;",
+        "        return 'DIRECT';",
         "    }",
         ""
     ].join("\n") + "\n";
@@ -34,7 +34,7 @@ let generatePAC = function(setting) {
         }
         pac += "    ) {\n        return '" + proxy + "';\n    }\n\n";
     }
-    pac += '    return "' + setting.default + '";' + "\n}\n";
+    pac += "    return '" + setting.default + "';" + "\n}\n";
     io.File(pac_file).write(pac);
     reloadPAC();
 };

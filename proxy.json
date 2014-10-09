@@ -1,0 +1,13 @@
+{
+  "proxies": [
+    [
+      "SOCKS5 127.0.0.1:7070",
+      []
+    ],
+    [
+      "DIRECT",
+      []
+    ]
+  ],
+  "default": "DIRECT"
+}

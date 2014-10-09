@@ -78,8 +78,8 @@ let delDomain = function (set, item) {
 };
 
 let updateProxy = function (args, func) {
+    let target_domains;
     let domains;
-    let proxy_entry;
     let setting = loadSetting();
     function getFirst(map) {
         for (let [key, value] of map) {
@@ -90,22 +90,22 @@ let updateProxy = function (args, func) {
         return [util.subdomains(window.content.location.hostname)[0]];
     }
     if (args.length === 0) {
-        domains = defaultDomains();
-        proxy_entry = getFirst(setting.proxies);
+        target_domains = defaultDomains();
+        domains = getFirst(setting.proxies);
     } else if (args.length === 1) {
         if (args[0].match(/^(SOCKS[45] |PROXY |DIRECT$)/)) {
-            domains = defaultDomains();
-            proxy_entry = setting.proxies.get(args[0]);
+            target_domains = defaultDomains();
+            domains = setting.proxies.get(args[0]);
         } else {
-            domains = args;
-            proxy_entry = getFirst(setting.proxies);
+            target_domains = args;
+            domains = getFirst(setting.proxies);
         }
     } else {
-        domains = args.slice(1);
-        proxy_entry = setting.proxies.get(args[0]);
+        target_domains = args.slice(1);
+        domains = setting.proxies.get(args[0]);
     }
-    domains.forEach(function (item) {
-        func(proxy_entry, item);
+    target_domains.forEach(function (domain) {
+        func(domains, domain);
     });
     saveSetting(setting);
 };

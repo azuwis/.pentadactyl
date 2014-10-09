@@ -5,6 +5,10 @@
       "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt"
     ],
     [
+      "Antisocial",
+      "https://raw.githubusercontent.com/Hubird-au/Adversity/master/Antisocial.txt"
+    ],
+    [
       "EasyList China",
       "https://easylist-downloads.adblockplus.org/easylistchina.txt"
     ],

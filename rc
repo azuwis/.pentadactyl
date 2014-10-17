@@ -190,16 +190,16 @@ nmap -builtin r :smartReload<CR>
 " flush browser dns {{{2
 command flushdns set! network.dnsCacheExpiration=0 | set! network.dnsCacheExpiration&
 
-" use you-get to download and play video {{{2
-command! youget -nargs=? -count -js <<EOF
-let youget = function(url) {
-    io.run("urxvt", ["-hold", "-title", "Floating: mpv", "-g", "72x60", "-e", "you-get", "--output-dir", "/tmp", "--local-play", "--player", "mpv --really-quiet -cache=no", url]);
+" use you-get/mpv to download and play video {{{2
+command! omniplay -nargs=? -count -js <<EOF
+let omniplay = function(url) {
+    io.run('omniplay', [url]);
 };
-let url = args.length ? args : buffer.URL.spec;
-youget(url);
+let url = args.length ? args[0] : buffer.URL.spec;
+omniplay(url);
 EOF
-group -locations http://v.youku.com/v_show/* youget
-nmap -builtin -ex ge <count>youget
+group -locations http://v.youku.com/v_show/*,http://www.iqiyi.com/v_* omniplay
+nmap -builtin -ex ge <count>omniplay
 group user
 
 " use vlc to play hls video {{{2

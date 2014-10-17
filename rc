@@ -202,30 +202,6 @@ group -locations http://v.youku.com/v_show/*,http://www.iqiyi.com/v_* omniplay
 nmap -builtin -ex ge <count>omniplay
 group user
 
-" use vlc to play hls video {{{2
-command! hls -nargs=? -count -js <<EOF
-let hls = function(url){
-    let m3u8 = youku(url);
-    if (m3u8) {
-        io.run('vlc', [m3u8]);
-    }
-};
-let youku = function(url) {
-    let m = url.match('v_show/id_(.*)\.html');
-    if (m) {
-        let id = m[1];
-        let format = 'hd2';
-        if (count) {
-            format = ['', 'hd2', 'mp4', 'flv'][count];
-        }
-        return 'http://v.youku.com/player/getM3U8/vid/' + id + '/type/' + format + '/video.m3u8';
-    }
-    return null;
-};
-let url = args.length ? args : buffer.URL.spec;
-hls(url);
-EOF
-
 " use vlc to play youtube video {{{2
 command! youtube -nargs=? -count -js <<EOF
 let url = args.length ? args : buffer.URL.spec;

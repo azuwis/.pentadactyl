@@ -204,7 +204,7 @@ group user
 
 " use vlc to play youtube video {{{2
 command! youtube -nargs=? -count -js <<EOF
-let url = args.length ? args : buffer.URL.spec;
+let url = args.length ? args[0] : buffer.URL.spec;
 let format = '';
 if (count) {
     format = ['', '&fmt=37', '&fmt=22', '&fmt=18'][count];
@@ -232,7 +232,7 @@ group user
 
 " open using external browser {{{2
 command! openEx -nargs=? -js <<EOF
-let url = args.length ? args : buffer.URL.spec;
+let url = args.length ? args[0] : buffer.URL.spec;
 if (config.OS.isMacOSX) {
     io.run('open', ['-a', 'Safari', url]);
 } else if (config.OS.isUnix) {

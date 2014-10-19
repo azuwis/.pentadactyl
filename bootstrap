@@ -99,6 +99,7 @@ if (config.OS.isUnix) {
     if (result.output === "nuc") {
         prefs.set("layout.css.devPixelsPerPx", "1.3");
         prefs.set("extensions.nosquint.fullZoomLevel", 145);
+        prefs.set("extensions.nosquint.hideStatus", true);
         dactyl.execute(":installaddon nosquint@urandom.ca https://addons.mozilla.org/firefox/downloads/latest/2592/addon-2592-latest.xpi");
     } else {
         // DPI tweak
@@ -143,9 +144,6 @@ set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_on_restart=true
 
 "" bartab
 set! extensions.bartab.unloadAfterTimeout=true
-
-"" nosquint
-set! extensions.nosquint.hideStatus=true
 "" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

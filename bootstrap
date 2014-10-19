@@ -135,9 +135,6 @@ installaddon {bb8d77b0-a845-4249-a205-ef7395587b69} https://addons.mozilla.org/f
 
 "" youku anti ads
 installaddon youkuantiads_with_player@haoutil.tk https://haoutil.googlecode.com/svn/trunk/firefox/xpi/youkuantiads_with_player.xpi
-
-"" vertical tabs
-set! extensions.verticaltabs.width=260
 "" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

@@ -6,10 +6,6 @@
 /* tabbar no all tab button */
 #alltabs-button {display:none !important;}
 
-/* statusbar no dropmarker */
-.toolbarbutton-menubutton-dropmarker {display:none !important;}
-.toolbarbutton-menu-dropmarker {display:none !important;}
-
 /* no tab close button on selected tab*/
 .tabbrowser-tab[selected="true"] .tab-close-button {display:none !important;}
 

@@ -139,9 +139,6 @@ if (config.haveGecko("23")) {
 }
 EOF
 
-"" dont show link at status line
-set showstatuslinks=
-
 "" highlight search
 "set hlfind
 
@@ -157,9 +154,6 @@ set complete=location,suggestion
 
 "" only follow hints when press enter
 "set followhints=1
-
-"" show link when hover links
-"set showstatuslinks=command
 
 "" disable annoying auto focus
 set strictfocus^=tao123.com:despotic

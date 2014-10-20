@@ -1,4 +1,4 @@
-"" {{{ Search Engines
+" Search Engines {{{1
 "" hide all browser search engines except google(for suggestion)
 js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google") e.hidden = true})
 silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s&ion=0&safe=off&lr=lang_zh-CN|lang_zh-TW|lang_en -keyword g
@@ -19,9 +19,8 @@ silent bmark -tags searchengine -title='CHDBits Search' http://chdbits.org/torre
 silent bmark -tags searchengine -title='Baidu MP3 Search' -charset=GB2312 http://mp3.baidu.com/m?f=ms&rf=idx&tn=baidump3&ct=134217728&lf=&rn=&word=%s&lm=-1 -keyword bm
 silent bmark -tags searchengine -title='Mobilism Search' http://forum.mobilism.org/search.php?keywords=%s&fid[]=398&sc=1&sr=topics&sf=titleonly -keyword mo
 silent bmark -tags searchengine -title='Taobao Search' http://s.taobao.com/search?q=%s -keyword tb
-"" }}}
 
-"" {{{ Commands
+" Commands {{{1
 "" install extension if not exists
 command! installaddon -nargs=+ -js <<EOF
 AddonManager.getAddonByID(args[0], function(addon) {
@@ -30,9 +29,8 @@ AddonManager.getAddonByID(args[0], function(addon) {
     }
 });
 EOF
-"" }}}
 
-"" {{{ Firefox Setting
+" Firefox Setting {{{1
 set! ui.caretWidth=5
 set! ui.caretBlinkTime=0
 "" disable web page accesskey, this leads to key conflict
@@ -91,7 +89,8 @@ prefs.set("extensions.checkCompatibility." + appVersion, false);
 prefs.set("extensions.checkCompatibility." + (parseInt(appVersion) + 1) + ".0", false);
 prefs.set("extensions.checkCompatibility.nightly", false);
 EOF
-"" DPI and zoom
+
+" DPI and zoom {{{1
 js <<EOF
 if (config.OS.isUnix) {
     // nuc
@@ -113,9 +112,7 @@ if (config.OS.isUnix) {
 }
 EOF
 
-"" }}}
-
-"" {{{ Extension
+" Extension {{{1
 "" adblock plus
 installaddon {d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d} https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi
 set! extensions.adblockplus.frameobjects=false
@@ -135,6 +132,5 @@ installaddon {bb8d77b0-a845-4249-a205-ef7395587b69} https://addons.mozilla.org/f
 
 "" youku anti ads
 installaddon youkuantiads_with_player@haoutil.tk https://haoutil.googlecode.com/svn/trunk/firefox/xpi/youkuantiads_with_player.xpi
-"" }}}
 
 " vim: set ft=pentadactyl fdm=marker:

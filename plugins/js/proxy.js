@@ -114,7 +114,7 @@ let updateProxy = function (args, func) {
     saveSetting(setting);
 };
 
-group.commands.add(["addproxy", "ap"],
+group.commands.add(["proxy", "px"],
     "Add domains to proxy",
     function (args) {
         updateProxy(args, addDomain);
@@ -130,7 +130,7 @@ group.commands.add(["addproxy", "ap"],
         },
     }, true);
 
-group.commands.add(["delproxy", "dp"],
+group.commands.add(["delproxy", "delpx"],
     "Remove domains from proxy",
     function (args) {
         updateProxy(args, delDomain);
@@ -146,7 +146,7 @@ group.commands.add(["delproxy", "dp"],
         },
     }, true);
 
-group.commands.add(["proxy", "px"],
+group.commands.add(["proxies", "pxs"],
     "Print proxy setting",
     function (args) {
 		let json = io.File(json_file);

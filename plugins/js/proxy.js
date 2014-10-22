@@ -146,6 +146,13 @@ group.commands.add(["delproxy", "dp"],
         },
     }, true);
 
+group.commands.add(["proxy", "px"],
+    "Print proxy setting",
+    function (args) {
+		let json = io.File(json_file);
+		dactyl.echo(json.read());
+    },{}, true);
+
 
 let proxy_types = [
     ["0", "Direct"],

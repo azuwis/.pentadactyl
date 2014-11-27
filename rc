@@ -41,8 +41,8 @@ nmap -builtin x <C-^>
 "" U list closed tabs
 nmap -builtin U :undo<Space>
 
-"" toggle menubar
-nmap -builtin gm :set guioptions!=m<CR>
+"" toggle menubar and toolbar
+nmap -builtin gm :set guioptions!=mT<CR>
 
 "" viewsource in new tab
 nmap -builtin gf :tab viewsource<CR>

@@ -209,6 +209,14 @@ group -locations http*://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube
 group user
 
+" focus on bilibili player {{{2
+command! biliplayer -js <<EOF
+buffer.win.document.getElementById('bofqi').scrollIntoView();
+EOF
+group -locations http://www.bilibili.com/* biliplayer
+nmap -builtin -ex ge biliplayer
+group user
+
 " open chdbits torrent {{{2
 command! chdbits -js <<EOF
 let chdbits = function (url) {

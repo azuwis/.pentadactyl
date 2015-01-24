@@ -277,8 +277,8 @@ nmap -builtin gs :gohttps<CR>
 " google translate {{{2
 command trans -js <<EOF
 let getParameterByName = function(url, name) {
-    let name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-    let regexS = '[\\?&]' + name + '=([^&#]*)';
+    let mname = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+    let regexS = '[\\?&]' + mname + '=([^&#]*)';
     let regex = new RegExp(regexS);
     let results = regex.exec(url);
     if (results == null)
@@ -512,7 +512,7 @@ overlay.overlayObject(dactyl, {
             let m = url.match(/^(\w+)\//);
             if (m)
                 return (m[1] === "localhost");
-            let m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
+            m = url.match(/^(?:[^.:\/ ]+\.)+([A-Za-z]+)($|\/)/);
             return (!m || m[1].match(/^(?:com|net|org|name|edu|gov|au|tw|cz|cn|us|me|info|co|jp|ly|gd|gl|de|fm|io)$/));
         };
         if (typeof urls === "string") {

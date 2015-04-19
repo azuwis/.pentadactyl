@@ -17,4 +17,4 @@
 .tabbrowser-tab[pending] {opacity: .5;}
 
 /* no click to play popup */
-panel[popupid="click-to-play-plugins"] {display: none !important;}
+/* panel[popupid="click-to-play-plugins"] {display: none !important;} */

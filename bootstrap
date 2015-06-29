@@ -112,9 +112,6 @@ if (config.OS.isUnix) {
         if (dpi !== 96) {
             prefs.set("layout.css.devPixelsPerPx", (dpi/96).toString());
         }
-        // vertical tabs addon
-        dactyl.execute(":installaddon verticaltabs@mozilla.com https://github.com/darrinhenein/VerticalTabs/raw/master/VerticalTabs.xpi");
-        prefs.set("extensions.verticaltabs.theme", "light");
     }
 }
 EOF

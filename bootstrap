@@ -26,7 +26,7 @@ AddonManager.getAddonByID(args[0], function(addon) {
     if(!addon) {
         let url = args[1];
         if(!isNaN(url)) {
-            url = 'https://addons.mozilla.org/firefox/downloads/latest/' + url + '/addon-' + url + '-latest.xpi';
+            url = 'https://addons.mozilla.org/firefox/downloads/latest/' + url;
         }
         dactyl.execute(":extadd " + url);
     }

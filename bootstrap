@@ -72,6 +72,8 @@ set! browser.newtabpage.enabled=false
 set! plugins.click_to_play=true
 "" disable pdfjs
 set! pdfjs.disabled=true
+"" handle org-protocol
+set! network.protocol-handler.expose.org-protocol=false
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

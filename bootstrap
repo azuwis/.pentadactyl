@@ -19,20 +19,6 @@ silent bmark -tags searchengine -title='Baidu MP3 Search' -charset=GB2312 http:/
 silent bmark -tags searchengine -title='Mobilism Search' http://forum.mobilism.org/search.php?keywords=%s&fid[]=398&sc=1&sr=topics&sf=titleonly -keyword mo
 silent bmark -tags searchengine -title='Taobao Search' http://s.taobao.com/search?q=%s -keyword tb
 
-" Commands {{{1
-"" install extension if not exists
-command! installaddon -nargs=+ -js <<EOF
-AddonManager.getAddonByID(args[0], function(addon) {
-    if(!addon) {
-        let url = args[1];
-        if(!url.startsWith('https://')) {
-            url = 'https://addons.mozilla.org/firefox/downloads/latest/' + url;
-        }
-        dactyl.execute(":extadd " + url);
-    }
-});
-EOF
-
 " Firefox Setting {{{1
 set! ui.caretWidth=5
 set! ui.caretBlinkTime=0
@@ -95,6 +81,30 @@ prefs.set("extensions.checkCompatibility." + (parseInt(appVersion) + 1) + ".0", 
 prefs.set("extensions.checkCompatibility.nightly", false);
 EOF
 
+" Commands {{{1
+"" install extension if not exists
+command! installaddon -nargs=+ -js <<EOF
+AddonManager.getAddonByID(args[0], function(addon) {
+    if(!addon) {
+        let url = args[1];
+        if(!url.startsWith('https://')) {
+            url = 'https://addons.mozilla.org/firefox/downloads/latest/' + url;
+        }
+        dactyl.execute(":extadd " + url);
+    }
+});
+EOF
+
+" Extension {{{1
+"" https everywhere
+installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere-latest.xpi
+
+"" ublock origin
+installaddon uBlock0@raymondhill.net ublock-origin
+
+"" acvaa
+installaddon AntiChinaVideoAds_with_player@xxx.com antichinavideoadsalliances
+
 " Machine specific config {{{1
 js <<EOF
 if (config.OS.isUnix) {
@@ -119,15 +129,5 @@ if (config.OS.isUnix) {
     }
 }
 EOF
-
-" Extension {{{1
-"" https everywhere
-installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere-latest.xpi
-
-"" ublock origin
-installaddon uBlock0@raymondhill.net ublock-origin
-
-"" acvaa
-installaddon AntiChinaVideoAds_with_player@xxx.com antichinavideoadsalliances
 
 " vim: set ft=pentadactyl fdm=marker:

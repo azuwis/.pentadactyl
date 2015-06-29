@@ -135,4 +135,7 @@ EOF
 "" https everywhere
 installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere-latest.xpi
 
+"" ublock origin
+installaddon uBlock0@raymondhill.net ublock-origin
+
 " vim: set ft=pentadactyl fdm=marker:

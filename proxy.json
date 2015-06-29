@@ -2,7 +2,33 @@
   "proxies": [
     [
       "SOCKS5 127.0.0.1:7070",
-      []
+      [
+        "addons.mozilla.org",
+        "amazonaws.com",
+        "androidpolice.com",
+        "bit.ly",
+        "blogspot.hk",
+        "deviantart.com",
+        "deviantart.net",
+        "github.com",
+        "google.com",
+        "googleapis.com",
+        "googleusercontent.com",
+        "gravatar.com",
+        "gstatic.com",
+        "lists.debian.org",
+        "saltstack.com",
+        "speakerdeck.com",
+        "sstatic.net",
+        "t.co",
+        "twimg.com",
+        "twitter.com",
+        "typekit.com",
+        "vimeo.com",
+        "wordpress.com",
+        "xda-developers.com",
+        "yahooapis.com"
+      ]
     ],
     [
       "DIRECT",

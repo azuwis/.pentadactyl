@@ -127,4 +127,7 @@ installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere
 "" ublock origin
 installaddon uBlock0@raymondhill.net ublock-origin
 
+"" acvaa
+installaddon AntiChinaVideoAds_with_player@xxx.com antichinavideoadsalliances
+
 " vim: set ft=pentadactyl fdm=marker:

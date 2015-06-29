@@ -590,7 +590,7 @@ EOF
 js <<EOF
 overlay.overlayObject(modes, {
     _getModeMessage: function _getModeMessage() {
-        return _getModeMessage.superapply(this, arguments).replace(/^-- EX --/, "➜ ");
+        return _getModeMessage.superapply(this, arguments).replace(/^-- EX --/, "❯");
     }
 });
 EOF

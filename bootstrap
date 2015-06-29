@@ -121,17 +121,6 @@ if (config.OS.isUnix) {
 EOF
 
 " Extension {{{1
-"" adblock plus
-installaddon {d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d} https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi
-set! extensions.adblockplus.frameobjects=false
-set! extensions.adblockplus.savestats=false
-"" custom patterns and subscriptions
-js <<EOF
-setTimeout(function () {
-    dactyl.execute(":abpload");
-    }, 30000);
-EOF
-
 "" https everywhere
 installaddon https-everywhere@eff.org https://www.eff.org/files/https-everywhere-latest.xpi
 

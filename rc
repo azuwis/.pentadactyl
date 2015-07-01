@@ -595,8 +595,8 @@ overlay.overlayObject(modes, {
                    .replace(/^-- MENU --/, "☰")
                    .replace(/^-- INSERT --/, "▐")
                    .replace(/^-- CARET --/, "⍲")
-                   .replace(/^-- VISUAL --/, "▓")
-                   .replace(/^-- TEXT EDIT --/, "❯_");
+                   .replace(/^-- VISUAL --/, "▒")
+                   .replace(/^-- TEXT EDIT --/, "█");
     }
 });
 EOF

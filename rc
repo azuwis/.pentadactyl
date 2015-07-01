@@ -586,11 +586,17 @@ if (file.exists() && file.isFile() && file.isReadable()) {
 }
 EOF
 
-" change EX mode prompt {{{2
+" change mode prompts {{{2
 js <<EOF
 overlay.overlayObject(modes, {
     _getModeMessage: function _getModeMessage() {
-        return _getModeMessage.superapply(this, arguments).replace(/^-- EX --/, "❯");
+        return _getModeMessage.superapply(this, arguments)
+                   .replace(/^-- EX --/, "❯")
+                   .replace(/^-- MENU --/, "☰")
+                   .replace(/^-- INSERT --/, "▐")
+                   .replace(/^-- CARET --/, "⍲")
+                   .replace(/^-- VISUAL --/, "▓")
+                   .replace(/^-- TEXT EDIT --/, "❯_");
     }
 });
 EOF

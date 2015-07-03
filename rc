@@ -274,6 +274,16 @@ if (buffer.URL.spec.startsWith('http://')) {
 EOF
 nmap -builtin gs :gohttps<CR>
 
+" toggle reader mode
+command! reader -js <<EOF
+if (buffer.URL.spec.startsWith('about:reader?')) {
+    dactyl.execute(':back')
+} else {
+    dactyl.open('about:reader?url=' + encodeURIComponent(buffer.URL.spec))
+}
+EOF
+nmap -builtin gr :reader<CR>
+
 " display calenda {{{2
 "command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
 

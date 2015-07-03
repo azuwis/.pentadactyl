@@ -257,11 +257,12 @@ group -locations http://review.cyanogenmod.org/#/c/* gerrit
 nmap -builtin y :yankgerrit<CR>
 group user
 
-"" kanged from https://github.com/blueyed/dotfiles/blob/master/pentadactylrc
-"" Open current location via Coral CDN
-"" String.replace is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=633830
-command coralcdn -js dactyl.open( String.replace(buffer.URL.spec, /(\.\w{2,4})\//, "$1.nyud.net/") )
-nmap -builtin gp :coralcdn<CR>
+"" Open current page in google webcache
+command webcache -js <<EOF
+dactyl.open('https://webcache.googleusercontent.com/search?strip=1&q=cache:'
+    + encodeURIComponent(String.replace(buffer.URL.spec, /^https?:\/\//, '')))
+EOF
+nmap -builtin gc :webcache<CR>
 
 " toggle http/https {{{2
 command gohttps -js <<EOF

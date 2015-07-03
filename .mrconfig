@@ -1,18 +1,4 @@
-[plugins/grassofhust]
-checkout = git clone 'git://github.com/grassofhust/dotfiles.git' 'grassofhust'
-post_checkout = 
-	cd grassofhust
-	git config core.sparsecheckout true
-	echo ".pentadactyl/plugins/chinese-hints.js
-	.pentadactyl/plugins/kindle.js
-	.pentadactyl/plugins/shorten.js
-	.pentadactyl/archives/walk-input.js
-	.pentadactyl/archives/caret-hint.js" >.git/info/sparse-checkout
-	git read-tree -m -u HEAD
-	ln -s .pentadactyl/*/*.js .
-
-[plugins/dict]
-checkout = git clone 'git://github.com/grassofhust/dict.js.git' 'dict'
+# -*- mode: conf -*-
 
 [plugins/dactyl]
 checkout = git clone 'git://github.com/azuwis/.pentadactyl_plugins_dactyl.git' 'dactyl'

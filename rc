@@ -207,7 +207,7 @@ if (count) {
 }
 io.run('mpv', [format, url]);
 EOF
-group -locations http*://www.youtube.com/watch* youtube
+group -locations https://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube
 group user
 

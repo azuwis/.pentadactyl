@@ -196,14 +196,16 @@ group -locations http://v.youku.com/v_show/*,http://www.iqiyi.com/v_* omniplay
 nmap -builtin -ex ge <count>omniplay
 group user
 
-" use vlc to play youtube video {{{2
+" use mpv to play youtube video {{{2
 command! youtube -nargs=? -count -js <<EOF
 let url = args.length ? args[0] : buffer.URL.spec;
-let format = '';
+let format = '--ytdl-format=';
 if (count) {
-    format = ['', '&fmt=37', '&fmt=22', '&fmt=18'][count];
+    format += ['', 'mp4', 'webm', 'worst'][count];
+} else {
+    format += 'best';
 }
-io.run('vlc', ['--socks', '127.0.0.1:7070', url+format]);
+io.run('mpv', [format, url]);
 EOF
 group -locations http*://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube

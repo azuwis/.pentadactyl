@@ -265,14 +265,14 @@ EOF
 nmap -builtin gc :webcache<CR>
 
 " toggle http/https {{{2
-command gohttps -js <<EOF
+command https -js <<EOF
 if (buffer.URL.spec.startsWith('http://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^http/i, 'https'));
 } else if (buffer.URL.spec.startsWith('https://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^https/i, 'http'));
 }
 EOF
-nmap -builtin gs :gohttps<CR>
+nmap -builtin gs :https<CR>
 
 " toggle reader mode
 command! reader -js <<EOF

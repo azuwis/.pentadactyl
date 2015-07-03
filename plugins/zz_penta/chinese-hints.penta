@@ -1,3 +1,0 @@
-if plugins.grassofhustChineseHints
-set hintmatching=custom
-endif

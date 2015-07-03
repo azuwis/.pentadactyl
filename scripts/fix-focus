@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# Script to escape from flash in firefox for Mac OS X
+
 # Automator -> Serive -> Run Shell Script -> Service receives: no input -> in: Firefox ->
 # Shell: /bin/bash -> content: path-to-this-script -> Saveas: fix-focus
 
@@ -9,9 +11,9 @@ from Quartz.CoreGraphics import *
 
 def mouseEvent(type, posx, posy):
         theEvent = CGEventCreateMouseEvent(
-                    None, 
-                    type, 
-                    (posx,posy), 
+                    None,
+                    type,
+                    (posx,posy),
                     kCGMouseButtonLeft)
         CGEventPost(kCGHIDEventTap, theEvent)
 

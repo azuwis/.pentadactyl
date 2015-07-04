@@ -242,7 +242,7 @@ if (config.OS.isMacOSX) {
 } else if (config.OS.isUnix) {
     io.run('chromium', [url]);
 } else {
-    dactyl.execute("tabopen " + url);
+    dactyl.open(url, dactyl.NEW_TAB);
 }
 EOF
 nmap -builtin ge :openEx<CR>

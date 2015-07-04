@@ -205,7 +205,7 @@ if (count) {
 } else {
     format += 'best';
 }
-io.run('mpv', [format, url]);
+io.run('mpv', ['--profile=pseudo-gui', format, url]);
 EOF
 group -locations https://www.youtube.com/watch* youtube
 nmap -builtin -ex ge <count>youtube

@@ -65,6 +65,9 @@ set! pdfjs.disabled=true
 "" handle org-protocol
 set! network.protocol-handler.expose.org-protocol=false
 js config.browser.loadURI('org-protocol://capture://')
+"" set reader mode style
+set! reader.color_scheme="sepia"
+set! reader.font_type="serif"
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

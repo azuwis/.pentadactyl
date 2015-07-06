@@ -64,6 +64,7 @@ set! plugins.click_to_play=true
 set! pdfjs.disabled=true
 "" handle org-protocol
 set! network.protocol-handler.expose.org-protocol=false
+js config.browser.loadURI('org-protocol://capture://')
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 end

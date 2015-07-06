@@ -544,7 +544,9 @@ overlay.overlayObject(modes, {
             "-- INSERT --": "▐",
             "-- CARET --": "⍲",
             "-- VISUAL --": "▒",
-            "-- TEXT EDIT --": "█"
+            "-- TEXT EDIT --": "█",
+            "-- FIND FORWARD --": "⚲",
+            "-- FIND BACKWARD --": "⚲"
         };
         let originModeMessage = _getModeMessage.superapply(this, arguments);
         let modeMessage = modeMap[originModeMessage];

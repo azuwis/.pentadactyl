@@ -468,13 +468,13 @@ overlay.overlayObject(dactyl, {
             let matches = urls.match(/^(\d+): /);
             if (matches) {
                 tabs.switchTo(urls, true);
-                return;
+                return true;
             }
         }
         if (!isURL(urls)) {
             arguments[0] = options["defsearch"] + " " + arguments[0];
         }
-        open.superapply(this, arguments);
+        return open.superapply(this, arguments);
     }
 });
 completion.addUrlCompleter("buffer", "Open Tabs", completion.buffer);

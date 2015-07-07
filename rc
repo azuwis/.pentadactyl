@@ -428,6 +428,9 @@ hi HintElem ;
 hi HintActive border-radius: 6px; background-color: rgba(173, 216, 230, 0.6) !important;
 "" from https://www.firefox.net.cn/read-34653
 hi Filter border-radius: 3px; background: #ffec8b; border: 1px solid orange !important;
+if config.OS.isWindows
+hi FontFixed font-family: Consolas !important;
+end
 
 " Bookmarklet {{{1
 nmap -builtin ,b :bml-

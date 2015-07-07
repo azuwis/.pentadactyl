@@ -1,3 +1,0 @@
-if plugins.dactylTabOptionsDev
-set tabclose=opener,previous,left,right
-endif

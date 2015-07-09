@@ -403,6 +403,7 @@ io.run('xdotool', ['mousemove', '--polar', '0', '0', 'click', '--repeat', repeat
 EOF
 nmap -builtin -ex ,c <count>click
 
+" use org-protocol to capture web content {{{2
 command! orgcap -js <<EOF
 org = 'org-protocol://capture://' + encodeURIComponent(buffer.URL.spec) + '/'
       + encodeURIComponent(buffer.title) + '/'

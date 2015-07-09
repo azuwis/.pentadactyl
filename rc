@@ -100,8 +100,8 @@ nmap -builtin gw ;F1<CR>
 
 " Searching {{{1
 "" from http://www.slimeden.com/2011/03/firefox/pentadactyl
-":map t -js content.getSelection().toString()!=""?dactyl.execute(":tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
-":map o -js content.getSelection().toString()!=""?dactyl.execute(":open "+ content.getSelection()):CommandExMode().open("open ")
+":map t -js content.getSelection().toString()!=""?dactyl.execute("tabopen "+ content.getSelection()):CommandExMode().open("tabopen ")
+":map o -js content.getSelection().toString()!=""?dactyl.execute("open "+ content.getSelection()):CommandExMode().open("open ")
 command -nargs=* -complete=search search execute 'tabopen <args> ' + content.getSelection().toString()
 map s :search<Space>
 command -nargs=? -complete=search switchSearch execute 'open <args> ' + (buffer.lastInputField?buffer.lastInputField.value:'')
@@ -277,7 +277,7 @@ nmap -builtin gs :https<CR>
 " toggle reader mode
 command! reader -js <<EOF
 if (buffer.URL.spec.startsWith('about:reader?')) {
-    dactyl.execute(':back')
+    dactyl.execute('back')
 } else {
     dactyl.open('about:reader?url=' + encodeURIComponent(buffer.URL.spec))
 }

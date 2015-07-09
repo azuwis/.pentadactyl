@@ -94,7 +94,7 @@ AddonManager.getAddonByID(args[0], function(addon) {
         if(!url.startsWith('https://')) {
             url = 'https://addons.mozilla.org/firefox/downloads/latest/' + url;
         }
-        dactyl.execute(":extadd " + url);
+        dactyl.execute("extadd " + url);
     }
 });
 EOF
@@ -118,7 +118,7 @@ if (config.OS.isUnix) {
         // DPI
         prefs.set("layout.css.devPixelsPerPx", "1.3");
         // nosquint addon
-        dactyl.execute(":installaddon nosquint@urandom.ca nosquint");
+        dactyl.execute("installaddon nosquint@urandom.ca nosquint");
         prefs.set("extensions.nosquint.fullZoomLevel", 145);
         prefs.set("extensions.nosquint.hideStatus", true);
     } else {

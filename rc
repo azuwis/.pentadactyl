@@ -42,10 +42,10 @@ nmap -builtin x <C-^>
 nmap -builtin U :undo<Space>
 
 "" toggle menubar and toolbar
-nmap -builtin gm :set guioptions!=mT<CR>
+nmap -builtin -ex gm :set guioptions!=mT
 
 "" viewsource in new tab
-nmap -builtin gf :tab viewsource<CR>
+nmap -builtin -ex gf :tab viewsource
 
 "" swap full zoom and text zoom mapping
 nmap -builtin zi ZI
@@ -60,22 +60,22 @@ nmap -builtin ZR zr
 nmap -builtin zZ zz
 
 "" open addons manager
-nmap -builtin ,a :dialog addons<CR>
+nmap -builtin -ex ,a :dialog addons
 
 "" rehash
-nmap -builtin ,R :rehash<CR>
+nmap -builtin -ex ,R :rehash
 
 "" private mode
-nmap -builtin ,p :set private!<CR>
+nmap -builtin -ex ,p :set private!
 
 "" fullscreen
-nmap -builtin ,F :set fullscreen!<CR>
+nmap -builtin -ex ,F :set fullscreen!
 
 "" display download
-nmap -builtin ,d :downloads<CR>
+nmap -builtin -ex ,d :downloads
 
 "" about:config
-nmap -builtin ,C :tabopen about:config<CR>
+nmap -builtin -ex ,C :tabopen about:config
 
 "" auto add -tags option when adding bookmark
 " nmap -builtin a a<Space>-tags<Space>
@@ -231,7 +231,7 @@ let chdbits = function (url) {
 chdbits(buffer.URL.spec);
 EOF
 group -locations http://chdbits.org/details.php?id=* chdbits
-nmap -builtin ge :chdbits<CR>
+nmap -builtin -ex ge :chdbits
 group user
 
 " open using external browser {{{2
@@ -245,7 +245,7 @@ if (config.OS.isMacOSX) {
     dactyl.open(url, dactyl.NEW_TAB);
 }
 EOF
-nmap -builtin ge :openEx<CR>
+nmap -builtin -ex ge :openEx
 
 " yank gerrit {{{2
 command! yankgerrit -js <<EOF
@@ -254,7 +254,7 @@ dactyl.clipboardWrite("# " + title + "\n" + buffer.URL.spec);
 dactyl.echo("Yank " + title);
 EOF
 group -locations http://review.cyanogenmod.org/#/c/* gerrit
-nmap -builtin y :yankgerrit<CR>
+nmap -builtin -ex y :yankgerrit
 group user
 
 "" Open current page in google webcache
@@ -262,7 +262,7 @@ command webcache -js <<EOF
 dactyl.open('https://webcache.googleusercontent.com/search?strip=1&q=cache:'
     + encodeURIComponent(String.replace(buffer.URL.spec, /^https?:\/\//, '')))
 EOF
-nmap -builtin gc :webcache<CR>
+nmap -builtin -ex gc :webcache
 
 " toggle http/https {{{2
 command https -js <<EOF
@@ -272,7 +272,7 @@ if (buffer.URL.spec.startsWith('http://')) {
     dactyl.open(String.replace(buffer.URL.spec, /^https/i, 'http'));
 }
 EOF
-nmap -builtin gs :https<CR>
+nmap -builtin -ex gs :https
 
 " toggle reader mode
 command! reader -js <<EOF
@@ -282,7 +282,7 @@ if (buffer.URL.spec.startsWith('about:reader?')) {
     dactyl.open('about:reader?url=' + encodeURIComponent(buffer.URL.spec))
 }
 EOF
-nmap -builtin gr :reader<CR>
+nmap -builtin -ex gr :reader
 
 " display calenda {{{2
 "command cal -js dactyl.echo(<datepicker type="grid" xmlns={XUL}/>)
@@ -305,7 +305,7 @@ if (buffer.URL.spec.startsWith('http://translate.google.com/')) {
     dactyl.open('http://translate.google.com/translate?hl=en&sl=auto&tl=en&u=' + encodeURIComponent(buffer.URL.spec));
 }
 EOF
-nmap -builtin ,t :trans<CR>
+nmap -builtin -ex ,t :trans
 
 " jump to source {{{2
 "" jump to a command, mapping or option source definition, from https://gist.github.com/3331062
@@ -342,7 +342,7 @@ while (i--) {
     }
 }
 EOF
-nmap -builtin ,D :tabcloseduplicates<CR>
+nmap -builtin -ex ,D :tabcloseduplicates
 
 " ramback {{{2
 " kanged from https://addons.mozilla.org/en-US/firefox/addon/ramback/
@@ -443,7 +443,7 @@ endif
 
 " Bookmarklet {{{1
 nmap -builtin ,b :bml-
-nmap -builtin ,s :bml-subscribe<CR>
+nmap -builtin -ex ,s :bml-subscribe
 command bml-readable -description "Bookmarklet: Make webpage readable" open javascript:(function(){_readableOptions={'text_font':'Vollkorn','text_font_monospace':'quote(Courier%20New),%20Courier,%20monospace','text_font_header':'quote(Palatino%20Linotype),%20Palatino,%20quote(Book%20Antigua),%20Georgia,%20serif','text_size':'20px','text_line_height':'1.5','box_width':'35em','color_text':'#282828','color_background':'#E5DED6','color_links':'#EE4545','text_align':'normal','base':'blueprint','custom_css':''};if(document.getElementsByTagName('body').length>0);else{return;}if(window.$readable){if(window.$readable.bookmarkletTimer){return;}}else{window.$readable={};}window.$readable.bookmarkletTimer=true;window.$readable.options=_readableOptions;if(window.$readable.bookmarkletClicked){window.$readable.bookmarkletClicked();return;}_readableScript=document.createElement('script');_readableScript.setAttribute('src','http://readable-static.tastefulwords.com/target.js?rand='+encodeURIComponent(Math.random()));document.getElementsByTagName('body')[0].appendChild(_readableScript);})()
 command bml-page2rss -description "Bookmarklet: Turn any page to RSS" open javascript:(function(){if(!window.page2rss_bookmark_urlr)window.page2rss_bookmark_urlr=function(ur){if(ur.error)alert(ur.error);if(ur.page&&ur.page.page)location.href=ur.page.page};var%20r=document.getElementById('urlFormRequest');if(r)r.parentNode.removeChild(r);r=document.createElement('script');r.id='urlFormRequest';r.type='text/javascript';r.src='http://page2rss.com/api/page?url='+encodeURIComponent(location.href)+'&callback=page2rss_bookmark_urlr';document.body.appendChild(r);})();
 command bml-twitter -description "Bookmarklet: Share on Twitter" open javascript:(function(){window.twttr=window.twttr||{};var%20D=550,A=450,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;if(C>A){G=Math.round((C/2)-(A/2))}window.twttr.shareWin=window.open('http://twitter.com/share','','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');E=F.createElement('script');E.src='http://platform.twitter.com/bookmarklets/share.js?v=1';F.getElementsByTagName('head')[0].appendChild(E)}());

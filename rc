@@ -85,7 +85,7 @@ if config.OS.isMacOSX
 nmap -builtin ,e <S-M-e>
 else
 nmap -builtin ,e <S-C-e>
-end
+endif
 
 "" jumping at hint mode, see http://code.google.com/p/dactyl/issues/detail?id=158
 "map -modes hints j     -ex normal! 10j
@@ -430,7 +430,7 @@ hi HintActive border-radius: 6px; background-color: rgba(173, 216, 230, 0.6) !im
 hi Filter border-radius: 3px; background: #ffec8b; border: 1px solid orange !important;
 if config.OS.isWindows
 hi FontFixed font-family: Consolas !important;
-end
+endif
 
 " Bookmarklet {{{1
 nmap -builtin ,b :bml-

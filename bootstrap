@@ -70,12 +70,12 @@ set! reader.color_scheme="sepia"
 set! reader.font_type="serif"
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
-end
+endif
 if config.OS.isWindows
 set! font.name.monospace.zh-CN="Consolas"
 set! font.name.sans-serif.zh-CN="微软雅黑"
 set! font.name.serif.zh-CN="微软雅黑"
-end
+endif
 "" disable addons compatibility check
 js <<EOF
 // get version, kanged from https://addons.mozilla.org/en-us/firefox/addon/checkcompatibility/

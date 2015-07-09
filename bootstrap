@@ -62,9 +62,6 @@ set! browser.newtabpage.enabled=false
 set! plugins.click_to_play=true
 "" disable pdfjs
 set! pdfjs.disabled=true
-"" handle org-protocol
-set! network.protocol-handler.expose.org-protocol=false
-js config.browser.loadURI('org-protocol://capture://')
 "" set reader mode style
 set! reader.color_scheme="sepia"
 set! reader.font_type="serif"

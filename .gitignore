@@ -1,6 +1,5 @@
-*.swp
 *.dis
 /info/
 /plugins/dactyl/
-/plugins/dict/
-/plugins/grassofhust/
+/test.js
+/test.penta

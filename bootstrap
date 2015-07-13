@@ -4,7 +4,6 @@ js services.browserSearch.getEngines().forEach(function (e) {if(e.name!="Google"
 silent bmark -tags searchengine -title='Google SSL Search' https://www.google.com/search?q=%s&ion=0&safe=off&lr=lang_zh-CN|lang_zh-TW|lang_en -keyword g
 silent bmark -tags searchengine -title='Google Lucky Search' https://www.google.com/search?q=%s&ion=0&lr=lang_zh-CN|lang_zh-TW|lang_en&btnI=1 -keyword gl
 silent bmark -tags searchengine -title='DuckDuckGo Search' https://duckduckgo.com/?q=%s&kf=fw&kj=b2&ks=t&kw=n&ka=g&ko=s&kt=Lucida%20Grande&km=m&k1=-1&kv=1 -keyword ddg
-silent bmark -tags searchengine -title='Google Code Search' http://google.com/codesearch?q=%s -keyword gc
 silent bmark -tags searchengine -title='Wikipedia Search' http://en.wikipedia.org/wiki/Special:Search?search=%s -keyword w
 silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/search/%s -keyword t
 silent bmark -tags searchengine -title='Debian Package Search' https://packages.debian.org/search?keywords=%s -keyword d

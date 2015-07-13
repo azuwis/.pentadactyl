@@ -103,6 +103,12 @@ installaddon uBlock0@raymondhill.net ublock-origin
 "" acvaa
 installaddon AntiChinaVideoAds_with_player@xxx.com antichinavideoadsalliances
 
+"" session manager
+installaddon {1280606b-2510-4fe0-97ef-9b5a22eafe30} session-manager
+"" backup every 4 hours
+set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_every=true
+set! extensions.{1280606b-2510-4fe0-97ef-9b5a22eafe30}.backup_every_time=240
+
 " Machine specific config {{{1
 js <<EOF
 if (config.OS.isUnix) {

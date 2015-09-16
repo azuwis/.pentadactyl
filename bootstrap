@@ -56,12 +56,21 @@ set! browser.fullscreen.animateUp=0
 set! browser.tabs.animate=false
 "" do not track
 set! privacy.donottrackheader.enabled=true
+"" no new tab page
 set! browser.newtabpage.enabled=false
 "" disable pdfjs
 set! pdfjs.disabled=true
 "" set reader mode style
 set! reader.color_scheme="sepia"
 set! reader.font_type="serif"
+"" enable OpenGL Off-Main-Thread Compositing (OMTC)
+set! layers.acceleration.force-enable=true
+"" enable pipelining
+set! network.http.pipelining=true
+set! network.http.proxy.pipelining=true
+"" enable tracking protection
+set! privacy.trackingprotection.enabled=true
+"" set fonts
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"
 endif

@@ -64,7 +64,7 @@ set! pdfjs.disabled=true
 set! reader.color_scheme="sepia"
 set! reader.font_type="serif"
 "" enable OpenGL Off-Main-Thread Compositing (OMTC)
-set! layers.acceleration.force-enable=true
+set! layers.acceleration.force-enabled=true
 "" enable pipelining
 set! network.http.pipelining=true
 set! network.http.proxy.pipelining=true

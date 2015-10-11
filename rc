@@ -196,8 +196,8 @@ group -locations http://v.youku.com/v_show/*,http://www.iqiyi.com/v_* omniplay
 nmap -builtin -ex ge <count>omniplay
 group user
 
-" use mpv to play youtube video {{{2
-command! youtube -nargs=? -count -js <<EOF
+" use mpv to play video {{{2
+command! mpv -nargs=? -count -js <<EOF
 let url = args.length ? args[0] : buffer.URL.spec;
 let format = '--ytdl-format=';
 if (count) {
@@ -205,11 +205,14 @@ if (count) {
 } else {
     format += 'best';
 }
-io.run('mpv', ['--profile=pseudo-gui', format, url]);
+io.run('mpv', ['--profile=pseudo-gui', '--cache=no', format, url]);
 EOF
-group -locations https://www.youtube.com/watch* youtube
-nmap -builtin -ex ge <count>youtube
-group user
+nmap -builtin -ex ,m <count>mpv
+js <<EOF
+hints.addMode("m", "Open link using mpv", function (elem) {
+    io.run('mpv', ['--profile=pseudo-gui', '--cache=no', elem.href]);
+});
+EOF
 
 " focus on bilibili player {{{2
 command! biliplayer -js <<EOF

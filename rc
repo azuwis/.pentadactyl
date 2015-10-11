@@ -42,7 +42,7 @@ nmap -builtin x <C-^>
 nmap -builtin U :undo<Space>
 
 "" toggle menubar and toolbar
-nmap -builtin -ex gm :set guioptions!=mT
+nmap -builtin -ex ,M :set guioptions!=mT
 
 "" viewsource in new tab
 nmap -builtin -ex gf :tab viewsource

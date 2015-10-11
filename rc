@@ -75,7 +75,7 @@ nmap -builtin -ex ,F :set fullscreen!
 nmap -builtin -ex ,d :downloads
 
 "" about:config
-nmap -builtin -ex ,C :tabopen about:config
+nmap -builtin -ex ,c :tabopen about:config
 
 "" auto add -tags option when adding bookmark
 " nmap -builtin a a<Space>-tags<Space>
@@ -404,7 +404,7 @@ switch (count) {
 }
 io.run('xdotool', ['mousemove', '--polar', '0', '0', 'click', '--repeat', repeat.toString(), mouse.toString()]);
 EOF
-nmap -builtin -ex ,c <count>click
+nmap -builtin -ex ,C <count>click
 
 " use org-protocol to capture web content {{{2
 command! orgcap -js <<EOF

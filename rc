@@ -205,12 +205,12 @@ if (count) {
 } else {
     format += 'best';
 }
-io.run('mpv', ['--profile=pseudo-gui', '--cache=no', format, url]);
+io.run('mpv', ['--profile=pseudo-gui', '--cache=no', '--fs', format, url]);
 EOF
 nmap -builtin -ex ,m <count>mpv
 js <<EOF
 hints.addMode("m", "Open link using mpv", function (elem) {
-    io.run('mpv', ['--profile=pseudo-gui', '--cache=no', elem.href]);
+    io.run('mpv', ['--profile=pseudo-gui', '--cache=no', '--fs', elem.href]);
 });
 EOF
 

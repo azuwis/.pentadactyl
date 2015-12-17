@@ -70,6 +70,8 @@ set! network.http.pipelining=true
 set! network.http.proxy.pipelining=true
 "" enable tracking protection
 set! privacy.trackingprotection.enabled=true
+"" disable addon signature checking
+set! xpinstall.signatures.required=false
 "" set fonts
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"

@@ -111,9 +111,6 @@ installaddon https-everywhere-eff@eff.org https://www.eff.org/files/https-everyw
 "" ublock origin
 installaddon uBlock0@raymondhill.net ublock-origin
 
-"" acvaa
-installaddon AntiChinaVideoAds_with_player@xxx.com antichinavideoadsalliances
-
 "" session manager
 installaddon {1280606b-2510-4fe0-97ef-9b5a22eafe30} session-manager
 "" backup every 4 hours

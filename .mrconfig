@@ -1,4 +1,4 @@
 # -*- mode: conf -*-
 
 [plugins/dactyl]
-checkout = git clone 'git://github.com/azuwis/.pentadactyl_plugins_dactyl.git' 'dactyl'
+checkout = git clone 'https://github.com/azuwis/.pentadactyl_plugins_dactyl.git' 'dactyl'

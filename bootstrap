@@ -9,6 +9,7 @@ silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/sear
 silent bmark -tags searchengine -title='Debian Package Search' https://packages.debian.org/search?keywords=%s -keyword d
 silent bmark -tags searchengine -title='Debian File Search' https://packages.debian.org/search?searchon=contents&mode=filename&keywords=%s -keyword df
 silent bmark -tags searchengine -title='Debian Package File List' https://packages.debian.org/sid/all/%s/filelist -keyword dfl
+silent bmark -tags searchengine -title='Debian Package File List' https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=%s -keyword db
 silent bmark -tags searchengine -title='Mtime Movie Search' http://search.mtime.com/search/?%s -keyword m
 silent bmark -tags searchengine -title='Douban Movie Search' http://movie.douban.com/subject_search?search_text=%s&cat=1002 -keyword dm
 silent bmark -tags searchengine -title='Baidu Search' -charset=GB2312 http://www.baidu.com/s?wd=%s&rsv_bp=0&rsv_spt=3 -keyword b

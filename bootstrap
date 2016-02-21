@@ -73,6 +73,13 @@ set! network.http.proxy.pipelining=true
 set! privacy.trackingprotection.enabled=true
 "" disable addon signature checking
 set! xpinstall.signatures.required=false
+"" search suggest
+set! browser.urlbar.suggest.searches=true
+"" show protocol on url bar
+set! browser.urlbar.trimURLs=false
+"" disable services
+set! loop.enabled=false
+set! browser.pocket.enabled=false
 "" set fonts
 if config.OS.isMacOSX
 set! font.name.monospace.x-western="Menlo"

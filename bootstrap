@@ -9,18 +9,9 @@ silent bmark -tags searchengine -title='Twitter Search' https://twitter.com/sear
 silent bmark -tags searchengine -title='Debian Package Search' https://packages.debian.org/search?keywords=%s -keyword d
 silent bmark -tags searchengine -title='Debian File Search' https://packages.debian.org/search?searchon=contents&mode=filename&keywords=%s -keyword df
 silent bmark -tags searchengine -title='Debian Package File List' https://packages.debian.org/sid/all/%s/filelist -keyword dfl
-silent bmark -tags searchengine -title='Debian Package File List' https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=%s -keyword db
-silent bmark -tags searchengine -title='Mtime Movie Search' http://search.mtime.com/search/?%s -keyword m
-silent bmark -tags searchengine -title='Douban Movie Search' http://movie.douban.com/subject_search?search_text=%s&cat=1002 -keyword dm
-silent bmark -tags searchengine -title='Baidu Search' -charset=GB2312 http://www.baidu.com/s?wd=%s&rsv_bp=0&rsv_spt=3 -keyword b
-silent bmark -tags searchengine -title='KTXP Torrent Search' http://bt.ktxp.com/search.php?keyword=%s -keyword k
-silent bmark -tags searchengine -title='CHDBits Search' http://chdbits.org/torrents.php?incldead=1&spstate=0&inclbookmarked=0&search=%s&search_area=0&search_mode=0 -keyword c
-silent bmark -tags searchengine -title='Baidu MP3 Search' -charset=GB2312 http://mp3.baidu.com/m?f=ms&rf=idx&tn=baidump3&ct=134217728&lf=&rn=&word=%s&lm=-1 -keyword bm
-silent bmark -tags searchengine -title='Mobilism Search' http://forum.mobilism.org/search.php?keywords=%s&fid[]=398&sc=1&sr=topics&sf=titleonly -keyword mo
-silent bmark -tags searchengine -title='Taobao Search' http://s.taobao.com/search?q=%s -keyword tb
+silent bmark -tags searchengine -title='Debian Bug Search' https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=%s -keyword db
 
 " Firefox Setting {{{1
-set! ui.caretWidth=5
 set! ui.caretBlinkTime=0
 "" disable web page accesskey, this leads to key conflict
 set! ui.key.generalAccessKey=0
